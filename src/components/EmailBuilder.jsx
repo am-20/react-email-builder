@@ -474,8 +474,8 @@ const EmailBuilder = () => {
             <td style="text-align: ${settings.textAlign || 'left'};">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td style="margin: 0; ${styleString}">
-                    <h1 style="margin: 0; ${styleString}; padding: ${settings.padding || '24px 0'}">${content}</h1>
+                  <td style="margin: 0; ${styleString} padding: 0;">
+                    <h1 style="margin: 0; ${styleString} padding: 0;">${content}</h1>
                   </td>
                 </tr>
               </table>
@@ -490,8 +490,8 @@ const EmailBuilder = () => {
             <td style="text-align: ${settings.textAlign || 'left'};">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
-                  <td style="margin: 0; ${styleString}">
-                    <div style="padding: ${settings.padding || '24px 0'}">${content}</div>
+                  <td style="margin: 0; ${styleString} padding: 0;">
+                    <div>${content}</div>
                   </td>
                 </tr>
               </table>
@@ -538,7 +538,7 @@ const EmailBuilder = () => {
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
           <tr>
-            <td style="text-align: ${settings.textAlign || 'center'}; padding: ${settings.padding || '10px'}">
+            <td style="text-align: ${settings.textAlign || 'center'};">
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td>
@@ -638,48 +638,43 @@ const EmailBuilder = () => {
           padding: '0 20px',
         };
 
+        const contentStyle = {
+          color: settings.color,
+          fontSize: settings.fontSize,
+          textAlign: settings.textAlign,
+          fontFamily: settings.fontFamily,
+        };
+
         const imageHtml = settings.imageLinkUrl 
           ? `<a href="${settings.imageLinkUrl}" _label="${settings.imageLinkLabel || ''}"><img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
           : `<img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">`;
 
+        const textContent = `
+          <div style="color: ${settings.color}; font-size: ${settings.fontSize}; text-align: ${settings.textAlign}; font-family: ${settings.fontFamily};">
+            ${content}
+          </div>
+          ${settings.showButton ? `
+            <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+              ${settings.buttonText}
+            </a>
+          ` : ''}`;
+
         blockHtml = `
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-          <tbody>
-            <tr>
-              <td>
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                  <tbody>
-                    <tr>
-                      <td style="${settings.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}">
-                        ${settings.imagePosition === 'left' ? imageHtml : `
-                          <div>
-                            <div style="${contentStyle}">${content}</div>
-                            ${settings.showButton ? `
-                              <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
-                                ${settings.buttonText}
-                              </a>
-                            ` : ''}
-                          </div>
-                        `}
-                      </td>
-                      <td style="${settings.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}">
-                        ${settings.imagePosition === 'left' ? `
-                          <div>
-                            <div style="${contentStyle}">${content}</div>
-                            ${settings.showButton ? `
-                              <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
-                                ${settings.buttonText}
-                              </a>
-                            ` : ''}
-                          </div>
-                        ` : imageHtml}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
+          <tr>
+            <td>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="${settings.imagePosition === 'left' ? `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;` : `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;`}">
+                    ${settings.imagePosition === 'left' ? imageHtml : textContent}
+                  </td>
+                  <td style="${settings.imagePosition === 'left' ? `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;` : `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;`}">
+                    ${settings.imagePosition === 'left' ? textContent : imageHtml}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
         </table>`;
         break;
       default:
