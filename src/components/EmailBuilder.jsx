@@ -21,6 +21,7 @@ const EmailBuilder = () => {
   const [template, setTemplate] = useState({
     id: `template-${Date.now()}`,
     title: 'Untitled Email Template',
+    titleLinkLabel: '',
     blocks: [
       {
         id: 'header-1',
@@ -57,6 +58,8 @@ const EmailBuilder = () => {
           backgroundColor: '#ffffff',
           textAlign: 'center',
           altText: 'Featured image',
+          linkUrl: '',
+          linkLabel: '',
         },
       },
     ],
@@ -162,6 +165,8 @@ const EmailBuilder = () => {
             backgroundColor: '#ffffff',
             textAlign: 'center',
             altText: 'Image description',
+            linkUrl: '',
+            linkLabel: '',
           },
         };
       case 'button':
@@ -173,10 +178,10 @@ const EmailBuilder = () => {
             backgroundColor: '#ffffff',
             padding: '10px',
             textAlign: 'center',
-            // rename content → imageUrl for clarity
             imageUrl: 'https://placehold.co/80x40',
             imageAlt: 'Click me',
             linkUrl: '#',
+            linkLabel: '',
             fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
           },
         };
@@ -194,6 +199,7 @@ const EmailBuilder = () => {
                 imageUrl: 'https://placehold.co/80x40',
                 imageAlt: 'Button 1',
                 linkUrl: '#',
+                linkLabel: '',
                 fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
               },
             },
@@ -206,6 +212,7 @@ const EmailBuilder = () => {
                 imageUrl: 'https://placehold.co/80x40',
                 imageAlt: 'Button 2',
                 linkUrl: '#',
+                linkLabel: '',
                 fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
               },
             },
@@ -247,7 +254,8 @@ const EmailBuilder = () => {
               settings: { 
                 padding: '10px',
                 altText: 'Left column image',
-                linkUrl: ''
+                linkUrl: '',
+                linkLabel: ''
               } 
             },
             { 
@@ -255,7 +263,8 @@ const EmailBuilder = () => {
               settings: { 
                 padding: '10px',
                 altText: 'Right column image',
-                linkUrl: ''
+                linkUrl: '',
+                linkLabel: ''
               } 
             },
           ],
@@ -285,6 +294,8 @@ const EmailBuilder = () => {
             buttonUrl: '#',
             buttonColor: '#2563eb',
             buttonTextColor: '#ffffff',
+            imageLinkUrl: '', // Add image link URL
+            imageLinkLabel: '', // Add image link label
           },
         };
       default:
@@ -448,7 +459,7 @@ const EmailBuilder = () => {
     let blockHtml = '';
 
     const styleString = Object.entries(settings || {})
-      .filter(([key]) => !['altText', 'buttonUrl', 'inline', 'gap', 'imagePosition', 'imageWidth', 'showButton', 'buttonText', 'buttonUrl', 'buttonColor', 'buttonTextColor'].includes(key))
+      .filter(([key]) => !['altText', 'buttonUrl', 'inline', 'gap', 'imagePosition', 'imageWidth', 'showButton', 'buttonText', 'buttonUrl', 'buttonColor', 'buttonTextColor', 'linkLabel'].includes(key))
       .map(([key, value]) => `${kebabCase(key)}: ${value};`)
       .join(' ');
 
@@ -497,7 +508,7 @@ const EmailBuilder = () => {
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                   <tr>
                     <td>
-                      <a href="${settings.linkUrl}">
+                      <a href="${settings.linkUrl}" _label="${settings.linkLabel || ''}">
                         <img src="${content}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
                       </a>
                     </td>
@@ -531,7 +542,7 @@ const EmailBuilder = () => {
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                 <tr>
                   <td>
-                    <a href="${settings.linkUrl || '#'}" target="_blank" rel="noopener noreferrer">
+                    <a href="${settings.linkUrl || '#'}" target="_blank" rel="noopener noreferrer" _label="${settings.linkLabel || ''}">
                       <img src="${settings.imageUrl}" alt="${settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
                     </a>
                   </td>
@@ -551,7 +562,7 @@ const EmailBuilder = () => {
             <td style="text-align: center;">
               ${block.buttons.map((button, index) => `
                 <div style="${buttonStyle} ${index < block.buttons.length - 1 ? gapStyle : ''}">
-                  <a href="${button.settings.linkUrl || '#'}" target="_blank" rel="noopener noreferrer">
+                  <a href="${button.settings.linkUrl || '#'}" target="_blank" rel="noopener noreferrer" _label="${button.settings.linkLabel || ''}">
                     <img src="${button.settings.imageUrl}" alt="${button.settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
                   </a>
                 </div>
@@ -591,7 +602,7 @@ const EmailBuilder = () => {
                 <tr>
                   <td>
                     ${block.columns[0].settings?.linkUrl 
-                      ? `<a href="${block.columns[0].settings.linkUrl}"><img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+                      ? `<a href="${block.columns[0].settings.linkUrl}" _label="${block.columns[0].settings?.linkLabel || ''}"><img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
                       : `<img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
                     }
                   </td>
@@ -603,7 +614,7 @@ const EmailBuilder = () => {
                 <tr>
                   <td>
                     ${block.columns[1].settings?.linkUrl 
-                      ? `<a href="${block.columns[1].settings.linkUrl}"><img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+                      ? `<a href="${block.columns[1].settings.linkUrl}" _label="${block.columns[1].settings?.linkLabel || ''}"><img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
                       : `<img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
                     }
                   </td>
@@ -627,6 +638,10 @@ const EmailBuilder = () => {
           padding: '0 20px',
         };
 
+        const imageHtml = settings.imageLinkUrl 
+          ? `<a href="${settings.imageLinkUrl}" _label="${settings.imageLinkLabel || ''}"><img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+          : `<img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">`;
+
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
           <tbody>
@@ -635,61 +650,29 @@ const EmailBuilder = () => {
                 <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
                   <tbody>
                     <tr>
-                      <td style={settings.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}>
-                        {settings.imagePosition === 'left' ? (
-                          <img
-                            src="${block.imageUrl}"
-                            alt="${settings.altText || ''}"
-                            style="max-width: 100%; border: 0; display: block;"
-                          />
-                        ) : (
+                      <td style="${settings.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}">
+                        ${settings.imagePosition === 'left' ? imageHtml : `
                           <div>
-                            <div
-                              style={contentStyle}
-                              contentEditable={isActive}
-                              suppressContentEditableWarning
-                              onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
-                              dangerouslySetInnerHTML={{ __html: content }}
-                            />
+                            <div style="${contentStyle}">${content}</div>
                             ${settings.showButton ? `
-                              <a
-                                href="${settings.buttonUrl}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+                              <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
                                 ${settings.buttonText}
                               </a>
                             ` : ''}
                           </div>
-                        )}
+                        `}
                       </td>
-                      <td style={settings.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}>
-                        ${settings.imagePosition === 'left' ? (
+                      <td style="${settings.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}">
+                        ${settings.imagePosition === 'left' ? `
                           <div>
-                            <div
-                              style={contentStyle}
-                              contentEditable={isActive}
-                              suppressContentEditableWarning
-                              onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
-                              dangerouslySetInnerHTML={{ __html: content }}
-                            />
+                            <div style="${contentStyle}">${content}</div>
                             ${settings.showButton ? `
-                              <a
-                                href="${settings.buttonUrl}"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+                              <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
                                 ${settings.buttonText}
                               </a>
                             ` : ''}
                           </div>
-                        ) : (
-                          <img
-                            src="${block.imageUrl}"
-                            alt="${settings.altText || ''}"
-                            style="max-width: 100%; border: 0; display: block;"
-                          />
-                        )}
+                        ` : imageHtml}
                       </td>
                     </tr>
                   </tbody>
@@ -846,6 +829,13 @@ const EmailBuilder = () => {
                               value={settings?.linkUrl || ''}
                               onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
                             />
+                            <input
+                              type="text"
+                              className="settings-input"
+                              placeholder="Link Label (optional)"
+                              value={settings?.linkLabel || ''}
+                              onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
+                            />
                             </div>
                             
                           </td>
@@ -904,6 +894,13 @@ const EmailBuilder = () => {
                         placeholder="Link URL"
                         value={settings.linkUrl}
                         onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        className="settings-input"
+                        placeholder="Link Label (optional)"
+                        value={settings.linkLabel || ''}
+                        onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
                       />
                     </div>
                   )}
@@ -978,6 +975,17 @@ const EmailBuilder = () => {
                               onChange={(e) => {
                                 const newBlocks = [...template.blocks];
                                 newBlocks[index].buttons[buttonIndex].settings.linkUrl = e.target.value;
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                            <input
+                              type="text"
+                              className="settings-input"
+                              placeholder="Link Label (optional)"
+                              value={button.settings.linkLabel || ''}
+                              onChange={(e) => {
+                                const newBlocks = [...template.blocks];
+                                newBlocks[index].buttons[buttonIndex].settings.linkLabel = e.target.value;
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
@@ -1089,11 +1097,21 @@ const EmailBuilder = () => {
                     <tbody>
                       <tr>
                         <td width="50%">
-                          <img
-                            src={block.columns[0].content}
-                            alt={block.columns[0].settings?.altText || ''}
-                            style={{ maxWidth: '100%', border: '0' }}
-                          />
+                          {block.columns[0].settings?.linkUrl ? (
+                            <a href={block.columns[0].settings.linkUrl} target="_blank" rel="noopener noreferrer">
+                              <img
+                                src={block.columns[0].content}
+                                alt={block.columns[0].settings?.altText || ''}
+                                style={{ maxWidth: '100%', border: '0' }}
+                              />
+                            </a>
+                          ) : (
+                            <img
+                              src={block.columns[0].content}
+                              alt={block.columns[0].settings?.altText || ''}
+                              style={{ maxWidth: '100%', border: '0' }}
+                            />
+                          )}
                           {isActive && (
                             <div className="column-settings">
                               <input
@@ -1118,15 +1136,47 @@ const EmailBuilder = () => {
                                   setTemplate({ ...template, blocks: newBlocks });
                                 }}
                               />
+                              <input
+                                type="text"
+                                className="settings-input"
+                                placeholder="Link URL (optional)"
+                                value={block.columns[0].settings?.linkUrl || ''}
+                                onChange={(e) => {
+                                  const newBlocks = [...template.blocks];
+                                  newBlocks[index].columns[0].settings.linkUrl = e.target.value;
+                                  setTemplate({ ...template, blocks: newBlocks });
+                                }}
+                              />
+                              <input
+                                type="text"
+                                className="settings-input"
+                                placeholder="Link Label (optional)"
+                                value={block.columns[0].settings?.linkLabel || ''}
+                                onChange={(e) => {
+                                  const newBlocks = [...template.blocks];
+                                  newBlocks[index].columns[0].settings.linkLabel = e.target.value;
+                                  setTemplate({ ...template, blocks: newBlocks });
+                                }}
+                              />
                             </div>
                           )}
                         </td>
                         <td width="50%">
-                          <img
-                            src={block.columns[1].content}
-                            alt={block.columns[1].settings?.altText || ''}
-                            style={{ maxWidth: '100%', border: '0' }}
-                          />
+                          {block.columns[1].settings?.linkUrl ? (
+                            <a href={block.columns[1].settings.linkUrl} target="_blank" rel="noopener noreferrer">
+                              <img
+                                src={block.columns[1].content}
+                                alt={block.columns[1].settings?.altText || ''}
+                                style={{ maxWidth: '100%', border: '0' }}
+                              />
+                            </a>
+                          ) : (
+                            <img
+                              src={block.columns[1].content}
+                              alt={block.columns[1].settings?.altText || ''}
+                              style={{ maxWidth: '100%', border: '0' }}
+                            />
+                          )}
                           {isActive && (
                             <div className="column-settings">
                               <input
@@ -1148,6 +1198,28 @@ const EmailBuilder = () => {
                                 onChange={(e) => {
                                   const newBlocks = [...template.blocks];
                                   newBlocks[index].columns[1].settings.altText = e.target.value;
+                                  setTemplate({ ...template, blocks: newBlocks });
+                                }}
+                              />
+                              <input
+                                type="text"
+                                className="settings-input"
+                                placeholder="Link URL (optional)"
+                                value={block.columns[1].settings?.linkUrl || ''}
+                                onChange={(e) => {
+                                  const newBlocks = [...template.blocks];
+                                  newBlocks[index].columns[1].settings.linkUrl = e.target.value;
+                                  setTemplate({ ...template, blocks: newBlocks });
+                                }}
+                              />
+                              <input
+                                type="text"
+                                className="settings-input"
+                                placeholder="Link Label (optional)"
+                                value={block.columns[1].settings?.linkLabel || ''}
+                                onChange={(e) => {
+                                  const newBlocks = [...template.blocks];
+                                  newBlocks[index].columns[1].settings.linkLabel = e.target.value;
                                   setTemplate({ ...template, blocks: newBlocks });
                                 }}
                               />
@@ -1177,6 +1249,24 @@ const EmailBuilder = () => {
           padding: '0 20px',
         };
 
+        const renderImage = () => (
+          settings.imageLinkUrl ? (
+            <a href={settings.imageLinkUrl} target="_blank" rel="noopener noreferrer">
+              <img
+                src={block.imageUrl}
+                alt={settings.altText || ''}
+                style={{ maxWidth: '100%', border: '0', display: 'block' }}
+              />
+            </a>
+          ) : (
+            <img
+              src={block.imageUrl}
+              alt={settings.altText || ''}
+              style={{ maxWidth: '100%', border: '0', display: 'block' }}
+            />
+          )
+        );
+
         blockContent = (
           <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0">
             <tbody>
@@ -1186,13 +1276,7 @@ const EmailBuilder = () => {
                     <tbody>
                       <tr>
                         <td style={settings.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}>
-                          {settings.imagePosition === 'left' ? (
-                            <img
-                              src={block.imageUrl}
-                              alt={settings.altText || ''}
-                              style={{ maxWidth: '100%', border: '0', display: 'block' }}
-                            />
-                          ) : (
+                          {settings.imagePosition === 'left' ? renderImage() : (
                             <div>
                               <div
                                 style={contentStyle}
@@ -1249,13 +1333,7 @@ const EmailBuilder = () => {
                                 </a>
                               )}
                             </div>
-                          ) : (
-                            <img
-                              src={block.imageUrl}
-                              alt={settings.altText || ''}
-                              style={{ maxWidth: '100%', border: '0', display: 'block' }}
-                            />
-                          )}
+                          ) : renderImage()}
                         </td>
                       </tr>
                     </tbody>
@@ -1363,6 +1441,21 @@ const EmailBuilder = () => {
                       <option value="48px">48px</option>
                     </select>
                   </>
+                )}
+                {type === 'buttonGroup' && (
+                  <div className="checkbox-container">
+                    <input
+                      type="checkbox"
+                      id={`inline-${block.id}`}
+                      checked={settings?.inline}
+                      onChange={(e) => {
+                        const newBlocks = [...template.blocks];
+                        newBlocks[index].settings.inline = e.target.checked;
+                        setTemplate({ ...template, blocks: newBlocks });
+                      }}
+                    />
+                    <label htmlFor={`inline-${block.id}`}>Display buttons inline</label>
+                  </div>
                 )}
                 <select
                   className="control-select flex-grow"
@@ -1484,6 +1577,28 @@ const EmailBuilder = () => {
                   />
                 </div>
               )}
+              {type === 'halfText' && (
+                <div className="control-flex margin-bottom-small">
+                  <input
+                    type="text"
+                    className="settings-input"
+                    placeholder="Image Link URL (optional)"
+                    value={settings?.imageLinkUrl || ''}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'imageLinkUrl', e.target.value)
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="settings-input"
+                    placeholder="Image Link Label (optional)"
+                    value={settings?.imageLinkLabel || ''}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'imageLinkLabel', e.target.value)
+                    }
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -1522,6 +1637,18 @@ const EmailBuilder = () => {
                 }
                 className='settings-input full-width'
                 placeholder='Enter template title'
+              />
+            </div>
+            <div className='setting-item'>
+              <label className='setting-label'>Title Link Label (optional)</label>
+              <input
+                type='text'
+                value={template.titleLinkLabel}
+                onChange={(e) =>
+                  handleUpdateTemplateSetting('titleLinkLabel', e.target.value)
+                }
+                className='settings-input full-width'
+                placeholder='Enter link label for the title'
               />
             </div>
           </div>
@@ -1574,7 +1701,13 @@ const EmailBuilder = () => {
                     marginBottom: '6px',
                     lineHeight: '1.1'
                   }}>
-                    {template.title || 'Untitled Email Template'}
+                    {template.titleLinkLabel ? (
+                      <a href="#" _label={template.titleLinkLabel} style={{ color: 'inherit', textDecoration: 'none' }}>
+                        {template.title || 'Untitled Email Template'}
+                      </a>
+                    ) : (
+                      template.title || 'Untitled Email Template'
+                    )}
                   </span>
                 </td>
                 <td style={{ padding: '20px' }} valign="middle" align="right">
