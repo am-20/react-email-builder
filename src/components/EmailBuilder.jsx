@@ -19,8 +19,8 @@ import './EmailBuilder.css';
 const EmailBuilder = () => {
   // Email template structure
   const [template, setTemplate] = useState({
-    backgroundColor: '#f5f5f5',
-    width: '640px',
+    id: `template-${Date.now()}`,
+    title: 'Untitled Email Template',
     blocks: [
       {
         id: 'header-1',
@@ -406,13 +406,24 @@ const EmailBuilder = () => {
     }
   </style>
 </head>
-<body style="margin: 0; padding: 0; background-color: ${template.backgroundColor};">
+<body style="margin: 0; padding: 0; background-color: #f5f5f5;">
   <!-- Email wrapper -->
-  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: ${template.backgroundColor};">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="background-color: #f5f5f5;">
     <tr>
       <td align="center">
+        <!-- Pre-header -->
+        <table role="presentation" width="640" cellspacing="0" cellpadding="0" border="0" style="width:640px;margin:0 auto;padding:0;text-align:center;font-family: SamsungOne, Arial, Helvetica, sans-serif;">
+          <tr>
+            <td style="padding: 20px;" align="left" valign="middle">
+              <span style="font-family: Arial, Helvetica, sans-serif;font-size:12px;text-align:center;color:#000000;margin:0;margin-bottom:6px;line-height:1.1;">${template.title}</span>
+            </td>
+            <td style="padding: 20px;" valign="middle" align="right">
+              <a href="#" onclick="window.open(URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' })), '_blank')" _label="Mirror Page" _type="mirrorPage" style="color:#000000;text-decoration:underline;font-size:12px;">View in Browser →</a>
+            </td>
+          </tr>
+        </table>
         <!-- Email container -->
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="${template.width}" style="margin: 0 auto;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="640px" style="margin: 0 auto;">
           <tr>
             <td>
               <!-- Email content -->
@@ -603,39 +614,89 @@ const EmailBuilder = () => {
         </table>`;
         break;
       case 'halfText':
-        const imageStyle = `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;`;
-        const textStyle = `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;`;
+        const imageContainerStyle = {
+          width: settings.imageWidth,
+          display: 'inline-block',
+          verticalAlign: 'top',
+        };
         
-        const imageHtml = `
-          <img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
-        `;
-        
-        const textHtml = `
-          <div style="padding: ${settings.padding || '24px 0'}">${content}</div>
-          ${settings.showButton ? `
-            <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" 
-               style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
-              ${settings.buttonText}
-            </a>
-          ` : ''}
-        `;
+        const textContainerStyle = {
+          width: `calc(100% - ${settings.imageWidth})`,
+          display: 'inline-block',
+          verticalAlign: 'top',
+          padding: '0 20px',
+        };
 
         blockHtml = `
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
-          <tr>
-            <td>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="${settings.imagePosition === 'left' ? imageStyle : textStyle}">
-                    ${settings.imagePosition === 'left' ? imageHtml : textHtml}
-                  </td>
-                  <td style="${settings.imagePosition === 'left' ? textStyle : imageStyle}">
-                    ${settings.imagePosition === 'left' ? textHtml : imageHtml}
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+          <tbody>
+            <tr>
+              <td>
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tbody>
+                    <tr>
+                      <td style={settings.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}>
+                        {settings.imagePosition === 'left' ? (
+                          <img
+                            src="${block.imageUrl}"
+                            alt="${settings.altText || ''}"
+                            style="max-width: 100%; border: 0; display: block;"
+                          />
+                        ) : (
+                          <div>
+                            <div
+                              style={contentStyle}
+                              contentEditable={isActive}
+                              suppressContentEditableWarning
+                              onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
+                              dangerouslySetInnerHTML={{ __html: content }}
+                            />
+                            ${settings.showButton ? `
+                              <a
+                                href="${settings.buttonUrl}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+                                ${settings.buttonText}
+                              </a>
+                            ` : ''}
+                          </div>
+                        )}
+                      </td>
+                      <td style={settings.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}>
+                        ${settings.imagePosition === 'left' ? (
+                          <div>
+                            <div
+                              style={contentStyle}
+                              contentEditable={isActive}
+                              suppressContentEditableWarning
+                              onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
+                              dangerouslySetInnerHTML={{ __html: content }}
+                            />
+                            ${settings.showButton ? `
+                              <a
+                                href="${settings.buttonUrl}"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+                                ${settings.buttonText}
+                              </a>
+                            ` : ''}
+                          </div>
+                        ) : (
+                          <img
+                            src="${block.imageUrl}"
+                            alt="${settings.altText || ''}"
+                            style="max-width: 100%; border: 0; display: block;"
+                          />
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
         </table>`;
         break;
       default:
@@ -763,35 +824,30 @@ const EmailBuilder = () => {
                       <tbody>
                         <tr>
                           <td>
+                            <div className="button-settings">
                             <input
                               type="text"
-                              className="border p-1 text-sm w-full"
+                              className="settings-input"
                               placeholder="Image URL"
                               value={content}
                               onChange={(e) => handleUpdateBlockContent(index, e.target.value)}
                             />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input
+                             <input
                               type="text"
-                              className="border p-1 text-sm w-full mt-1"
+                              className="settings-input"
                               placeholder="Alt text"
                               value={settings?.altText || ''}
                               onChange={(e) => handleUpdateBlockSettings(index, 'altText', e.target.value)}
                             />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input
+                              <input
                               type="text"
-                              className="border p-1 text-sm w-full mt-1"
+                              className="settings-input"
                               placeholder="Link URL (optional)"
                               value={settings?.linkUrl || ''}
                               onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
                             />
+                            </div>
+                            
                           </td>
                         </tr>
                       </tbody>
@@ -827,30 +883,29 @@ const EmailBuilder = () => {
                     />
                   </a>
                   {isActive && (
-                    <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" className="block-settings">
-                      <tbody>
-                        <tr>
-                          <td>
-                            <input
-                              type="text"
-                              value={settings.imageUrl}
-                              onChange={(e) => handleUpdateBlockSettings(index, 'imageUrl', e.target.value)}
-                              placeholder="Image URL"
-                            />
-                          </td>
-                        </tr>
-                        <tr>
-                          <td>
-                            <input
-                              type="text"
-                              value={settings.linkUrl}
-                              onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
-                              placeholder="Link URL"
-                            />
-                          </td>
-                        </tr>
-                      </tbody>
-                    </table>
+                    <div className="button-settings">
+                      <input
+                        type="text"
+                        className="settings-input"
+                        placeholder="Image URL"
+                        value={settings.imageUrl}
+                        onChange={(e) => handleUpdateBlockSettings(index, 'imageUrl', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        className="settings-input"
+                        placeholder="Alt text"
+                        value={settings.imageAlt}
+                        onChange={(e) => handleUpdateBlockSettings(index, 'imageAlt', e.target.value)}
+                      />
+                      <input
+                        type="text"
+                        className="settings-input"
+                        placeholder="Link URL"
+                        value={settings.linkUrl}
+                        onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
+                      />
+                    </div>
                   )}
                 </td>
               </tr>
@@ -1284,7 +1339,7 @@ const EmailBuilder = () => {
                   }
                   className="color-input"
                 />
-                {(type === 'header' || type === 'text') && (
+                {(type === 'header' || type === 'text' || type === 'halfText') && (
                   <>
                     <input
                       type="color"
@@ -1320,7 +1375,7 @@ const EmailBuilder = () => {
                   <option value="24px 0">Medium padding</option>
                   <option value="40px 0">Large padding</option>
                 </select>
-                {(type === 'header' || type === 'text' || type === 'image') && (
+                {(type === 'header' || type === 'text' || type === 'image' || type === 'halfText') && (
                   <select
                     className="control-select"
                     value={settings?.textAlign}
@@ -1332,7 +1387,103 @@ const EmailBuilder = () => {
                     <option value="right">Right</option>
                   </select>
                 )}
+                {type === 'halfText' && (
+                  <>
+                    <select
+                      className="control-select"
+                      value={settings?.imagePosition}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(index, 'imagePosition', e.target.value)
+                      }>
+                      <option value="left">Image Left</option>
+                      <option value="right">Image Right</option>
+                    </select>
+                    <select
+                      className="control-select"
+                      value={settings?.imageWidth}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(index, 'imageWidth', e.target.value)
+                      }>
+                      <option value="30%">30% Width</option>
+                      <option value="40%">40% Width</option>
+                      <option value="50%">50% Width</option>
+                    </select>
+                    <div className="checkbox-container">
+                      <input
+                        type="checkbox"
+                        id={`showButton-${block.id}`}
+                        checked={settings?.showButton}
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(index, 'showButton', e.target.checked)
+                        }
+                      />
+                      <label htmlFor={`showButton-${block.id}`}>Show Button</label>
+                    </div>
+                  </>
+                )}
               </div>
+              {type === 'halfText' && settings?.showButton && (
+                <div className="control-flex margin-bottom-small">
+                  <input
+                    type="text"
+                    className="settings-input"
+                    placeholder="Button Text"
+                    value={settings?.buttonText}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'buttonText', e.target.value)
+                    }
+                  />
+                  <input
+                    type="text"
+                    className="settings-input"
+                    placeholder="Button URL"
+                    value={settings?.buttonUrl}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'buttonUrl', e.target.value)
+                    }
+                  />
+                  <input
+                    type="color"
+                    value={settings?.buttonColor}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'buttonColor', e.target.value)
+                    }
+                    className="color-input"
+                  />
+                  <input
+                    type="color"
+                    value={settings?.buttonTextColor}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'buttonTextColor', e.target.value)
+                    }
+                    className="color-input"
+                  />
+                </div>
+              )}
+              {type === 'halfText' && (
+                <div className="control-flex margin-bottom-small">
+                  <input
+                    type="text"
+                    className="settings-input"
+                    placeholder="Image URL"
+                    value={block.imageUrl}
+                    onChange={(e) => {
+                      const newBlocks = [...template.blocks];
+                      newBlocks[index].imageUrl = e.target.value;
+                      setTemplate({ ...template, blocks: newBlocks });
+                    }}
+                  />
+                  <input
+                    type="text"
+                    className="settings-input"
+                    placeholder="Alt text"
+                    value={settings?.altText || ''}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'altText', e.target.value)
+                    }
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -1362,29 +1513,16 @@ const EmailBuilder = () => {
           <h3 className='settings-title'>Template Settings</h3>
           <div className='settings-group'>
             <div className='setting-item'>
-              <label className='setting-label'>Background Color</label>
+              <label className='setting-label'>Template Title</label>
               <input
-                type='color'
-                value={template.backgroundColor}
+                type='text'
+                value={template.title}
                 onChange={(e) =>
-                  handleUpdateTemplateSetting('backgroundColor', e.target.value)
+                  handleUpdateTemplateSetting('title', e.target.value)
                 }
-                className='color-input-large'
+                className='settings-input full-width'
+                placeholder='Enter template title'
               />
-            </div>
-            <div className='setting-item'>
-              <label className='setting-label'>Email Width</label>
-              <select
-                className='control-select full-width'
-                value={template.width}
-                onChange={(e) =>
-                  handleUpdateTemplateSetting('width', e.target.value)
-                }>
-                <option value='500px'>500px</option>
-                <option value='640px'>640px</option>
-                <option value='700px'>700px</option>
-                <option value='800px'>800px</option>
-              </select>
             </div>
           </div>
         </div>
@@ -1421,6 +1559,50 @@ const EmailBuilder = () => {
           </div>
         </div>
 
+        {/* Pre-header Section */}
+        <div className='pre-header'>
+          <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0" style={{ width: '100%', margin: '0 auto', padding: '0', textAlign: 'center' }}>
+            <tbody>
+              <tr>
+                <td style={{ padding: '20px' }} align="left" valign="middle">
+                  <span style={{ 
+                    fontFamily: 'Arial, Helvetica, sans-serif',
+                    fontSize: '12px',
+                    textAlign: 'center',
+                    color: '#000000',
+                    margin: '0',
+                    marginBottom: '6px',
+                    lineHeight: '1.1'
+                  }}>
+                    {template.title || 'Untitled Email Template'}
+                  </span>
+                </td>
+                <td style={{ padding: '20px' }} valign="middle" align="right">
+                  <a 
+                    href="#"
+                    _label="Mirror Page"
+                    _type="mirrorPage"
+                    style={{
+                      color: '#000000',
+                      textDecoration: 'underline',
+                      fontSize: '12px'
+                    }}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      const htmlOutput = generateHtmlOutput();
+                      const blob = new Blob([htmlOutput], { type: 'text/html' });
+                      const url = URL.createObjectURL(blob);
+                      window.open(url, '_blank');
+                    }}
+                  >
+                    View in Browser →
+                  </a>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
         {/* Canvas */}
         <div className='canvas-container'>
           {showCode ? (
@@ -1455,13 +1637,7 @@ const EmailBuilder = () => {
                 e.preventDefault();
                 setDragOverIndex(null);
               }}
-              style={{ width: template.width }}>
-              {/* <div
-                className='email-content'
-                style={{
-                  backgroundColor: template.backgroundColor,
-                  padding: '20px',
-                }}> */}
+              style={{ width: '640px' }}>
               {template.blocks.map((block, index) => (
                 <React.Fragment key={block.id}>
                   {/* show indicator above the block */}
@@ -1496,7 +1672,6 @@ const EmailBuilder = () => {
                 <div className='drop-indicator' />
               )}
             </div>
-            // </div>
           )}
         </div>
       </div>
