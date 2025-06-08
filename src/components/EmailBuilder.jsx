@@ -471,14 +471,8 @@ const EmailBuilder = () => {
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
           <tr>
-            <td style="text-align: ${settings.textAlign || 'left'};">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="margin: 0; ${styleString} padding: 0;">
-                    <h1 style="margin: 0; ${styleString} padding: 0;">${content}</h1>
-                  </td>
-                </tr>
-              </table>
+            <td style="text-align: ${settings.textAlign || 'left'}; margin: 0; padding: 0;">
+              <h1 style="margin: 0; ${styleString} padding: 0;">${content}</h1>
             </td>
           </tr>
         </table>`;
@@ -487,14 +481,8 @@ const EmailBuilder = () => {
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
           <tr>
-            <td style="text-align: ${settings.textAlign || 'left'};">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="margin: 0; ${styleString} padding: 0;">
-                    <div>${content}</div>
-                  </td>
-                </tr>
-              </table>
+            <td style="text-align: ${settings.textAlign || 'left'}; margin: 0; padding: 0;">
+              <div>${content}</div>
             </td>
           </tr>
         </table>`;
@@ -505,15 +493,9 @@ const EmailBuilder = () => {
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
             <tr>
               <td style="text-align: ${settings.textAlign || 'left'};">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                  <tr>
-                    <td>
-                      <a href="${settings.linkUrl}" _label="${settings.linkLabel || ''}">
-                        <img src="${content}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
-                      </a>
-                    </td>
-                  </tr>
-                </table>
+                <a href="${settings.linkUrl}" _label="${settings.linkLabel || ''}">
+                  <img src="${content}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
+                </a>
               </td>
             </tr>
           </table>`;
@@ -522,13 +504,7 @@ const EmailBuilder = () => {
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
             <tr>
               <td style="text-align: ${settings.textAlign || 'left'};">
-                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                  <tr>
-                    <td>
-                      <img src="${content}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
-                    </td>
-                  </tr>
-                </table>
+                <img src="${content}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
               </td>
             </tr>
           </table>`;
@@ -539,15 +515,9 @@ const EmailBuilder = () => {
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
           <tr>
             <td style="text-align: ${settings.textAlign || 'center'};">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td>
-                    <a href="${settings.linkUrl || '#'}" target="_blank" rel="noopener noreferrer" _label="${settings.linkLabel || ''}">
-                      <img src="${settings.imageUrl}" alt="${settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
-                    </a>
-                  </td>
-                </tr>
-              </table>
+              <a href="${settings.linkUrl}" target="_blank" rel="noopener noreferrer" _label="${settings.linkLabel || ''}">
+                <img src="${settings.imageUrl}" alt="${settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
+              </a>
             </td>
           </tr>
         </table>`;
@@ -575,13 +545,7 @@ const EmailBuilder = () => {
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
           <tr>
-            <td>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="height: ${settings.lineHeight}; background-color: ${settings.lineColor};"></td>
-                </tr>
-              </table>
-            </td>
+            <td style="height: ${settings.lineHeight}; background-color: ${settings.lineColor};"></td>
           </tr>
         </table>`;
         break;
@@ -597,29 +561,17 @@ const EmailBuilder = () => {
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} padding-left: 12%; padding-right: 12%;">
           <tr>
-            <td width="50%">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td>
-                    ${block.columns[0].settings?.linkUrl 
-                      ? `<a href="${block.columns[0].settings.linkUrl}" _label="${block.columns[0].settings?.linkLabel || ''}"><img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
-                      : `<img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
-                    }
-                  </td>
-                </tr>
-              </table>
+            <td width="50%" style="padding: 0 8px;">
+              ${block.columns[0].settings?.linkUrl 
+                ? `<a href="${block.columns[0].settings.linkUrl}" _label="${block.columns[0].settings?.linkLabel || ''}"><img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+                : `<img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
+              }
             </td>
-            <td width="50%">
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td>
-                    ${block.columns[1].settings?.linkUrl 
-                      ? `<a href="${block.columns[1].settings.linkUrl}" _label="${block.columns[1].settings?.linkLabel || ''}"><img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
-                      : `<img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
-                    }
-                  </td>
-                </tr>
-              </table>
+            <td width="50%" style="padding: 0 8px;">
+              ${block.columns[1].settings?.linkUrl 
+                ? `<a href="${block.columns[1].settings.linkUrl}" _label="${block.columns[1].settings?.linkLabel || ''}"><img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+                : `<img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
+              }
             </td>
           </tr>
         </table>`;
@@ -662,17 +614,11 @@ const EmailBuilder = () => {
         blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
           <tr>
-            <td>
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-                <tr>
-                  <td style="${settings.imagePosition === 'left' ? `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;` : `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;`}">
-                    ${settings.imagePosition === 'left' ? imageHtml : textContent}
-                  </td>
-                  <td style="${settings.imagePosition === 'left' ? `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;` : `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;`}">
-                    ${settings.imagePosition === 'left' ? textContent : imageHtml}
-                  </td>
-                </tr>
-              </table>
+            <td style="${settings.imagePosition === 'left' ? `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;` : `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;`}">
+              ${settings.imagePosition === 'left' ? imageHtml : textContent}
+            </td>
+            <td style="${settings.imagePosition === 'left' ? `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;` : `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;`}">
+              ${settings.imagePosition === 'left' ? textContent : imageHtml}
             </td>
           </tr>
         </table>`;
@@ -1263,7 +1209,7 @@ const EmailBuilder = () => {
         );
 
         blockContent = (
-          <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0">
+          <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0" style="${styleString}">
             <tbody>
               <tr>
                 <td>
