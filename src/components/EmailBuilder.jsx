@@ -577,28 +577,8 @@ const EmailBuilder = () => {
         </table>`;
         break;
       case 'halfText':
-        const imageContainerStyle = {
-          width: settings.imageWidth,
-          display: 'inline-block',
-          verticalAlign: 'top',
-        };
-        
-        const textContainerStyle = {
-          width: `calc(100% - ${settings.imageWidth})`,
-          display: 'inline-block',
-          verticalAlign: 'top',
-          padding: '0 20px',
-        };
-
-        const contentStyle = {
-          color: settings.color,
-          fontSize: settings.fontSize,
-          textAlign: settings.textAlign,
-          fontFamily: settings.fontFamily,
-        };
-
         const imageHtml = settings.imageLinkUrl 
-          ? `<a href="${settings.imageLinkUrl}" _label="${settings.imageLinkLabel || ''}"><img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+          ? `<a href="${settings.imageLinkUrl}" target="_blank" rel="noopener noreferrer"><img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
           : `<img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">`;
 
         const textContent = `
@@ -611,14 +591,32 @@ const EmailBuilder = () => {
             </a>
           ` : ''}`;
 
+        const imageContainerStyle = `width: ${settings.imageWidth}; vertical-align: top;`;
+        const textContainerStyle = `width: ${settings.imageWidth === '40%' ? '60%' : '70%'}; vertical-align: top; padding: 0 20px;`;
+
         blockHtml = `
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} padding-left: 12%; padding-right: 12%;">
           <tr>
-            <td style="${settings.imagePosition === 'left' ? `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;` : `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;`}">
-              ${settings.imagePosition === 'left' ? imageHtml : textContent}
-            </td>
-            <td style="${settings.imagePosition === 'left' ? `width: calc(100% - ${settings.imageWidth}); display: inline-block; vertical-align: top; padding: 0 20px;` : `width: ${settings.imageWidth}; display: inline-block; vertical-align: top;`}">
-              ${settings.imagePosition === 'left' ? textContent : imageHtml}
+            <td>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  ${settings.imagePosition === 'left' ? `
+                    <td style="${imageContainerStyle}">
+                      ${imageHtml}
+                    </td>
+                    <td style="${textContainerStyle}">
+                      ${textContent}
+                    </td>
+                  ` : `
+                    <td style="${textContainerStyle}">
+                      ${textContent}
+                    </td>
+                    <td style="${imageContainerStyle}">
+                      ${imageHtml}
+                    </td>
+                  `}
+                </tr>
+              </table>
             </td>
           </tr>
         </table>`;
@@ -1190,6 +1188,19 @@ const EmailBuilder = () => {
           padding: '0 20px',
         };
 
+        const halfTextContentStyle = {
+          color: settings.color,
+          fontSize: settings.fontSize,
+          textAlign: settings.textAlign,
+          fontFamily: settings.fontFamily,
+        };
+
+        const tableStyle = {
+          backgroundColor: settings.backgroundColor,
+          padding: settings.padding,
+          width: '100%',
+        };
+
         const renderImage = () => (
           settings.imageLinkUrl ? (
             <a href={settings.imageLinkUrl} target="_blank" rel="noopener noreferrer">
@@ -1209,7 +1220,7 @@ const EmailBuilder = () => {
         );
 
         blockContent = (
-          <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0" style="${styleString}">
+          <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0" style={tableStyle}>
             <tbody>
               <tr>
                 <td>
@@ -1220,7 +1231,7 @@ const EmailBuilder = () => {
                           {settings.imagePosition === 'left' ? renderImage() : (
                             <div>
                               <div
-                                style={contentStyle}
+                                style={halfTextContentStyle}
                                 contentEditable={isActive}
                                 suppressContentEditableWarning
                                 onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
@@ -1250,7 +1261,7 @@ const EmailBuilder = () => {
                           {settings.imagePosition === 'left' ? (
                             <div>
                               <div
-                                style={contentStyle}
+                                style={halfTextContentStyle}
                                 contentEditable={isActive}
                                 suppressContentEditableWarning
                                 onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
