@@ -25,6 +25,35 @@ const BlockRenderer = ({
 }) => {
   const { type, content } = block;
 
+  const handleImageUpload = (e, buttonIndex = null, columnIndex = null, isHalfText = false) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (buttonIndex !== null) {
+          // Handle buttonGroup image upload
+          const newBlocks = [...template.blocks];
+          newBlocks[index].buttons[buttonIndex].settings.imageUrl = reader.result;
+          setTemplate({ ...template, blocks: newBlocks });
+        } else if (columnIndex !== null) {
+          // Handle columns image upload
+          const newBlocks = [...template.blocks];
+          newBlocks[index].columns[columnIndex].content = reader.result;
+          setTemplate({ ...template, blocks: newBlocks });
+        } else if (isHalfText) {
+          // Handle halfText image upload
+          const newBlocks = [...template.blocks];
+          newBlocks[index].imageUrl = reader.result;
+          setTemplate({ ...template, blocks: newBlocks });
+        } else {
+          // Handle regular image block upload
+          handleUpdateBlockContent(index, reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   // Only show toolbar for the main block, not for nested blocks
   const shouldShowToolbar = isHovered || isActive;
 
@@ -127,6 +156,13 @@ const BlockRenderer = ({
                         <td>
                           <div className="button-settings">
                             <input
+                              type="file"
+                              accept="image/*"
+                              className="settings-input"
+                              onChange={(e) => handleImageUpload(e)}
+                              style={{ marginBottom: '8px' }}
+                            />
+                            <input
                               type="text"
                               className="settings-input"
                               placeholder="Image URL"
@@ -191,6 +227,22 @@ const BlockRenderer = ({
                 </a>
                 {isActive && (
                   <div className="button-settings">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="settings-input"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onloadend = () => {
+                            handleUpdateBlockSettings(index, 'imageUrl', reader.result);
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                      style={{ marginBottom: '8px' }}
+                    />
                     <input
                       type="text"
                       className="settings-input"
@@ -262,6 +314,13 @@ const BlockRenderer = ({
                       </a>
                       {isActive && (
                         <div className="button-settings">
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="settings-input"
+                            onChange={(e) => handleImageUpload(e, buttonIndex)}
+                            style={{ marginBottom: '8px' }}
+                          />
                           <input
                             type="text"
                             className="settings-input"
@@ -432,6 +491,13 @@ const BlockRenderer = ({
                         {isActive && (
                           <div className="column-settings">
                             <input
+                              type="file"
+                              accept="image/*"
+                              className="settings-input"
+                              onChange={(e) => handleImageUpload(e, null, 0)}
+                              style={{ marginBottom: '8px' }}
+                            />
+                            <input
                               type="text"
                               className="settings-input"
                               placeholder="Image URL"
@@ -496,6 +562,13 @@ const BlockRenderer = ({
                         )}
                         {isActive && (
                           <div className="column-settings">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="settings-input"
+                              onChange={(e) => handleImageUpload(e, null, 1)}
+                              style={{ marginBottom: '8px' }}
+                            />
                             <input
                               type="text"
                               className="settings-input"
@@ -886,6 +959,13 @@ const BlockRenderer = ({
             {type === 'halfText' && (
               <div className="control-flex margin-bottom-small">
                 <input
+                  type="file"
+                  accept="image/*"
+                  className="settings-input"
+                  onChange={(e) => handleImageUpload(e, null, null, true)}
+                  style={{ marginBottom: '8px' }}
+                />
+                <input
                   type="text"
                   className="settings-input"
                   placeholder="Image URL"
@@ -903,28 +983,6 @@ const BlockRenderer = ({
                   value={settings?.altText || ''}
                   onChange={(e) =>
                     handleUpdateBlockSettings(index, 'altText', e.target.value)
-                  }
-                />
-              </div>
-            )}
-            {type === 'halfText' && (
-              <div className="control-flex margin-bottom-small">
-                <input
-                  type="text"
-                  className="settings-input"
-                  placeholder="Image Link URL (optional)"
-                  value={settings?.imageLinkUrl || ''}
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(index, 'imageLinkUrl', e.target.value)
-                  }
-                />
-                <input
-                  type="text"
-                  className="settings-input"
-                  placeholder="Image Link Label (optional)"
-                  value={settings?.imageLinkLabel || ''}
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(index, 'imageLinkLabel', e.target.value)
                   }
                 />
               </div>
