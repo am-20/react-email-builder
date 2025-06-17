@@ -899,23 +899,6 @@ const BlockRenderer = ({
                   value={settings?.linklabel || ''}
                   onChange={(e) => handleUpdateBlockSettings(index, 'linklabel', e.target.value)}
                 />
-                <div className="url-settings">
-                  <h4>Social Media URLs</h4>
-                  {Object.keys(settings?.urls || {}).map((key) => (
-                    <input
-                      key={key}
-                      type="text"
-                      className="settings-input"
-                      placeholder={`${key.charAt(0).toUpperCase() + key.slice(1)} URL`}
-                      value={settings?.urls?.[key] || ''}
-                      onChange={(e) => {
-                        const newBlocks = [...template.blocks];
-                        newBlocks[index].settings.urls[key] = e.target.value;
-                        setTemplate({ ...template, blocks: newBlocks });
-                      }}
-                    />
-                  ))}
-                </div>
               </div>
             </div>
           </>
@@ -984,7 +967,7 @@ const BlockRenderer = ({
 
         {blockContent}
 
-        {!showPreview && isActive && !isNestedBlock && (
+        {!showPreview && isActive && !isNestedBlock && type !== 'footer' && (
           <div className="block-settings">
             <div className="control-flex margin-bottom-small">
               <input
