@@ -46,6 +46,32 @@ export const initialTemplate = {
         linkLabel: '',
       },
     },
+    {
+      id: 'footer-1',
+      type: 'footer',
+      settings: {
+        canvascolor: '#FFFFFF',
+        textcolor: '#000000',
+        theme: 'day',
+        disclaimercolor: '#555555',
+        linklabel: '99_unsubscribe_btn',
+        urls: {
+          facebook: 'https://www.facebook.com/SamsungKazakhstan',
+          instagram: 'https://www.instagram.com/samsungkz/',
+          vkontakte: 'https://vk.com/samsungkazakhstan',
+          youtube: 'https://www.youtube.com/user/SamsungKZ',
+          twitter: 'https://twitter.com/SamsungKZ',
+          linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
+          livechat: 'https://www.samsung.com/kz_ru/support/?content_type=text&creative=creative&segment=no-segment',
+          email: 'https://www.samsung.com/kz_ru/support/email/?content_type=text&creative=creative&segment=no-segment',
+          hotline: 'https://www.samsung.com/kz_ru/info/contactus/?content_type=text&creative=creative&segment=no-segment',
+          call: 'tel:7700',
+          optout: 'https://www.samsung.com/kz_ru/unsubscribe',
+          privacy: 'https://www.samsung.com/kz_ru/info/privacy/?content_type=text&creative=creative&segment=no-segment',
+          legal: 'https://www.samsung.com/kz_ru/info/legal/?content_type=text&creative=creative&segment=no-segment'
+        }
+      }
+    }
   ],
 };
 
@@ -60,4 +86,5 @@ export const components = [
   { type: 'spacer', label: 'Spacer', icon: <Layout size={16} /> },
   { type: 'columns', label: '2 Columns', icon: <Grid size={16} /> },
   { type: 'halfText', label: 'Half Text', icon: <FileText size={16} /> },
+  { type: 'footer', label: 'General Footer RU', icon: <Layout size={16} /> },
 ]; 

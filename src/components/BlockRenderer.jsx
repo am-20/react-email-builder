@@ -59,13 +59,14 @@ const BlockRenderer = ({
 
   const [vertical] = (settings?.padding || '10px').split(' ');
   const isImageOrSpacer = block.type === 'image' || block.type === 'spacer';
+  const isFooter = block.type === 'footer';
 
   const blockStyle = {
     backgroundColor: settings?.backgroundColor || 'white',
-    paddingTop: isImageOrSpacer ? '0' : vertical,
-    paddingBottom: isImageOrSpacer ? '0' : vertical,
-    paddingLeft: isImageOrSpacer ? '0' : '12%',
-    paddingRight: isImageOrSpacer ? '0' : '12%',
+    paddingTop: isImageOrSpacer || isFooter ? '0' : vertical,
+    paddingBottom: isImageOrSpacer || isFooter ? '0' : vertical,
+    paddingLeft: isImageOrSpacer || isFooter ? '0' : '12%',
+    paddingRight: isImageOrSpacer || isFooter ? '0' : '12%',
     position: 'relative',
     cursor: 'pointer',
     border: isActive ? '2px solid #4299e1' : 'none',
@@ -746,6 +747,180 @@ const BlockRenderer = ({
           </tbody>
         </table>
       );
+      break;
+    case 'footer':
+      blockContent = (
+        <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0">
+          <tbody>
+            <tr>
+              <td style={{ height: '50px', fontSize: '0', backgroundColor: settings?.canvascolor }}>&nbsp;</td>
+            </tr>
+            <tr>
+              <td style={{ backgroundColor: settings?.canvascolor }} align="center">
+                <table className="w100pc" style={{ width: '100%', margin: '0', padding: '0' }} cellPadding="0" cellSpacing="0">
+                  <tbody>
+                    <tr>
+                      <td style={{ width: '120px' }}>&nbsp;</td>
+                      <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a title="Samsung Kazakhstan" href={settings?.urls?.facebook}>
+                          <img border="0" width="57" src="i/ic_fb.png" alt="Facebook" />
+                        </a>
+                      </td>
+                      <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a title="Samsung Kazakhstan" href={settings?.urls?.instagram}>
+                          <img border="0" width="57" src="i/ic_in.png" alt="Instagram" />
+                        </a>
+                      </td>
+                      <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a title="Samsung Kazakhstan" href={settings?.urls?.vkontakte}>
+                          <img border="0" width="57" src="i/ic_vk.png" alt="VK" />
+                        </a>
+                      </td>
+                      <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a title="Samsung Kazakhstan" href={settings?.urls?.youtube}>
+                          <img border="0" width="57" src="i/ic_yt.png" alt="Youtube" />
+                        </a>
+                      </td>
+                      <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a title="Samsung Kazakhstan" href={settings?.urls?.twitter}>
+                          <img border="0" width="57" src="i/icon-x.png" alt="Twitter" />
+                        </a>
+                      </td>
+                      <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a title="Samsung Kazakhstan" href={settings?.urls?.linkedin}>
+                          <img border="0" width="57" src="i/icon-linkedin.png" alt="LinkedIn" />
+                        </a>
+                      </td>
+                      <td style={{ width: '120px' }}>&nbsp;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style={{ height: '37px', fontSize: '0', backgroundColor: settings?.canvascolor }}>&nbsp;</td>
+            </tr>
+            <tr>
+              <td style={{ textAlign: 'center', paddingLeft: '10%', paddingRight: '10%', backgroundColor: settings?.canvascolor }} align="center" className="w100pc">
+                <h1 className="ff" style={{ fontSize: '24px', fontWeight: 'bold', margin: '0', marginBottom: '13px', color: settings?.textcolor, lineHeight: '1' }}>Есть вопросы?</h1>
+                <table style={{ margin: '0', marginLeft: 'auto', marginRight: 'auto', padding: '0', textAlign: 'center', color: settings?.textcolor }} cellPadding="15" cellSpacing="0">
+                  <tbody>
+                    <tr>
+                      <td valign="top" align="center" style={{ padding: '7px' }}>
+                        <a style={{ fontSize: '11px', color: settings?.textcolor, textDecoration: 'none' }} href={settings?.urls?.livechat}>
+                          <img width="13" src={`i/i-chat${settings?.theme === 'night' ? '-white' : ''}.png`} alt="чат" />&nbsp;&nbsp;Онлайн чат
+                        </a>
+                      </td>
+                      <td valign="top" align="center" style={{ padding: '7px' }}>
+                        <a style={{ fontSize: '11px', color: settings?.textcolor, textDecoration: 'none' }} href={settings?.urls?.call}>
+                          <img width="13" src={`i/i-call${settings?.theme === 'night' ? '-white' : ''}.png`} alt="Call" />&nbsp;&nbsp;Call Center 7700
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td style={{ backgroundColor: settings?.canvascolor }} align="center">
+                <table style={{ width: '500px', margin: '0', padding: '0', textAlign: 'center', color: settings?.disclaimercolor }} cellPadding="0" cellSpacing="0" border="0">
+                  <tbody>
+                    <tr>
+                      <td style={{ height: '26px' }}>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td style={{ fontSize: '14px', color: settings?.disclaimercolor }}>
+                        Вы получили это письмо, потому что подписались на&nbsp;рассылку Samsung. Не отвечайте на&nbsp;данное письмо. Оно является автоматической рассылкой. Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по&nbsp;этой <a style={{ textDecoration: 'underline', color: settings?.disclaimercolor }} href={settings?.urls?.optout} _type="optout" _label={settings?.linklabel}>ссылке</a>.<br /><br />
+                        ©{new Date().getFullYear()} Samsung Electronics Co., Ltd. Все права защищены.<br />
+                        ТОО &laquo;SAMSUNG ELECTRONICS CENTRAL EURASIA&raquo;<br />
+                        (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)<br />
+                        Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115,<br />
+                        Торгово-офисный центр &laquo;Kaisar Plaza&raquo;, 3 этаж.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '24px' }} height="24">&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '24px', color: settings?.disclaimercolor, fontSize: '14px' }} height="24">
+                        <a style={{ fontSize: '14px', color: settings?.textcolor, textDecoration: 'underline' }} href={settings?.urls?.legal}>Правовая информация</a>&nbsp;|&nbsp;
+                        <a style={{ fontSize: '14px', color: settings?.textcolor, textDecoration: 'underline' }} href={settings?.urls?.privacy}>Политика конфиденциальности</a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '115px' }} height="115">&nbsp;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+
+      if (isActive) {
+        blockContent = (
+          <>
+            {blockContent}
+            <div className="block-settings">
+              <div className="control-flex margin-bottom-small">
+                <input
+                  type="color"
+                  value={settings?.canvascolor || '#FFFFFF'}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'canvascolor', e.target.value)}
+                  className="color-input"
+                  placeholder="Canvas Color"
+                />
+                <input
+                  type="color"
+                  value={settings?.textcolor || '#000000'}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'textcolor', e.target.value)}
+                  className="color-input"
+                  placeholder="Text Color"
+                />
+                <input
+                  type="color"
+                  value={settings?.disclaimercolor || '#555555'}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'disclaimercolor', e.target.value)}
+                  className="color-input"
+                  placeholder="Disclaimer Color"
+                />
+                <select
+                  className="control-select"
+                  value={settings?.theme || 'day'}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'theme', e.target.value)}>
+                  <option value="day">Day Theme</option>
+                  <option value="night">Night Theme</option>
+                </select>
+                <input
+                  type="text"
+                  className="settings-input"
+                  placeholder="Link Label"
+                  value={settings?.linklabel || ''}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'linklabel', e.target.value)}
+                />
+                <div className="url-settings">
+                  <h4>Social Media URLs</h4>
+                  {Object.keys(settings?.urls || {}).map((key) => (
+                    <input
+                      key={key}
+                      type="text"
+                      className="settings-input"
+                      placeholder={`${key.charAt(0).toUpperCase() + key.slice(1)} URL`}
+                      value={settings?.urls?.[key] || ''}
+                      onChange={(e) => {
+                        const newBlocks = [...template.blocks];
+                        newBlocks[index].settings.urls[key] = e.target.value;
+                        setTemplate({ ...template, blocks: newBlocks });
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </>
+        );
+      }
       break;
     default:
       blockContent = <div>Unknown block type</div>;

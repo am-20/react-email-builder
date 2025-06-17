@@ -536,3 +536,33 @@
   .pre-header a:hover {
     color: #2563eb;
   }
+
+  .url-settings {
+    margin-top: 16px;
+    padding: 16px;
+    background-color: #f9fafb;
+    border-radius: 4px;
+  }
+
+  .url-settings h4 {
+    margin: 0 0 12px 0;
+    font-size: 14px;
+    color: #374151;
+  }
+
+  .url-settings .settings-input {
+    margin-bottom: 8px;
+  }
+
+  .w100pc {
+    width: 100%;
+  }
+
+  .paddLR10px {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .ff {
+    font-family: SamsungOne, Arial, Helvetica, sans-serif;
+  }

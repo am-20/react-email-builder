@@ -147,26 +147,90 @@ const renderBlockHtml = (block) => {
       const textContainerStyle = `width: ${settings.imageWidth === '40%' ? '60%' : '70%'}; vertical-align: top; padding: 0 20px;`;
 
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} padding-left: 12%; padding-right: 12%;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr>
           <td>
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
               <tr>
-                ${settings.imagePosition === 'left' ? `
-                  <td style="${imageContainerStyle}">
-                    ${imageHtml}
-                  </td>
-                  <td style="${textContainerStyle}">
-                    ${textContent}
-                  </td>
-                ` : `
-                  <td style="${textContainerStyle}">
-                    ${textContent}
-                  </td>
-                  <td style="${imageContainerStyle}">
-                    ${imageHtml}
-                  </td>
-                `}
+                <td style="${settings.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}">
+                  ${settings.imagePosition === 'left' ? imageHtml : textContent}
+                </td>
+                <td style="${settings.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}">
+                  ${settings.imagePosition === 'left' ? textContent : imageHtml}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>`;
+      break;
+    case 'footer':
+      blockHtml = `
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+        <tr>
+          <td style="height:50px;font-size:0;background-color:${settings.canvascolor};" height="50">&nbsp;</td>
+        </tr>
+        <tr>
+          <td bgcolor="${settings.canvascolor}" align="center">
+            <table class="w100pc" style="width:100%;margin:0;padding:0;" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="width:120px;">&nbsp;</td>
+                <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.facebook}"><img border="0" width="57" src="i/ic_fb.png" alt="Facebook"></a></td>
+                <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.instagram}"><img border="0" width="57" src="i/ic_in.png" alt="Instagram"></a></td>
+                <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.vkontakte}"><img border="0" width="57" src="i/ic_vk.png" alt="VK"></a></td>
+                <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.youtube}"><img border="0" width="57" src="i/ic_yt.png" alt="Youtube"></a></td>
+                <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.twitter}"><img border="0" width="57" src="i/icon-x.png" alt="Twitter"></a></td>
+                <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.linkedin}"><img border="0" width="57" src="i/icon-linkedin.png" alt="LinkedIn"></a></td>
+                <td style="width:120px;">&nbsp;</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="height:37px;font-size:0;background-color:${settings.canvascolor};" height="37">&nbsp;</td>
+        </tr>
+        <tr>
+          <td bgcolor="${settings.canvascolor}" style="text-align:center;padding-left:10%;padding-right:10%;" align="center" class="w100pc">
+            <h1 class="ff" style="font-size:24px;font-weight:bold;margin:0;margin-bottom:13px;color:${settings.textcolor};line-height:1;font-family:${settings.fontFamily || 'Arial, sans-serif'};">Есть вопросы?</h1>
+            <table style="margin:0;margin-left:auto;margin-right:auto;padding:0;text-align:center;color:${settings.textcolor};" cellpadding="15" cellspacing="0">
+              <tr>
+                <td valign="top" align="center" style="padding:7px">
+                  <a style="font-size:11px;color:${settings.textcolor};text-decoration:none;font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.livechat}"><img width="13" src="i/i-chat${settings.theme === 'night' ? '-white' : ''}.png" alt="чат" />&nbsp;&nbsp;Онлайн чат</a>
+                </td>
+                <td valign="top" align="center" style="padding:7px">
+                  <a style="font-size:11px;color:${settings.textcolor};text-decoration:none;font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.call}"><img width="13" src="i/i-call${settings.theme === 'night' ? '-white' : ''}.png" alt="Call" />&nbsp;&nbsp;Call Center 7700</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="${settings.canvascolor}" align="center">
+            <table style="width:500px;margin:0;padding:0;text-align:center;color:${settings.disclaimercolor};" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="height:26px;">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="font-size:14px;color:${settings.disclaimercolor};font-family:${settings.fontFamily || 'Arial, sans-serif'};">
+                  Вы получили это письмо, потому что подписались на&nbsp;рассылку Samsung. Не отвечайте на&nbsp;данное письмо. Оно является автоматической рассылкой. Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по&nbsp;этой <a style="text-decoration:underline;color:${settings.disclaimercolor};font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.optout}" _type="optout" _label="${settings.linklabel}">ссылке</a>.<br /><br />
+                  ©${new Date().getFullYear()} Samsung Electronics Co., Ltd. Все права защищены.<br />
+                  ТОО &laquo;SAMSUNG ELECTRONICS CENTRAL EURASIA&raquo;<br />
+                  (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)<br />
+                  Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115,<br />
+                  Торгово-офисный центр &laquo;Kaisar Plaza&raquo;, 3 этаж.
+                </td>
+              </tr>
+              <tr>
+                <td style="height:24px;" height="24">&nbsp;</td>
+              </tr>
+              <tr>
+                <td style="height:24px;color:${settings.disclaimercolor};font-size:14px;font-family:${settings.fontFamily || 'Arial, sans-serif'};" height="24">
+                  <a style="font-size:14px;color:${settings.textcolor};text-decoration:underline;font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.legal}">Правовая информация</a>&nbsp;|&nbsp;
+                  <a style="font-size:14px;color:${settings.textcolor};text-decoration:underline;font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.privacy}">Политика конфиденциальности</a>
+                </td>
+              </tr>
+              <tr>
+                <td style="height:115px;" height="115">&nbsp;</td>
               </tr>
             </table>
           </td>
@@ -174,7 +238,7 @@ const renderBlockHtml = (block) => {
       </table>`;
       break;
     default:
-      blockHtml = '';
+      blockHtml = '<div>Unknown block type</div>';
   }
 
   return `<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color: ${settings.backgroundColor};">
