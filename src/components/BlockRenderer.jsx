@@ -137,7 +137,7 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'left' }}>
                 {settings?.linkUrl ? (
-                  <a href={settings.linkUrl} target="_blank" rel="noopener noreferrer">
+                  <a href={`${settings.linkUrl}${settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`} target="_blank" rel="noopener noreferrer">
                     <img
                       src={content}
                       alt={settings?.altText || ''}
@@ -188,6 +188,13 @@ const BlockRenderer = ({
                             <input
                               type="text"
                               className="settings-input"
+                              placeholder="Link Suffix (optional)"
+                              value={settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                              onChange={(e) => handleUpdateBlockSettings(index, 'linkSuffix', e.target.value)}
+                            />
+                            <input
+                              type="text"
+                              className="settings-input"
                               placeholder="Link Label (optional)"
                               value={settings?.linkLabel || ''}
                               onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
@@ -211,7 +218,7 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: settings.textAlign || 'center' }}>
                 <a
-                  href={settings.linkUrl}
+                  href={`${settings.linkUrl}${settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ display: 'inline-block' }}>
@@ -269,6 +276,13 @@ const BlockRenderer = ({
                     <input
                       type="text"
                       className="settings-input"
+                      placeholder="Link Suffix (optional)"
+                      value={settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                      onChange={(e) => handleUpdateBlockSettings(index, 'linkSuffix', e.target.value)}
+                    />
+                    <input
+                      type="text"
+                      className="settings-input"
                       placeholder="Link Label (optional)"
                       value={settings.linkLabel || ''}
                       onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
@@ -298,7 +312,7 @@ const BlockRenderer = ({
                   {block.buttons.map((button, buttonIndex) => (
                     <div key={buttonIndex}>
                       <a
-                        href={button.settings.linkUrl}
+                        href={`${button.settings.linkUrl}${button.settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         style={{ display: 'inline-block' }}>
@@ -353,6 +367,17 @@ const BlockRenderer = ({
                             onChange={(e) => {
                               const newBlocks = [...template.blocks];
                               newBlocks[index].buttons[buttonIndex].settings.linkUrl = e.target.value;
+                              setTemplate({ ...template, blocks: newBlocks });
+                            }}
+                          />
+                          <input
+                            type="text"
+                            className="settings-input"
+                            placeholder="Link Suffix (optional)"
+                            value={button.settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                            onChange={(e) => {
+                              const newBlocks = [...template.blocks];
+                              newBlocks[index].buttons[buttonIndex].settings.linkSuffix = e.target.value;
                               setTemplate({ ...template, blocks: newBlocks });
                             }}
                           />
@@ -476,7 +501,7 @@ const BlockRenderer = ({
                     <tr>
                       <td width="50%">
                         {block.columns[0].settings?.linkUrl ? (
-                          <a href={block.columns[0].settings.linkUrl} target="_blank" rel="noopener noreferrer">
+                          <a href={`${block.columns[0].settings.linkUrl}${block.columns[0].settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`} target="_blank" rel="noopener noreferrer">
                             <img
                               src={block.columns[0].content}
                               alt={block.columns[0].settings?.altText || ''}
@@ -535,6 +560,17 @@ const BlockRenderer = ({
                             <input
                               type="text"
                               className="settings-input"
+                              placeholder="Link Suffix (optional)"
+                              value={block.columns[0].settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                              onChange={(e) => {
+                                const newBlocks = [...template.blocks];
+                                newBlocks[index].columns[0].settings.linkSuffix = e.target.value;
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                            <input
+                              type="text"
+                              className="settings-input"
                               placeholder="Link Label (optional)"
                               value={block.columns[0].settings?.linkLabel || ''}
                               onChange={(e) => {
@@ -548,7 +584,7 @@ const BlockRenderer = ({
                       </td>
                       <td width="50%">
                         {block.columns[1].settings?.linkUrl ? (
-                          <a href={block.columns[1].settings.linkUrl} target="_blank" rel="noopener noreferrer">
+                          <a href={`${block.columns[1].settings.linkUrl}${block.columns[1].settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`} target="_blank" rel="noopener noreferrer">
                             <img
                               src={block.columns[1].content}
                               alt={block.columns[1].settings?.altText || ''}
@@ -607,6 +643,17 @@ const BlockRenderer = ({
                             <input
                               type="text"
                               className="settings-input"
+                              placeholder="Link Suffix (optional)"
+                              value={block.columns[1].settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                              onChange={(e) => {
+                                const newBlocks = [...template.blocks];
+                                newBlocks[index].columns[1].settings.linkSuffix = e.target.value;
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                            <input
+                              type="text"
+                              className="settings-input"
                               placeholder="Link Label (optional)"
                               value={block.columns[1].settings?.linkLabel || ''}
                               onChange={(e) => {
@@ -656,7 +703,7 @@ const BlockRenderer = ({
 
       const renderImage = () => (
         settings.imageLinkUrl ? (
-          <a href={settings.imageLinkUrl} target="_blank" rel="noopener noreferrer">
+          <a href={`${settings.imageLinkUrl}${settings?.imageLinkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`} target="_blank" rel="noopener noreferrer">
             <img
               src={block.imageUrl}
               alt={settings.altText || ''}
@@ -692,7 +739,7 @@ const BlockRenderer = ({
                             />
                             {settings.showButton && (
                               <a
-                                href={settings.buttonUrl}
+                                href={`${settings.buttonUrl}${settings?.buttonLinkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -722,7 +769,7 @@ const BlockRenderer = ({
                             />
                             {settings.showButton && (
                               <a
-                                href={settings.buttonUrl}
+                                href={`${settings.buttonUrl}${settings?.buttonLinkSuffix || '?content_type=text&creative=creative&segment=no-segment'}`}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
@@ -1029,6 +1076,15 @@ const BlockRenderer = ({
                   }
                 />
                 <input
+                  type="text"
+                  className="settings-input"
+                  placeholder="Button Link Suffix (optional)"
+                  value={settings?.buttonLinkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(index, 'buttonLinkSuffix', e.target.value)
+                  }
+                />
+                <input
                   type="color"
                   value={settings?.buttonColor}
                   onChange={(e) =>
@@ -1073,6 +1129,24 @@ const BlockRenderer = ({
                   value={settings?.altText || ''}
                   onChange={(e) =>
                     handleUpdateBlockSettings(index, 'altText', e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  className="settings-input"
+                  placeholder="Image Link URL (optional)"
+                  value={settings?.imageLinkUrl || ''}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(index, 'imageLinkUrl', e.target.value)
+                  }
+                />
+                <input
+                  type="text"
+                  className="settings-input"
+                  placeholder="Image Link Suffix (optional)"
+                  value={settings?.imageLinkSuffix || '?content_type=text&creative=creative&segment=no-segment'}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(index, 'imageLinkSuffix', e.target.value)
                   }
                 />
               </div>

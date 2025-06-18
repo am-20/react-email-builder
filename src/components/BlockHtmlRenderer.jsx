@@ -45,7 +45,7 @@ const renderBlockHtml = (block) => {
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
           <tr>
             <td style="text-align: ${settings.textAlign || 'left'};">
-              <a href="${settings.linkUrl}" _label="${settings.linkLabel || ''}">
+              <a href="${settings.linkUrl}${settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" _label="${settings.linkLabel || ''}">
                 <img src="${content}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">
               </a>
             </td>
@@ -67,7 +67,7 @@ const renderBlockHtml = (block) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
         <tr>
           <td style="text-align: ${settings.textAlign || 'center'};">
-            <a href="${settings.linkUrl}" target="_blank" rel="noopener noreferrer" _label="${settings.linkLabel || ''}">
+            <a href="${settings.linkUrl}${settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" target="_blank" rel="noopener noreferrer" _label="${settings.linkLabel || ''}">
               <img src="${settings.imageUrl}" alt="${settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
             </a>
           </td>
@@ -84,7 +84,7 @@ const renderBlockHtml = (block) => {
           <td style="text-align: center;">
             ${block.buttons.map((button, index) => `
               <div style="${buttonStyle} ${index < block.buttons.length - 1 ? gapStyle : ''}">
-                <a href="${button.settings.linkUrl || '#'}" target="_blank" rel="noopener noreferrer" _label="${button.settings.linkLabel || ''}">
+                <a href="${button.settings.linkUrl}${button.settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" target="_blank" rel="noopener noreferrer" _label="${button.settings.linkLabel || ''}">
                   <img src="${button.settings.imageUrl}" alt="${button.settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
                 </a>
               </div>
@@ -115,13 +115,13 @@ const renderBlockHtml = (block) => {
         <tr>
           <td width="50%" style="padding: 0 8px;">
             ${block.columns[0].settings?.linkUrl 
-              ? `<a href="${block.columns[0].settings.linkUrl}" _label="${block.columns[0].settings?.linkLabel || ''}"><img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+              ? `<a href="${block.columns[0].settings.linkUrl}${block.columns[0].settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" _label="${block.columns[0].settings?.linkLabel || ''}"><img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
               : `<img src="${block.columns[0].content}" alt="${block.columns[0].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
             }
           </td>
           <td width="50%" style="padding: 0 8px;">
             ${block.columns[1].settings?.linkUrl 
-              ? `<a href="${block.columns[1].settings.linkUrl}" _label="${block.columns[1].settings?.linkLabel || ''}"><img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+              ? `<a href="${block.columns[1].settings.linkUrl}${block.columns[1].settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" _label="${block.columns[1].settings?.linkLabel || ''}"><img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
               : `<img src="${block.columns[1].content}" alt="${block.columns[1].settings?.altText || ''}" style="max-width: 100%; border: 0; display: block;">`
             }
           </td>
@@ -130,7 +130,7 @@ const renderBlockHtml = (block) => {
       break;
     case 'halfText':
       const imageHtml = settings.imageLinkUrl 
-        ? `<a href="${settings.imageLinkUrl}" target="_blank" rel="noopener noreferrer"><img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+        ? `<a href="${settings.imageLinkUrl}${settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" target="_blank" rel="noopener noreferrer"><img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
         : `<img src="${block.imageUrl}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">`;
 
       const textContent = `
@@ -138,7 +138,7 @@ const renderBlockHtml = (block) => {
           ${content}
         </div>
         ${settings.showButton ? `
-          <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+          <a href="${settings.buttonUrl}${settings?.linkSuffix || '?content_type=text&creative=creative&segment=no-segment'}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
             ${settings.buttonText}
           </a>
         ` : ''}`;

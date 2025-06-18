@@ -55,6 +55,7 @@ export const initialTemplate = {
         theme: 'day',
         disclaimercolor: '#555555',
         linklabel: '99_unsubscribe_btn',
+        linksuffix: '?content_type=text&creative=creative&segment=no-segment',
         urls: {
           facebook: 'https://www.facebook.com/SamsungKazakhstan',
           instagram: 'https://www.instagram.com/samsungkz/',
