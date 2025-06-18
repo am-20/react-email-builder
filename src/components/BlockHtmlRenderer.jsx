@@ -165,6 +165,8 @@ const renderBlockHtml = (block) => {
       </table>`;
       break;
     case 'footer':
+    case 'footer_general_kz':
+    case 'footer_sendpulse':
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
@@ -182,24 +184,6 @@ const renderBlockHtml = (block) => {
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.twitter}"><img border="0" width="57" src="i/icon-x.png" alt="Twitter"></a></td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${settings.urls.linkedin}"><img border="0" width="57" src="i/icon-linkedin.png" alt="LinkedIn"></a></td>
                 <td style="width:120px;">&nbsp;</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td style="height:37px;font-size:0;background-color:${settings.canvascolor};" height="37">&nbsp;</td>
-        </tr>
-        <tr>
-          <td bgcolor="${settings.canvascolor}" style="text-align:center;padding-left:10%;padding-right:10%;" align="center" class="w100pc">
-            <h1 class="ff" style="font-size:24px;font-weight:bold;margin:0;margin-bottom:13px;color:${settings.textcolor};line-height:1;font-family:${settings.fontFamily || 'Arial, sans-serif'};">Есть вопросы?</h1>
-            <table style="margin:0;margin-left:auto;margin-right:auto;padding:0;text-align:center;color:${settings.textcolor};" cellpadding="15" cellspacing="0">
-              <tr>
-                <td valign="top" align="center" style="padding:7px">
-                  <a style="font-size:11px;color:${settings.textcolor};text-decoration:none;font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.livechat}"><img width="13" src="i/i-chat${settings.theme === 'night' ? '-white' : ''}.png" alt="чат" />&nbsp;&nbsp;Онлайн чат</a>
-                </td>
-                <td valign="top" align="center" style="padding:7px">
-                  <a style="font-size:11px;color:${settings.textcolor};text-decoration:none;font-family:${settings.fontFamily || 'Arial, sans-serif'};" href="${settings.urls.call}"><img width="13" src="i/i-call${settings.theme === 'night' ? '-white' : ''}.png" alt="Call" />&nbsp;&nbsp;Call Center 7700</a>
-                </td>
               </tr>
             </table>
           </td>

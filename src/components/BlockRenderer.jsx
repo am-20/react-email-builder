@@ -60,7 +60,7 @@ const BlockRenderer = ({
 
   const [vertical] = (settings?.padding || '10px').split(' ');
   const isImageOrSpacer = block.type === 'image' || block.type === 'spacer';
-  const isFooter = block.type === 'footer';
+  const isFooter = block.type === 'footer' || block.type === 'footer_general_kz' || block.type === 'footer_sendpulse';
 
   const blockStyle = {
     backgroundColor: settings?.backgroundColor || 'white',
@@ -750,6 +750,8 @@ const BlockRenderer = ({
       );
       break;
     case 'footer':
+    case 'footer_general_kz':
+    case 'footer_sendpulse':
       blockContent = (
         <table role="presentation" width="100%" cellSpacing="0" cellPadding="0" border="0">
           <tbody>
@@ -799,30 +801,6 @@ const BlockRenderer = ({
               </td>
             </tr>
             <tr>
-              <td style={{ height: '37px', fontSize: '0', backgroundColor: settings?.canvascolor }}>&nbsp;</td>
-            </tr>
-            <tr>
-              <td style={{ textAlign: 'center', paddingLeft: '10%', paddingRight: '10%', backgroundColor: settings?.canvascolor }} align="center" className="w100pc">
-                <h1 className="ff" style={{ fontSize: '24px', fontWeight: 'bold', margin: '0', marginBottom: '13px', color: settings?.textcolor, lineHeight: '1' }}>Есть вопросы?</h1>
-                <table style={{ margin: '0', marginLeft: 'auto', marginRight: 'auto', padding: '0', textAlign: 'center', color: settings?.textcolor }} cellPadding="15" cellSpacing="0">
-                  <tbody>
-                    <tr>
-                      <td valign="top" align="center" style={{ padding: '7px' }}>
-                        <a style={{ fontSize: '11px', color: settings?.textcolor, textDecoration: 'none' }} href={settings?.urls?.livechat}>
-                          <img width="13" src={getImagePath(settings?.theme === 'night' ? 'i-chat-white.png' : 'i-chat.png')} alt="чат" />&nbsp;&nbsp;Онлайн чат
-                        </a>
-                      </td>
-                      <td valign="top" align="center" style={{ padding: '7px' }}>
-                        <a style={{ fontSize: '11px', color: settings?.textcolor, textDecoration: 'none' }} href={settings?.urls?.call}>
-                          <img width="13" src={getImagePath(socialIcons.call)} alt="Call" />&nbsp;&nbsp;Call Center 7700
-                        </a>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-            <tr>
               <td style={{ backgroundColor: settings?.canvascolor }} align="center">
                 <table style={{ width: '500px', margin: '0', padding: '0', textAlign: 'center', color: settings?.disclaimercolor }} cellPadding="0" cellSpacing="0" border="0">
                   <tbody>
@@ -858,53 +836,6 @@ const BlockRenderer = ({
           </tbody>
         </table>
       );
-
-      if (isActive) {
-        blockContent = (
-          <>
-            {blockContent}
-            <div className="block-settings">
-              <div className="control-flex margin-bottom-small">
-                <input
-                  type="color"
-                  value={settings?.canvascolor || '#FFFFFF'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'canvascolor', e.target.value)}
-                  className="color-input"
-                  placeholder="Canvas Color"
-                />
-                <input
-                  type="color"
-                  value={settings?.textcolor || '#000000'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'textcolor', e.target.value)}
-                  className="color-input"
-                  placeholder="Text Color"
-                />
-                <input
-                  type="color"
-                  value={settings?.disclaimercolor || '#555555'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'disclaimercolor', e.target.value)}
-                  className="color-input"
-                  placeholder="Disclaimer Color"
-                />
-                <select
-                  className="control-select"
-                  value={settings?.theme || 'day'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'theme', e.target.value)}>
-                  <option value="day">Day Theme</option>
-                  <option value="night">Night Theme</option>
-                </select>
-                <input
-                  type="text"
-                  className="settings-input"
-                  placeholder="Link Label"
-                  value={settings?.linklabel || ''}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'linklabel', e.target.value)}
-                />
-              </div>
-            </div>
-          </>
-        );
-      }
       break;
     default:
       blockContent = <div>Unknown block type</div>;
