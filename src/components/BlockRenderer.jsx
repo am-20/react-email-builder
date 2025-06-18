@@ -1,8 +1,6 @@
 import React from 'react';
 import { GripVertical, Trash2, Copy } from 'lucide-react';
-import iconImage from '../assets/global/icon.png';
-import headerImage from '../assets/templates/example-template/header.png';
-import bannerImage from '../assets/templates/example-template/banner.jpg';
+import { getImagePath, socialIcons } from '../utils/imageUtils';
 
 const BlockRenderer = ({
   block,
@@ -766,32 +764,32 @@ const BlockRenderer = ({
                       <td style={{ width: '120px' }}>&nbsp;</td>
                       <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
                         <a title="Samsung Kazakhstan" href={settings?.urls?.facebook}>
-                          <img border="0" width="57" src={iconImage} alt="Facebook" />
+                          <img border="0" width="57" src={getImagePath(socialIcons.facebook)} alt="Facebook" />
                         </a>
                       </td>
                       <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
                         <a title="Samsung Kazakhstan" href={settings?.urls?.instagram}>
-                          <img border="0" width="57" src={iconImage} alt="Instagram" />
+                          <img border="0" width="57" src={getImagePath(socialIcons.instagram)} alt="Instagram" />
                         </a>
                       </td>
                       <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
                         <a title="Samsung Kazakhstan" href={settings?.urls?.vkontakte}>
-                          <img border="0" width="57" src={iconImage} alt="VK" />
+                          <img border="0" width="57" src={getImagePath(socialIcons.vkontakte)} alt="VK" />
                         </a>
                       </td>
                       <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
                         <a title="Samsung Kazakhstan" href={settings?.urls?.youtube}>
-                          <img border="0" width="57" src={iconImage} alt="Youtube" />
+                          <img border="0" width="57" src={getImagePath(socialIcons.youtube)} alt="Youtube" />
                         </a>
                       </td>
                       <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
                         <a title="Samsung Kazakhstan" href={settings?.urls?.twitter}>
-                          <img border="0" width="57" src={iconImage} alt="Twitter" />
+                          <img border="0" width="57" src={getImagePath(socialIcons.twitter)} alt="Twitter" />
                         </a>
                       </td>
                       <td className="paddLR10px" style={{ paddingLeft: '16px', paddingRight: '16px' }}>
                         <a title="Samsung Kazakhstan" href={settings?.urls?.linkedin}>
-                          <img border="0" width="57" src={iconImage} alt="LinkedIn" />
+                          <img border="0" width="57" src={getImagePath(socialIcons.linkedin)} alt="LinkedIn" />
                         </a>
                       </td>
                       <td style={{ width: '120px' }}>&nbsp;</td>
@@ -811,12 +809,12 @@ const BlockRenderer = ({
                     <tr>
                       <td valign="top" align="center" style={{ padding: '7px' }}>
                         <a style={{ fontSize: '11px', color: settings?.textcolor, textDecoration: 'none' }} href={settings?.urls?.livechat}>
-                          <img width="13" src={iconImage} alt="чат" />&nbsp;&nbsp;Онлайн чат
+                          <img width="13" src={getImagePath(settings?.theme === 'night' ? 'i-chat-white.png' : 'i-chat.png')} alt="чат" />&nbsp;&nbsp;Онлайн чат
                         </a>
                       </td>
                       <td valign="top" align="center" style={{ padding: '7px' }}>
                         <a style={{ fontSize: '11px', color: settings?.textcolor, textDecoration: 'none' }} href={settings?.urls?.call}>
-                          <img width="13" src={iconImage} alt="Call" />&nbsp;&nbsp;Call Center 7700
+                          <img width="13" src={getImagePath(socialIcons.call)} alt="Call" />&nbsp;&nbsp;Call Center 7700
                         </a>
                       </td>
                     </tr>

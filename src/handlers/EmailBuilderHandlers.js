@@ -271,25 +271,26 @@ export const handleUpdateTemplateSetting = (setting, value, template, setTemplat
 
 // Save template handler
 export const handleSaveTemplate = (generateHtmlOutput) => {
-  // Get the HTML output
   const htmlOutput = generateHtmlOutput();
   
-  // Create a blob with the HTML data
+  // Create a blob with the HTML content
   const blob = new Blob([htmlOutput], { type: 'text/html' });
   
   // Create a download link
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'email-template.html';
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
   
-  // Trigger download
-  document.body.appendChild(a);
-  a.click();
+  // Set the filename with timestamp
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  link.download = `email-template-${timestamp}.html`;
   
-  // Cleanup
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  // Append to body, click, and remove
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  // Clean up the URL object
+  URL.revokeObjectURL(link.href);
 };
 
 // Drag and drop handlers
