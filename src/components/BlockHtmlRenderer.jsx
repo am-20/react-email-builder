@@ -68,10 +68,9 @@ const renderBlockHtml = (block) => {
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
           <tr>
             <td style="text-align: ${settings.textAlign || 'left'};">
-              <a href="${settings.linkUrl}${
-          settings?.linkSuffix ||
-          '?content_type=text&creative=creative&segment=no-segment'
-        }" _label="${settings.linkLabel || ''}">
+              <a href="${settings.linkUrl}" _label="${
+          settings.linkLabel || ''
+        }">
                 <img src="${content}" alt="${
           settings.altText || ''
         }" style="max-width: 100%; border: 0; display: block;">
@@ -97,10 +96,9 @@ const renderBlockHtml = (block) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
         <tr>
           <td style="text-align: ${settings.textAlign || 'center'};">
-            <a href="${settings.linkUrl}${
-        settings?.linkSuffix ||
-        '?content_type=text&creative=creative&segment=no-segment'
-      }" target="_blank" rel="noopener noreferrer" _label="${
+            <a href="${
+              settings.linkUrl
+            }" target="_blank" rel="noopener noreferrer" _label="${
         settings.linkLabel || ''
       }">
               <img src="${settings.imageUrl}" alt="${
@@ -129,9 +127,8 @@ const renderBlockHtml = (block) => {
               <div style="${buttonStyle} ${
                   index < block.buttons.length - 1 ? gapStyle : ''
                 }">
-                <a href="${button.settings.linkUrl}${
-                  button.settings?.linkSuffix ||
-                  '?content_type=text&creative=creative&segment=no-segment'
+                <a href="${
+                  button.settings.linkUrl
                 }" target="_blank" rel="noopener noreferrer" _label="${
                   button.settings.linkLabel || ''
                 }">
@@ -171,10 +168,7 @@ const renderBlockHtml = (block) => {
           <td width="50%" style="padding: 0 8px;">
             ${
               block.columns[0].settings?.linkUrl
-                ? `<a href="${block.columns[0].settings.linkUrl}${
-                    block.columns[0].settings?.linkSuffix ||
-                    '?content_type=text&creative=creative&segment=no-segment'
-                  }" _label="${
+                ? `<a href="${block.columns[0].settings.linkUrl}" _label="${
                     block.columns[0].settings?.linkLabel || ''
                   }"><img src="${block.columns[0].content}" alt="${
                     block.columns[0].settings?.altText || ''
@@ -187,10 +181,7 @@ const renderBlockHtml = (block) => {
           <td width="50%" style="padding: 0 8px;">
             ${
               block.columns[1].settings?.linkUrl
-                ? `<a href="${block.columns[1].settings.linkUrl}${
-                    block.columns[1].settings?.linkSuffix ||
-                    '?content_type=text&creative=creative&segment=no-segment'
-                  }" _label="${
+                ? `<a href="${block.columns[1].settings.linkUrl}" _label="${
                     block.columns[1].settings?.linkLabel || ''
                   }"><img src="${block.columns[1].content}" alt="${
                     block.columns[1].settings?.altText || ''
@@ -205,9 +196,8 @@ const renderBlockHtml = (block) => {
       break;
     case 'halfText': {
       const imageHtml = settings.imageLinkUrl
-        ? `<a href="${settings.imageLinkUrl}${
-            settings?.linkSuffix ||
-            '?content_type=text&creative=creative&segment=no-segment'
+        ? `<a href="${
+            settings.imageLinkUrl
           }" target="_blank" rel="noopener noreferrer"><img src="${
             block.imageUrl
           }" alt="${
@@ -228,14 +218,7 @@ const renderBlockHtml = (block) => {
         ${
           settings.showButton
             ? `
-          <a href="${settings.buttonUrl}${
-                settings?.linkSuffix ||
-                '?content_type=text&creative=creative&segment=no-segment'
-              }" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${
-                settings.buttonColor
-              }; color: ${
-                settings.buttonTextColor
-              }; text-decoration: none; border-radius: 4px; margin-top: 16px;">
+          <a href="${settings.buttonUrl}" target="_blank" rel="noopener noreferrer" style="display: inline-block; padding: 8px 16px; background-color: ${settings.buttonColor}; color: ${settings.buttonTextColor}; text-decoration: none; border-radius: 4px; margin-top: 16px;">
             ${settings.buttonText}
           </a>
         `
@@ -309,6 +292,47 @@ const renderBlockHtml = (block) => {
                 }"><img border="0" width="57" src="i/icon-linkedin.png" alt="LinkedIn"></a></td>
                 <td style="width:120px;">&nbsp;</td>
               </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td bgcolor="${
+            settings.canvascolor
+          }" align="center" style="text-align:center;padding-top:16px;padding-left:10%;padding-right:10%;background-color: ${
+        settings.canvascolor
+      };">
+            <h1 style="font-family:${
+              settings.fontFamily || 'Arial, sans-serif'
+            };font-size:24px;font-weight:bold;margin:0;margin-bottom:13px;color:${
+        settings.textcolor
+      };line-height:1;">Есть вопросы?</h1>
+            <table style="margin:0;margin-left:auto;margin-right:auto;padding:0;text-align:center;color:${
+              settings.textcolor
+            };" cellpadding="15" cellspacing="0">
+                <tbody>
+                  <tr>
+                    <td valign="top" align="center" style="padding:7px">
+                      <a style="font-family:${
+                        settings.fontFamily || 'Arial, sans-serif'
+                      };font-size:11px;color:${
+        settings.textcolor
+      };text-decoration:none;" href="${settings.urls.livechat}">
+                        <img width="13" src="" alt="chat"/> 
+                        &nbsp;&nbsp;Онлайн чат
+                      </a>
+                    </td>
+                    <td valign="top" align="center" style="padding:7px">
+                      <a style="font-family:${
+                        settings.fontFamily || 'Arial, sans-serif'
+                      };font-size:11px;color:${
+        settings.textcolor
+      };text-decoration:none;" href="${settings.urls.call}">
+                        <img width="13" src="" alt="chat"/> 
+                        &nbsp;&nbsp;Call Center 7700
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
             </table>
           </td>
         </tr>

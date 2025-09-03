@@ -6,6 +6,7 @@ export const initialTemplate = {
   id: `template-${Date.now()}`,
   title: 'Untitled Email Template',
   titleLinkLabel: '',
+  titleLinkLabelUnsub: '',
   blocks: [
     {
       id: 'header-1',
@@ -50,29 +51,30 @@ export const initialTemplate = {
       id: 'footer-1',
       type: 'footer',
       settings: {
-        canvascolor: '#FFFFFF',
+        canvascolor: '#f5f5f5',
         textcolor: '#000000',
         theme: 'day',
         disclaimercolor: '#555555',
-        linklabel: '99_unsubscribe_btn',
-        linksuffix: '?content_type=text&creative=creative&segment=no-segment',
+        linklabel: '',
         urls: {
           facebook: 'https://www.facebook.com/SamsungKazakhstan',
           instagram: 'https://www.instagram.com/samsungkz/',
           vkontakte: 'https://vk.com/samsungkazakhstan',
           youtube: 'https://www.youtube.com/user/SamsungKZ',
           twitter: 'https://twitter.com/SamsungKZ',
-          linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
-          livechat: 'https://www.samsung.com/kz_ru/support/?content_type=text&creative=creative&segment=no-segment',
-          email: 'https://www.samsung.com/kz_ru/support/email/?content_type=text&creative=creative&segment=no-segment',
-          hotline: 'https://www.samsung.com/kz_ru/info/contactus/?content_type=text&creative=creative&segment=no-segment',
-          call: 'tel:7700',
-          optout: 'https://www.samsung.com/kz_ru/unsubscribe',
-          privacy: 'https://www.samsung.com/kz_ru/info/privacy/?content_type=text&creative=creative&segment=no-segment',
-          legal: 'https://www.samsung.com/kz_ru/info/legal/?content_type=text&creative=creative&segment=no-segment'
-        }
-      }
-    }
+          linkedin:
+            'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
+          livechat: 'https://www.samsung.com/kz_ru/support/',
+          email: 'https://www.samsung.com/kz_ru/support/email/',
+          hotline: 'https://www.samsung.com/kz_ru/info/contactus/',
+          call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
+          optout:
+            "<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru",
+          privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
+          legal: 'https://www.samsung.com/kz_ru/info/legal/',
+        },
+      },
+    },
   ],
 };
 
@@ -88,6 +90,14 @@ export const components = [
   { type: 'columns', label: '2 Columns', icon: <Grid size={16} /> },
   { type: 'halfText', label: 'Half Text', icon: <FileText size={16} /> },
   { type: 'footer', label: 'General Footer RU', icon: <Layout size={16} /> },
-  { type: 'footer_general_kz', label: 'Footer General KZ', icon: <Layout size={16} /> },
-  { type: 'footer_sendpulse', label: 'Footer Sendpulse', icon: <Layout size={16} /> },
-]; 
+  {
+    type: 'footer_general_kz',
+    label: 'Footer General KZ',
+    icon: <Layout size={16} />,
+  },
+  {
+    type: 'footer_sendpulse',
+    label: 'Footer Sendpulse',
+    icon: <Layout size={16} />,
+  },
+];

@@ -64,7 +64,9 @@ const EmailBuilder = () => {
               key={component.type}
               className='component-item'
               draggable
-              onDragStart={(e) => handleDragStart(e, component, true, setDraggedItem)}>
+              onDragStart={(e) =>
+                handleDragStart(e, component, true, setDraggedItem)
+              }>
               <div className='component-icon'>{component.icon}</div>
               {component.label}
             </div>
@@ -80,22 +82,53 @@ const EmailBuilder = () => {
                 type='text'
                 value={template.title}
                 onChange={(e) =>
-                  handleUpdateTemplateSetting('title', e.target.value, template, setTemplate)
+                  handleUpdateTemplateSetting(
+                    'title',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
                 }
                 className='settings-input full-width'
                 placeholder='Enter template title'
               />
             </div>
             <div className='setting-item'>
-              <label className='setting-label'>Title Link Label (optional)</label>
+              <label className='setting-label'>
+                Title Link Label (optional)
+              </label>
               <input
                 type='text'
                 value={template.titleLinkLabel}
                 onChange={(e) =>
-                  handleUpdateTemplateSetting('titleLinkLabel', e.target.value, template, setTemplate)
+                  handleUpdateTemplateSetting(
+                    'titleLinkLabel',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
                 }
                 className='settings-input full-width'
                 placeholder='Enter link label for the title'
+              />
+            </div>
+            <div className='setting-item'>
+              <label className='setting-label'>
+                Title Link Label Unsub (optional)
+              </label>
+              <input
+                type='text'
+                value={template.titleLinkLabelUnsub}
+                onChange={(e) =>
+                  handleUpdateTemplateSetting(
+                    'titleLinkLabelUnsub',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
+                }
+                className='settings-input full-width'
+                placeholder='Enter link label for unsubcription'
               />
             </div>
           </div>
@@ -126,7 +159,13 @@ const EmailBuilder = () => {
               <Code size={16} />
               <span>HTML</span>
             </button>
-            <button className='toolbar-button primary' onClick={() => handleSaveTemplate(() => generateHtmlOutput(template, renderBlockHtml))}>
+            <button
+              className='toolbar-button primary'
+              onClick={() =>
+                handleSaveTemplate(() =>
+                  generateHtmlOutput(template, renderBlockHtml)
+                )
+              }>
               <Save size={16} />
               <span>Save</span>
             </button>
@@ -147,7 +186,9 @@ const EmailBuilder = () => {
                   Close
                 </button>
               </div>
-              <pre className='code-output'>{generateHtmlOutput(template, renderBlockHtml)}</pre>
+              <pre className='code-output'>
+                {generateHtmlOutput(template, renderBlockHtml)}
+              </pre>
             </div>
           ) : (
             <div
@@ -163,7 +204,16 @@ const EmailBuilder = () => {
               onDrop={(e) => {
                 e.preventDefault();
                 // drop at the last hover position (or at end)
-                handleDrop(e, dragOverIndex ?? template.blocks.length, draggedItem, template, setTemplate, setDraggedItem, setDragOverIndex, createNewBlock);
+                handleDrop(
+                  e,
+                  dragOverIndex ?? template.blocks.length,
+                  draggedItem,
+                  template,
+                  setTemplate,
+                  setDraggedItem,
+                  setDragOverIndex,
+                  createNewBlock
+                );
                 setDragOverIndex(null);
               }}
               onDragLeave={(e) => {
@@ -187,16 +237,55 @@ const EmailBuilder = () => {
                     settings={block.settings}
                     template={template}
                     setTemplate={setTemplate}
-                    handleDragStart={(e) => handleDragStart(e, block, false, setDraggedItem)}
-                    handleDragOver={(e) => handleDragOver(e, index, setDragOverIndex)}
-                    handleDrop={(e) => handleDrop(e, index, draggedItem, template, setTemplate, setDraggedItem, setDragOverIndex, createNewBlock)}
+                    handleDragStart={(e) =>
+                      handleDragStart(e, block, false, setDraggedItem)
+                    }
+                    handleDragOver={(e) =>
+                      handleDragOver(e, index, setDragOverIndex)
+                    }
+                    handleDrop={(e) =>
+                      handleDrop(
+                        e,
+                        index,
+                        draggedItem,
+                        template,
+                        setTemplate,
+                        setDraggedItem,
+                        setDragOverIndex,
+                        createNewBlock
+                      )
+                    }
                     setActiveBlockId={setActiveBlockId}
                     setHoveredBlockId={setHoveredBlockId}
                     setDragOverIndex={setDragOverIndex}
-                    handleDuplicateBlock={(index) => handleDuplicateBlock(index, template, setTemplate)}
-                    handleDeleteBlock={(index) => handleDeleteBlock(index, template, setTemplate, setActiveBlockId)}
-                    handleUpdateBlockContent={(index, content) => handleUpdateBlockContent(index, content, template, setTemplate)}
-                    handleUpdateBlockSettings={(index, setting, value) => handleUpdateBlockSettings(index, setting, value, template, setTemplate)}
+                    handleDuplicateBlock={(index) =>
+                      handleDuplicateBlock(index, template, setTemplate)
+                    }
+                    handleDeleteBlock={(index) =>
+                      handleDeleteBlock(
+                        index,
+                        template,
+                        setTemplate,
+                        setActiveBlockId
+                      )
+                    }
+                    handleUpdateBlockContent={(index, content) =>
+                      handleUpdateBlockContent(
+                        index,
+                        content,
+                        template,
+                        setTemplate
+                      )
+                    }
+                    handleUpdateBlockSettings={(index, setting, value) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        setting,
+                        value,
+                        template,
+                        setTemplate
+                      )
+                    }
                   />
                 </React.Fragment>
               ))}
@@ -206,7 +295,18 @@ const EmailBuilder = () => {
                 <div
                   className='empty-placeholder'
                   onDragOver={(e) => e.preventDefault()}
-                  onDrop={(e) => handleDrop(e, 0, draggedItem, template, setTemplate, setDraggedItem, setDragOverIndex, createNewBlock)}>
+                  onDrop={(e) =>
+                    handleDrop(
+                      e,
+                      0,
+                      draggedItem,
+                      template,
+                      setTemplate,
+                      setDraggedItem,
+                      setDragOverIndex,
+                      createNewBlock
+                    )
+                  }>
                   Drag components here
                 </div>
               )}

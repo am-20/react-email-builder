@@ -166,10 +166,7 @@ const BlockRenderer = ({
               <td style={{ textAlign: settings?.textAlign || 'left' }}>
                 {settings?.linkUrl ? (
                   <a
-                    href={`${settings.linkUrl}${
-                      settings?.linkSuffix ||
-                      '?content_type=text&creative=creative&segment=no-segment'
-                    }`}
+                    href={`${settings.linkUrl}`}
                     target='_blank'
                     rel='noopener noreferrer'>
                     <img
@@ -242,22 +239,6 @@ const BlockRenderer = ({
                             <input
                               type='text'
                               className='settings-input'
-                              placeholder='Link Suffix (optional)'
-                              value={
-                                settings?.linkSuffix ||
-                                '?content_type=text&creative=creative&segment=no-segment'
-                              }
-                              onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'linkSuffix',
-                                  e.target.value
-                                )
-                              }
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
                               placeholder='Link Label (optional)'
                               value={settings?.linkLabel || ''}
                               onChange={(e) =>
@@ -292,10 +273,7 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: settings.textAlign || 'center' }}>
                 <a
-                  href={`${settings.linkUrl}${
-                    settings?.linkSuffix ||
-                    '?content_type=text&creative=creative&segment=no-segment'
-                  }`}
+                  href={`${settings.linkUrl}`}
                   target='_blank'
                   rel='noopener noreferrer'
                   style={{ display: 'inline-block' }}>
@@ -375,22 +353,6 @@ const BlockRenderer = ({
                     <input
                       type='text'
                       className='settings-input'
-                      placeholder='Link Suffix (optional)'
-                      value={
-                        settings?.linkSuffix ||
-                        '?content_type=text&creative=creative&segment=no-segment'
-                      }
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'linkSuffix',
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
                       placeholder='Link Label (optional)'
                       value={settings.linkLabel || ''}
                       onChange={(e) =>
@@ -431,10 +393,7 @@ const BlockRenderer = ({
                   {block.buttons.map((button, buttonIndex) => (
                     <div key={buttonIndex}>
                       <a
-                        href={`${button.settings.linkUrl}${
-                          button.settings?.linkSuffix ||
-                          '?content_type=text&creative=creative&segment=no-segment'
-                        }`}
+                        href={`${button.settings.linkUrl}`}
                         target='_blank'
                         rel='noopener noreferrer'
                         style={{ display: 'inline-block' }}>
@@ -498,22 +457,7 @@ const BlockRenderer = ({
                               setTemplate({ ...template, blocks: newBlocks });
                             }}
                           />
-                          <input
-                            type='text'
-                            className='settings-input'
-                            placeholder='Link Suffix (optional)'
-                            value={
-                              button.settings?.linkSuffix ||
-                              '?content_type=text&creative=creative&segment=no-segment'
-                            }
-                            onChange={(e) => {
-                              const newBlocks = [...template.blocks];
-                              newBlocks[index].buttons[
-                                buttonIndex
-                              ].settings.linkSuffix = e.target.value;
-                              setTemplate({ ...template, blocks: newBlocks });
-                            }}
-                          />
+
                           <input
                             type='text'
                             className='settings-input'
@@ -708,10 +652,7 @@ const BlockRenderer = ({
                       <td width='50%'>
                         {block.columns[0].settings?.linkUrl ? (
                           <a
-                            href={`${block.columns[0].settings.linkUrl}${
-                              block.columns[0].settings?.linkSuffix ||
-                              '?content_type=text&creative=creative&segment=no-segment'
-                            }`}
+                            href={`${block.columns[0].settings.linkUrl}`}
                             target='_blank'
                             rel='noopener noreferrer'>
                             <img
@@ -772,23 +713,7 @@ const BlockRenderer = ({
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link Suffix (optional)'
-                              value={
-                                block.columns[0].settings?.linkSuffix ||
-                                '?content_type=text&creative=creative&segment=no-segment'
-                              }
-                              onChange={(e) => {
-                                const newBlocks = [...template.blocks];
-                                newBlocks[
-                                  index
-                                ].columns[0].settings.linkSuffix =
-                                  e.target.value;
-                                setTemplate({ ...template, blocks: newBlocks });
-                              }}
-                            />
+
                             <input
                               type='text'
                               className='settings-input'
@@ -807,10 +732,7 @@ const BlockRenderer = ({
                       <td width='50%'>
                         {block.columns[1].settings?.linkUrl ? (
                           <a
-                            href={`${block.columns[1].settings.linkUrl}${
-                              block.columns[1].settings?.linkSuffix ||
-                              '?content_type=text&creative=creative&segment=no-segment'
-                            }`}
+                            href={`${block.columns[1].settings.linkUrl}`}
                             target='_blank'
                             rel='noopener noreferrer'>
                             <img
@@ -871,23 +793,7 @@ const BlockRenderer = ({
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link Suffix (optional)'
-                              value={
-                                block.columns[1].settings?.linkSuffix ||
-                                '?content_type=text&creative=creative&segment=no-segment'
-                              }
-                              onChange={(e) => {
-                                const newBlocks = [...template.blocks];
-                                newBlocks[
-                                  index
-                                ].columns[1].settings.linkSuffix =
-                                  e.target.value;
-                                setTemplate({ ...template, blocks: newBlocks });
-                              }}
-                            />
+
                             <input
                               type='text'
                               className='settings-input'
@@ -942,10 +848,7 @@ const BlockRenderer = ({
       const renderImage = () =>
         settings.imageLinkUrl ? (
           <a
-            href={`${settings.imageLinkUrl}${
-              settings?.imageLinkSuffix ||
-              '?content_type=text&creative=creative&segment=no-segment'
-            }`}
+            href={`${settings.imageLinkUrl}`}
             target='_blank'
             rel='noopener noreferrer'>
             <img
@@ -1005,10 +908,7 @@ const BlockRenderer = ({
                             />
                             {settings.showButton && (
                               <a
-                                href={`${settings.buttonUrl}${
-                                  settings?.buttonLinkSuffix ||
-                                  '?content_type=text&creative=creative&segment=no-segment'
-                                }`}
+                                href={`${settings.buttonUrl}`}
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 style={{
@@ -1048,10 +948,7 @@ const BlockRenderer = ({
                             />
                             {settings.showButton && (
                               <a
-                                href={`${settings.buttonUrl}${
-                                  settings?.buttonLinkSuffix ||
-                                  '?content_type=text&creative=creative&segment=no-segment'
-                                }`}
+                                href={`${settings.buttonUrl}`}
                                 target='_blank'
                                 rel='noopener noreferrer'
                                 style={{
@@ -1082,7 +979,607 @@ const BlockRenderer = ({
       break;
     }
     case 'footer':
+      blockContent = (
+        <table
+          role='presentation'
+          width='100%'
+          cellSpacing='0'
+          cellPadding='0'
+          border='0'>
+          <tbody>
+            <tr>
+              <td
+                style={{
+                  height: '50px',
+                  fontSize: '0',
+                  backgroundColor: settings?.canvascolor,
+                }}>
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{ backgroundColor: settings?.canvascolor }}
+                align='center'>
+                <table
+                  className='w100pc'
+                  style={{ width: '100%', margin: '0', padding: '0' }}
+                  cellPadding='0'
+                  cellSpacing='0'>
+                  <tbody>
+                    <tr>
+                      <td style={{ width: '120px' }}>&nbsp;</td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.facebook}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.facebook)}
+                            alt='Facebook'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.instagram}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.instagram)}
+                            alt='Instagram'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.vkontakte}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.vkontakte)}
+                            alt='VK'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.youtube}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.youtube)}
+                            alt='Youtube'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.twitter}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.twitter)}
+                            alt='Twitter'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.linkedin}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.linkedin)}
+                            alt='LinkedIn'
+                          />
+                        </a>
+                      </td>
+                      <td style={{ width: '120px' }}>&nbsp;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  backgroundColor: settings?.canvascolor,
+                  paddingLeft: '10%',
+                  paddingRight: '10%',
+                  paddingTop: '16px',
+                }}
+                align='center'>
+                <h1
+                  style={{
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    margin: '0',
+                    marginBottom: '13px',
+                    color: settings?.textcolor,
+                    lineHeight: '1',
+                  }}>
+                  Есть вопросы?
+                </h1>
+                <table
+                  style={{
+                    margin: '0',
+                    padding: '0',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    textAlign: 'center',
+                    color: settings?.textcolor,
+                  }}
+                  cellPadding='15'
+                  cellSpacing='0'>
+                  <tbody>
+                    <tr>
+                      <td align='center' style={{ padding: '7px' }}>
+                        <a
+                          href={settings?.urls?.livechat}
+                          style={{
+                            fontSize: '11px',
+                            color: settings?.textcolor,
+                            textDecoration: 'none',
+                          }}>
+                          <img
+                            src={
+                              settings?.theme === 'night'
+                                ? getImagePath(socialIcons.livechat) + '-white'
+                                : getImagePath(socialIcons.livechat)
+                            }
+                            alt='chat'
+                            width='13'
+                          />
+                          &nbsp;&nbsp;Онлайн чат
+                        </a>
+                      </td>
+                      <td align='center' style={{ padding: '7px' }}>
+                        <a
+                          href={settings?.urls?.call}
+                          style={{
+                            fontSize: '11px',
+                            color: settings?.textcolor,
+                            textDecoration: 'none',
+                          }}>
+                          <img
+                            src={
+                              settings?.theme === 'night'
+                                ? getImagePath(socialIcons.call) + '-white'
+                                : getImagePath(socialIcons.call)
+                            }
+                            alt='call'
+                          />
+                          &nbsp;&nbsp;Call Center 7700
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style={{ backgroundColor: settings?.canvascolor }}
+                align='center'>
+                <table
+                  style={{
+                    width: '500px',
+                    margin: '0',
+                    padding: '0',
+                    textAlign: 'center',
+                    color: settings?.disclaimercolor,
+                  }}
+                  cellPadding='0'
+                  cellSpacing='0'
+                  border='0'>
+                  <tbody>
+                    <tr>
+                      <td style={{ height: '26px' }}>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          fontSize: '14px',
+                          color: settings?.disclaimercolor,
+                        }}>
+                        Вы получили это письмо, потому что подписались
+                        на&nbsp;рассылку Samsung. Не отвечайте на&nbsp;данное
+                        письмо. Оно является автоматической рассылкой. Чтобы
+                        отказаться от получения наших рассылок, пожалуйста,
+                        перейдите по&nbsp;этой{' '}
+                        <a
+                          style={{
+                            textDecoration: 'underline',
+                            color: settings?.disclaimercolor,
+                          }}
+                          href={settings?.urls?.optout}
+                          _type='optout'
+                          _label={settings?.linklabel}>
+                          ссылке
+                        </a>
+                        .<br />
+                        <br />©{new Date().getFullYear()} Samsung Electronics
+                        Co., Ltd. Все права защищены.
+                        <br />
+                        ТОО &laquo;SAMSUNG ELECTRONICS CENTRAL EURASIA&raquo;
+                        <br />
+                        (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)
+                        <br />
+                        Республика Казахстан, г. Алматы, 050000, улица
+                        Желтоксан, д. 115,
+                        <br />
+                        Торгово-офисный центр &laquo;Kaisar Plaza&raquo;, 3
+                        этаж.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '24px' }} height='24'>
+                        &nbsp;
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          height: '24px',
+                          color: settings?.disclaimercolor,
+                          fontSize: '14px',
+                        }}
+                        height='24'>
+                        <a
+                          style={{
+                            fontSize: '14px',
+                            color: settings?.textcolor,
+                            textDecoration: 'underline',
+                          }}
+                          href={settings?.urls?.legal}>
+                          Правовая информация
+                        </a>
+                        &nbsp;|&nbsp;
+                        <a
+                          style={{
+                            fontSize: '14px',
+                            color: settings?.textcolor,
+                            textDecoration: 'underline',
+                          }}
+                          href={settings?.urls?.privacy}>
+                          Политика конфиденциальности
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '115px' }} height='115'>
+                        &nbsp;
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+      break;
+
     case 'footer_general_kz':
+      blockContent = (
+        <table
+          role='presentation'
+          width='100%'
+          cellSpacing='0'
+          cellPadding='0'
+          border='0'>
+          <tbody>
+            <tr>
+              <td
+                style={{
+                  height: '50px',
+                  fontSize: '0',
+                  backgroundColor: settings?.canvascolor,
+                }}>
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{ backgroundColor: settings?.canvascolor }}
+                align='center'>
+                <table
+                  className='w100pc'
+                  style={{ width: '100%', margin: '0', padding: '0' }}
+                  cellPadding='0'
+                  cellSpacing='0'>
+                  <tbody>
+                    <tr>
+                      <td style={{ width: '120px' }}>&nbsp;</td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.facebook}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.facebook)}
+                            alt='Facebook'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.instagram}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.instagram)}
+                            alt='Instagram'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.vkontakte}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.vkontakte)}
+                            alt='VK'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.youtube}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.youtube)}
+                            alt='Youtube'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.twitter}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.twitter)}
+                            alt='Twitter'
+                          />
+                        </a>
+                      </td>
+                      <td
+                        className='paddLR10px'
+                        style={{ paddingLeft: '16px', paddingRight: '16px' }}>
+                        <a
+                          title='Samsung Kazakhstan'
+                          href={settings?.urls?.linkedin}>
+                          <img
+                            border='0'
+                            width='57'
+                            src={getImagePath(socialIcons.linkedin)}
+                            alt='LinkedIn'
+                          />
+                        </a>
+                      </td>
+                      <td style={{ width: '120px' }}>&nbsp;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style={{
+                  backgroundColor: settings?.canvascolor,
+                  paddingLeft: '10%',
+                  paddingRight: '10%',
+                  paddingTop: '16px',
+                }}
+                align='center'>
+                <h1
+                  style={{
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    margin: '0',
+                    marginBottom: '13px',
+                    color: settings?.textcolor,
+                    lineHeight: '1',
+                  }}>
+                  Сұрақтарыңыз бар ма?
+                </h1>
+                <table
+                  style={{
+                    margin: '0',
+                    padding: '0',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    textAlign: 'center',
+                    color: settings?.textcolor,
+                  }}
+                  cellPadding='15'
+                  cellSpacing='0'>
+                  <tbody>
+                    <tr>
+                      <td align='center' style={{ padding: '7px' }}>
+                        <a
+                          href={settings?.urls?.livechat}
+                          style={{
+                            fontSize: '11px',
+                            color: settings?.textcolor,
+                            textDecoration: 'none',
+                          }}>
+                          <img
+                            src={
+                              settings?.theme === 'night'
+                                ? getImagePath(socialIcons.livechat) + '-white'
+                                : getImagePath(socialIcons.livechat)
+                            }
+                            alt='chat'
+                            width='13'
+                          />
+                          &nbsp;&nbsp;Онлайн чат
+                        </a>
+                      </td>
+                      <td align='center' style={{ padding: '7px' }}>
+                        <a
+                          href={settings?.urls?.call}
+                          style={{
+                            fontSize: '11px',
+                            color: settings?.textcolor,
+                            textDecoration: 'none',
+                          }}>
+                          <img
+                            src={
+                              settings?.theme === 'night'
+                                ? getImagePath(socialIcons.call) + '-white'
+                                : getImagePath(socialIcons.call)
+                            }
+                            alt='call'
+                          />
+                          &nbsp;&nbsp;Call Center 7700
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td
+                style={{ backgroundColor: settings?.canvascolor }}
+                align='center'>
+                <table
+                  style={{
+                    width: '500px',
+                    margin: '0',
+                    padding: '0',
+                    textAlign: 'center',
+                    color: settings?.disclaimercolor,
+                  }}
+                  cellPadding='0'
+                  cellSpacing='0'
+                  border='0'>
+                  <tbody>
+                    <tr>
+                      <td style={{ height: '26px' }}>&nbsp;</td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          fontSize: '14px',
+                          color: settings?.disclaimercolor,
+                        }}>
+                        Сіз Samsung хабарламаларының таратылымына жазылғандықтан
+                        осы хатты алдыңыз. Осы хатқа жауап қайтармаңыз. Бұл
+                        автоматты түрде жолданатын хабарлама. Біздің
+                        хабарламаларымызды алудан бас тарту үшін, осы{' '}
+                        <a
+                          style={{
+                            textDecoration: 'underline',
+                            color: settings?.disclaimercolor,
+                          }}
+                          href={settings?.urls?.optout}
+                          _type='optout'
+                          _label={settings?.linklabel}>
+                          сілтеме
+                        </a>{' '}
+                        арқылы өтуіңізді сұраймыз .<br />
+                        <br />©{new Date().getFullYear()} Samsung Electronics
+                        Co., Ltd. Барлық құқықтар қорғалған.
+                        <br />
+                        &laquo;SAMSUNG ELECTRONICS CENTRAL EURASIA&raquo; ЖШС
+                        <br />
+                        (САМСУНГ ЭЛЕКТРОНИКС ОРТАЛЫҚ ЕУРАЗИЯ)
+                        <br />
+                        Қазақстан Республикасы, Алматы қ., 050000, Желтоқсан
+                        көшесі, 115 үй,
+                        <br /> &laquo;Kaisar Plaza&laquo; сауда-кеңсе орталығы,
+                        3-қабат.
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '24px' }} height='24'>
+                        &nbsp;
+                      </td>
+                    </tr>
+                    <tr>
+                      <td
+                        style={{
+                          height: '24px',
+                          color: settings?.disclaimercolor,
+                          fontSize: '14px',
+                        }}
+                        height='24'>
+                        <a
+                          style={{
+                            fontSize: '14px',
+                            color: settings?.textcolor,
+                            textDecoration: 'underline',
+                          }}
+                          href={settings?.urls?.legal}>
+                          Құқықтық ақпарат
+                        </a>
+                        &nbsp;|&nbsp;
+                        <a
+                          style={{
+                            fontSize: '14px',
+                            color: settings?.textcolor,
+                            textDecoration: 'underline',
+                          }}
+                          href={settings?.urls?.privacy}>
+                          Құпиялылық саясаты
+                        </a>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td style={{ height: '115px' }} height='115'>
+                        &nbsp;
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+      break;
+
     case 'footer_sendpulse':
       blockContent = (
         <table
@@ -1206,6 +1703,84 @@ const BlockRenderer = ({
             </tr>
             <tr>
               <td
+                style={{
+                  backgroundColor: settings?.canvascolor,
+                  paddingLeft: '10%',
+                  paddingRight: '10%',
+                  paddingTop: '16px',
+                }}
+                align='center'>
+                <h1
+                  style={{
+                    fontSize: '24px',
+                    fontWeight: 'bold',
+                    margin: '0',
+                    marginBottom: '13px',
+                    color: settings?.textcolor,
+                    lineHeight: '1',
+                  }}>
+                  Есть вопросы?
+                </h1>
+                <table
+                  style={{
+                    margin: '0',
+                    padding: '0',
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                    textAlign: 'center',
+                    color: settings?.textcolor,
+                  }}
+                  cellPadding='15'
+                  cellSpacing='0'>
+                  <tbody>
+                    <tr>
+                      <td align='center' style={{ padding: '7px' }}>
+                        <a
+                          href={settings?.urls?.livechat}
+                          style={{
+                            fontSize: '11px',
+                            color: settings?.textcolor,
+                            textDecoration: 'none',
+                          }}>
+                          <img
+                            src={
+                              settings?.theme === 'night'
+                                ? getImagePath(socialIcons.livechat) + '-white'
+                                : getImagePath(socialIcons.livechat)
+                            }
+                            alt='chat'
+                            width='13'
+                          />
+                          &nbsp;&nbsp;Онлайн чат
+                        </a>
+                      </td>
+                      <td align='center' style={{ padding: '7px' }}>
+                        <a
+                          href={settings?.urls?.call}
+                          style={{
+                            fontSize: '11px',
+                            color: settings?.textcolor,
+                            textDecoration: 'none',
+                          }}>
+                          <img
+                            src={
+                              settings?.theme === 'night'
+                                ? getImagePath(socialIcons.call) + '-white'
+                                : getImagePath(socialIcons.call)
+                            }
+                            alt='call'
+                          />
+                          &nbsp;&nbsp;Call Center 7700
+                        </a>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+
+            <tr>
+              <td
                 style={{ backgroundColor: settings?.canvascolor }}
                 align='center'>
                 <table
@@ -1221,30 +1796,11 @@ const BlockRenderer = ({
                   border='0'>
                   <tbody>
                     <tr>
-                      <td style={{ height: '26px' }}>&nbsp;</td>
-                    </tr>
-                    <tr>
                       <td
                         style={{
                           fontSize: '14px',
                           color: settings?.disclaimercolor,
                         }}>
-                        Вы получили это письмо, потому что подписались
-                        на&nbsp;рассылку Samsung. Не отвечайте на&nbsp;данное
-                        письмо. Оно является автоматической рассылкой. Чтобы
-                        отказаться от получения наших рассылок, пожалуйста,
-                        перейдите по&nbsp;этой{' '}
-                        <a
-                          style={{
-                            textDecoration: 'underline',
-                            color: settings?.disclaimercolor,
-                          }}
-                          href={settings?.urls?.optout}
-                          _type='optout'
-                          _label={settings?.linklabel}>
-                          ссылке
-                        </a>
-                        .<br />
                         <br />©{new Date().getFullYear()} Samsung Electronics
                         Co., Ltd. Все права защищены.
                         <br />
@@ -1306,6 +1862,7 @@ const BlockRenderer = ({
         </table>
       );
       break;
+
     default:
       blockContent = <div>Unknown block type</div>;
   }
@@ -1404,7 +1961,8 @@ const BlockRenderer = ({
                     }
                     className='color-input'
                   />
-                  <select
+                  <input
+                    type='text'
                     className='control-select'
                     value={settings?.fontSize}
                     onChange={(e) =>
@@ -1413,14 +1971,8 @@ const BlockRenderer = ({
                         'fontSize',
                         e.target.value
                       )
-                    }>
-                    <option value='8px'>8px</option>
-                    <option value='16px'>16px</option>
-                    <option value='24px'>24px</option>
-                    <option value='32px'>32px</option>
-                    <option value='40px'>40px</option>
-                    <option value='48px'>48px</option>
-                  </select>
+                    }
+                  />
                 </>
               )}
               {type === 'buttonGroup' && (
@@ -1547,22 +2099,7 @@ const BlockRenderer = ({
                     )
                   }
                 />
-                <input
-                  type='text'
-                  className='settings-input'
-                  placeholder='Button Link Suffix (optional)'
-                  value={
-                    settings?.buttonLinkSuffix ||
-                    '?content_type=text&creative=creative&segment=no-segment'
-                  }
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(
-                      index,
-                      'buttonLinkSuffix',
-                      e.target.value
-                    )
-                  }
-                />
+
                 <input
                   type='color'
                   value={settings?.buttonColor}
@@ -1627,22 +2164,6 @@ const BlockRenderer = ({
                     handleUpdateBlockSettings(
                       index,
                       'imageLinkUrl',
-                      e.target.value
-                    )
-                  }
-                />
-                <input
-                  type='text'
-                  className='settings-input'
-                  placeholder='Image Link Suffix (optional)'
-                  value={
-                    settings?.imageLinkSuffix ||
-                    '?content_type=text&creative=creative&segment=no-segment'
-                  }
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(
-                      index,
-                      'imageLinkSuffix',
                       e.target.value
                     )
                   }
