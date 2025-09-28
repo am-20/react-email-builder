@@ -7,6 +7,7 @@ export const initialTemplate = {
   title: 'Untitled Email Template',
   titleLinkLabel: '',
   titleLinkLabelUnsub: '',
+  footerLinkLabel: '',
   blocks: [
     {
       id: 'header-1',
@@ -65,8 +66,6 @@ export const initialTemplate = {
           linkedin:
             'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
           livechat: 'https://www.samsung.com/kz_ru/support/',
-          email: 'https://www.samsung.com/kz_ru/support/email/',
-          hotline: 'https://www.samsung.com/kz_ru/info/contactus/',
           call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
           optout:
             "<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru",

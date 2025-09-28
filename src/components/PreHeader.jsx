@@ -28,16 +28,10 @@ const PreHeader = ({ template, onViewInBrowser }) => {
                   marginBottom: '6px',
                   lineHeight: '1.1',
                 }}>
-                {template.titleLinkLabel ? (
-                  <a
-                    href='#'
-                    _label={template.titleLinkLabel}
-                    style={{ color: 'inherit', textDecoration: 'none' }}>
-                    {template.title || 'Untitled Email Template'}
-                  </a>
-                ) : (
-                  template.title || 'Untitled Email Template'
-                )}
+                <span
+                  {...(template.titleLinkLabel && { _label: template.titleLinkLabel })}>
+                  {template.title || 'Untitled Email Template'}
+                </span>
               </span>
             </td>
             <td style={{ padding: '20px' }} valign='middle' align='right'>

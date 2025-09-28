@@ -70,20 +70,25 @@ export const generateHtmlOutput = (template, renderBlockHtml) => {
           <tr>
             <td>
               <!-- Header with title and view in browser link -->
-              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;margin:0 auto;padding:0;text-align:center;font-family: SamsungOne, Arial, Helvetica, sans-serif;">
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;margin:0 auto;padding:0;text-align:center;font-family: SamsungOne, Arial, Helvetica, sans-serif;background-color: #f5f5f5;">
                 <tr>
                   <td style="padding: 20px;" align="left" valign="middle">
-                    <span style="font-family: Arial, Helvetica, sans-serif;font-size:12px;text-align:center;color:#000000;margin:0;margin-bottom:6px;line-height:1.1;">${template.title}</span>
+                    <span style="font-family: Arial, Helvetica, sans-serif;font-size:12px;text-align:center;color:#000000;margin:0;margin-bottom:6px;line-height:1.1;" ${template.titleLinkLabel ? `_label="${template.titleLinkLabel}"` : ''}>
+                      ${template.title || 'Untitled Email Template'}
+                    </span>
                   </td>
                   <td style="padding: 20px;" valign="middle" align="right">
                     <a href="#" onclick="window.open(URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' })), '_blank')" _label="Mirror Page" _type="mirrorPage" style="color:#000000;text-decoration:underline;font-size:12px;">View in Browser →</a>
+                  </td>
+                  <td style="padding: 20px 20px 20px 0;" valign="right" align="right">
+                    <a style="font-size:12px;color:#000000;text-decoration:underline;" href="<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru" _type="optout" _label="${template.titleLinkLabelUnsub}">Отписаться</a>
                   </td>
                 </tr>
               </table>
 
               <!-- Email content -->
               <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-                ${template.blocks.map(block => renderBlockHtml(block)).join('')}
+                ${template.blocks.map(block => renderBlockHtml(block, template)).join('')}
               </table>
             </td>
           </tr>

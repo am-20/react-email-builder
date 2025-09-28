@@ -131,6 +131,25 @@ const EmailBuilder = () => {
                 placeholder='Enter link label for unsubcription'
               />
             </div>
+            <div className='setting-item'>
+              <label className='setting-label'>
+                Footer Link Label (optional)
+              </label>
+              <input
+                type='text'
+                value={template.footerLinkLabel || ''}
+                onChange={(e) =>
+                  handleUpdateTemplateSetting(
+                    'footerLinkLabel',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
+                }
+                className='settings-input full-width'
+                placeholder='Enter default link label for footer unsubscribe links'
+              />
+            </div>
           </div>
         </div>
       </div>

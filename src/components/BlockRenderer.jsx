@@ -992,14 +992,14 @@ const BlockRenderer = ({
                 style={{
                   height: '50px',
                   fontSize: '0',
-                  backgroundColor: settings?.canvascolor,
+                  backgroundColor: settings?.canvascolor || '#f5f5f5',
                 }}>
                 &nbsp;
               </td>
             </tr>
             <tr>
               <td
-                style={{ backgroundColor: settings?.canvascolor }}
+                style={{ backgroundColor: settings?.canvascolor || '#f5f5f5' }}
                 align='center'>
                 <table
                   className='w100pc'
@@ -1102,7 +1102,7 @@ const BlockRenderer = ({
             <tr>
               <td
                 style={{
-                  backgroundColor: settings?.canvascolor,
+                  backgroundColor: settings?.canvascolor || '#f5f5f5',
                   paddingLeft: '10%',
                   paddingRight: '10%',
                   paddingTop: '16px',
@@ -1179,7 +1179,7 @@ const BlockRenderer = ({
 
             <tr>
               <td
-                style={{ backgroundColor: settings?.canvascolor }}
+                style={{ backgroundColor: settings?.canvascolor || '#f5f5f5' }}
                 align='center'>
                 <table
                   style={{
@@ -1294,14 +1294,14 @@ const BlockRenderer = ({
                 style={{
                   height: '50px',
                   fontSize: '0',
-                  backgroundColor: settings?.canvascolor,
+                  backgroundColor: settings?.canvascolor || '#f5f5f5',
                 }}>
                 &nbsp;
               </td>
             </tr>
             <tr>
               <td
-                style={{ backgroundColor: settings?.canvascolor }}
+                style={{ backgroundColor: settings?.canvascolor || '#f5f5f5' }}
                 align='center'>
                 <table
                   className='w100pc'
@@ -1404,7 +1404,7 @@ const BlockRenderer = ({
             <tr>
               <td
                 style={{
-                  backgroundColor: settings?.canvascolor,
+                  backgroundColor: settings?.canvascolor || '#f5f5f5',
                   paddingLeft: '10%',
                   paddingRight: '10%',
                   paddingTop: '16px',
@@ -1481,7 +1481,7 @@ const BlockRenderer = ({
 
             <tr>
               <td
-                style={{ backgroundColor: settings?.canvascolor }}
+                style={{ backgroundColor: settings?.canvascolor || '#f5f5f5' }}
                 align='center'>
                 <table
                   style={{
@@ -1594,14 +1594,14 @@ const BlockRenderer = ({
                 style={{
                   height: '50px',
                   fontSize: '0',
-                  backgroundColor: settings?.canvascolor,
+                  backgroundColor: settings?.canvascolor || '#f5f5f5',
                 }}>
                 &nbsp;
               </td>
             </tr>
             <tr>
               <td
-                style={{ backgroundColor: settings?.canvascolor }}
+                style={{ backgroundColor: settings?.canvascolor || '#f5f5f5' }}
                 align='center'>
                 <table
                   className='w100pc'
@@ -1704,7 +1704,7 @@ const BlockRenderer = ({
             <tr>
               <td
                 style={{
-                  backgroundColor: settings?.canvascolor,
+                  backgroundColor: settings?.canvascolor || '#f5f5f5',
                   paddingLeft: '10%',
                   paddingRight: '10%',
                   paddingTop: '16px',
@@ -1781,7 +1781,7 @@ const BlockRenderer = ({
 
             <tr>
               <td
-                style={{ backgroundColor: settings?.canvascolor }}
+                style={{ backgroundColor: settings?.canvascolor || '#f5f5f5' }}
                 align='center'>
                 <table
                   style={{
@@ -1934,7 +1934,7 @@ const BlockRenderer = ({
 
         {blockContent}
 
-        {!showPreview && isActive && !isNestedBlock && type !== 'footer' && (
+        {!showPreview && isActive && !isNestedBlock && (
           <div className='block-settings'>
             <div className='control-flex margin-bottom-small'>
               <input
@@ -2167,6 +2167,46 @@ const BlockRenderer = ({
                       e.target.value
                     )
                   }
+                />
+              </div>
+            )}
+            {(type === 'footer' || type === 'footer_general_kz' || type === 'footer_sendpulse') && (
+              <div className='control-flex margin-bottom-small'>
+                <input
+                  type='color'
+                  value={settings?.canvascolor || '#f5f5f5'}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'canvascolor',
+                      e.target.value
+                    )
+                  }
+                  className='color-input'
+                />
+                <input
+                  type='color'
+                  value={settings?.textcolor || '#000000'}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'textcolor',
+                      e.target.value
+                    )
+                  }
+                  className='color-input'
+                />
+                <input
+                  type='color'
+                  value={settings?.disclaimercolor || '#555555'}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'disclaimercolor',
+                      e.target.value
+                    )
+                  }
+                  className='color-input'
                 />
               </div>
             )}

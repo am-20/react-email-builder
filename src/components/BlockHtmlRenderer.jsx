@@ -1,4 +1,5 @@
 import React from 'react';
+import { getFooterIconBase64 } from '../utils/imageUtils';
 
 // Convert camelCase to kebab-case for CSS properties
 const kebabCase = (str) => {
@@ -6,7 +7,7 @@ const kebabCase = (str) => {
 };
 
 // Render a block as HTML
-const renderBlockHtml = (block) => {
+const renderBlockHtml = (block, template = null) => {
   const { type, content, settings } = block;
   let blockHtml = '';
 
@@ -264,7 +265,7 @@ const renderBlockHtml = (block) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td style="height:50px;font-size:0;background-color:${
-            settings.canvascolor
+            settings.canvascolor || '#f5f5f5'
           };" height="50">&nbsp;</td>
         </tr>
         <tr>
@@ -274,22 +275,22 @@ const renderBlockHtml = (block) => {
                 <td style="width:120px;">&nbsp;</td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${
                   settings.urls.facebook
-                }"><img border="0" width="57" src="i/ic_fb.png" alt="Facebook"></a></td>
+                }"><img border="0" width="57" src="${getFooterIconBase64('facebook')}" alt="Facebook"></a></td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${
                   settings.urls.instagram
-                }"><img border="0" width="57" src="i/ic_in.png" alt="Instagram"></a></td>
+                }"><img border="0" width="57" src="${getFooterIconBase64('instagram')}" alt="Instagram"></a></td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${
                   settings.urls.vkontakte
-                }"><img border="0" width="57" src="i/ic_vk.png" alt="VK"></a></td>
+                }"><img border="0" width="57" src="${getFooterIconBase64('vk')}" alt="VK"></a></td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${
                   settings.urls.youtube
-                }"><img border="0" width="57" src="i/ic_yt.png" alt="Youtube"></a></td>
+                }"><img border="0" width="57" src="${getFooterIconBase64('youtube')}" alt="Youtube"></a></td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${
                   settings.urls.twitter
-                }"><img border="0" width="57" src="i/icon-x.png" alt="Twitter"></a></td>
+                }"><img border="0" width="57" src="${getFooterIconBase64('twitter')}" alt="Twitter"></a></td>
                 <td class="paddLR10px" style="padding-left:16px;padding-right:16px;"><a title="Samsung Kazakhstan" href="${
                   settings.urls.linkedin
-                }"><img border="0" width="57" src="i/icon-linkedin.png" alt="LinkedIn"></a></td>
+                }"><img border="0" width="57" src="${getFooterIconBase64('linkedin')}" alt="LinkedIn"></a></td>
                 <td style="width:120px;">&nbsp;</td>
               </tr>
             </table>
@@ -297,7 +298,7 @@ const renderBlockHtml = (block) => {
         </tr>
         <tr>
           <td bgcolor="${
-            settings.canvascolor
+            settings.canvascolor || '#f5f5f5'
           }" align="center" style="text-align:center;padding-top:16px;padding-left:10%;padding-right:10%;background-color: ${
         settings.canvascolor
       };">
@@ -317,7 +318,7 @@ const renderBlockHtml = (block) => {
                       };font-size:11px;color:${
         settings.textcolor
       };text-decoration:none;" href="${settings.urls.livechat}">
-                        <img width="13" src="" alt="chat"/> 
+                        <img width="13" src="${getFooterIconBase64('chat')}" alt="chat"/> 
                         &nbsp;&nbsp;Онлайн чат
                       </a>
                     </td>
@@ -327,7 +328,7 @@ const renderBlockHtml = (block) => {
                       };font-size:11px;color:${
         settings.textcolor
       };text-decoration:none;" href="${settings.urls.call}">
-                        <img width="13" src="" alt="chat"/> 
+                        <img width="13" src="${getFooterIconBase64('call')}" alt="call"/> 
                         &nbsp;&nbsp;Call Center 7700
                       </a>
                     </td>
@@ -353,7 +354,7 @@ const renderBlockHtml = (block) => {
                   };font-family:${
         settings.fontFamily || 'Arial, sans-serif'
       };" href="${settings.urls.optout}" _type="optout" _label="${
-        settings.linklabel
+        settings.linklabel || template?.footerLinkLabel || ''
       }">ссылке</a>.<br /><br />
                   ©${new Date().getFullYear()} Samsung Electronics Co., Ltd. Все права защищены.<br />
                   ТОО &laquo;SAMSUNG ELECTRONICS CENTRAL EURASIA&raquo;<br />

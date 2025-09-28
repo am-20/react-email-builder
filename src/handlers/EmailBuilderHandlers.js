@@ -1,7 +1,7 @@
 // Handler functions for EmailBuilder component
 
 // Create a new block based on type
-export const createNewBlock = (type) => {
+export const createNewBlock = (type, template = null) => {
   const id = `${type}-${Date.now()}`;
 
   switch (type) {
@@ -126,11 +126,11 @@ export const createNewBlock = (type) => {
         id,
         type,
         settings: {
-          canvascolor: '#FFFFFF',
+          canvascolor: '#f5f5f5',
           textcolor: '#000000',
           theme: 'day',
           disclaimercolor: '#555555',
-          linklabel: '99_unsubscribe_btn',
+          linklabel: template?.footerLinkLabel || '',
           urls: {
             facebook: 'https://www.facebook.com/SamsungKazakhstan',
             instagram: 'https://www.instagram.com/samsungkz/',
@@ -138,13 +138,11 @@ export const createNewBlock = (type) => {
             youtube: 'https://www.youtube.com/user/SamsungKZ',
             twitter: 'https://twitter.com/SamsungKZ',
             linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
-            livechat: 'https://www.samsung.com/kz_ru/support/?content_type=text&creative=creative&segment=no-segment',
-            email: 'https://www.samsung.com/kz_ru/support/email/?content_type=text&creative=creative&segment=no-segment',
-            hotline: 'https://www.samsung.com/kz_ru/info/contactus/?content_type=text&creative=creative&segment=no-segment',
-            call: 'tel:7700',
-            optout: 'https://www.samsung.com/kz_ru/unsubscribe',
-            privacy: 'https://www.samsung.com/kz_ru/info/privacy/?content_type=text&creative=creative&segment=no-segment',
-            legal: 'https://www.samsung.com/kz_ru/info/legal/?content_type=text&creative=creative&segment=no-segment'
+            livechat: 'https://www.samsung.com/kz_ru/support/',
+            call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
+            optout: '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
+            privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
+            legal: 'https://www.samsung.com/kz_ru/info/legal/'
           }
         }
       };
@@ -153,11 +151,11 @@ export const createNewBlock = (type) => {
         id,
         type,
         settings: {
-          canvascolor: '#FFFFFF',
+          canvascolor: '#f5f5f5',
           textcolor: '#000000',
           theme: 'day',
           disclaimercolor: '#555555',
-          linklabel: '99_unsubscribe_btn',
+          linklabel: template?.footerLinkLabel || '',
           urls: {
             facebook: 'https://www.facebook.com/SamsungKazakhstan',
             instagram: 'https://www.instagram.com/samsungkz/',
@@ -165,13 +163,11 @@ export const createNewBlock = (type) => {
             youtube: 'https://www.youtube.com/user/SamsungKZ',
             twitter: 'https://twitter.com/SamsungKZ',
             linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
-            livechat: 'https://www.samsung.com/kz_ru/support/?content_type=text&creative=creative&segment=no-segment',
-            email: 'https://www.samsung.com/kz_ru/support/email/?content_type=text&creative=creative&segment=no-segment',
-            hotline: 'https://www.samsung.com/kz_ru/info/contactus/?content_type=text&creative=creative&segment=no-segment',
-            call: 'tel:7700',
-            optout: 'https://www.samsung.com/kz_ru/unsubscribe',
-            privacy: 'https://www.samsung.com/kz_ru/info/privacy/?content_type=text&creative=creative&segment=no-segment',
-            legal: 'https://www.samsung.com/kz_ru/info/legal/?content_type=text&creative=creative&segment=no-segment'
+            livechat: 'https://www.samsung.com/kz_kz/support/',
+            call: 'https://www.samsung.com/kz_kz/support/contact/#onlinesupport',
+            optout: '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_kz',
+            privacy: 'https://www.samsung.com/kz_kz/info/privacy/',
+            legal: 'https://www.samsung.com/kz_kz/info/legal/'
           }
         }
       };
@@ -180,11 +176,11 @@ export const createNewBlock = (type) => {
         id,
         type,
         settings: {
-          canvascolor: '#FFFFFF',
+          canvascolor: '#f5f5f5',
           textcolor: '#000000',
           theme: 'day',
           disclaimercolor: '#555555',
-          linklabel: '99_unsubscribe_btn',
+          linklabel: template?.footerLinkLabel || '',
           urls: {
             facebook: 'https://www.facebook.com/SamsungKazakhstan',
             instagram: 'https://www.instagram.com/samsungkz/',
@@ -192,13 +188,11 @@ export const createNewBlock = (type) => {
             youtube: 'https://www.youtube.com/user/SamsungKZ',
             twitter: 'https://twitter.com/SamsungKZ',
             linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
-            livechat: 'https://www.samsung.com/kz_ru/support/?content_type=text&creative=creative&segment=no-segment',
-            email: 'https://www.samsung.com/kz_ru/support/email/?content_type=text&creative=creative&segment=no-segment',
-            hotline: 'https://www.samsung.com/kz_ru/info/contactus/?content_type=text&creative=creative&segment=no-segment',
-            call: 'tel:7700',
-            optout: 'https://www.samsung.com/kz_ru/unsubscribe',
-            privacy: 'https://www.samsung.com/kz_ru/info/privacy/?content_type=text&creative=creative&segment=no-segment',
-            legal: 'https://www.samsung.com/kz_ru/info/legal/?content_type=text&creative=creative&segment=no-segment'
+            livechat: 'https://www.samsung.com/kz_ru/support/',
+            call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
+            optout: '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
+            privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
+            legal: 'https://www.samsung.com/kz_ru/info/legal/'
           }
         }
       };
@@ -372,7 +366,7 @@ export const handleDrop = (e, dropIndex, draggedItem, template, setTemplate, set
   const newBlocks = [...template.blocks];
 
   if (draggedItem.isNew) {
-    const newBlock = createNewBlock(draggedItem.type);
+    const newBlock = createNewBlock(draggedItem.type, template);
     newBlocks.splice(dropIndex, 0, newBlock);
   } else {
     const movedItem = newBlocks[draggedItem.index];
