@@ -65,7 +65,7 @@ const BlockRenderer = ({
   const shouldShowToolbar = isHovered || isActive;
 
   const [vertical] = (settings?.padding || '10px').split(' ');
-  const isImageOrSpacer = block.type === 'image' || block.type === 'spacer';
+  const isSpacer = block.type === 'spacer';
   const isFooter =
     block.type === 'footer' ||
     block.type === 'footer_general_kz' ||
@@ -73,10 +73,10 @@ const BlockRenderer = ({
 
   const blockStyle = {
     backgroundColor: settings?.backgroundColor || 'white',
-    paddingTop: isImageOrSpacer || isFooter ? '0' : vertical,
-    paddingBottom: isImageOrSpacer || isFooter ? '0' : vertical,
-    paddingLeft: isImageOrSpacer || isFooter ? '0' : '12%',
-    paddingRight: isImageOrSpacer || isFooter ? '0' : '12%',
+    paddingTop: isSpacer || isFooter ? '0' : vertical,
+    paddingBottom: isSpacer || isFooter ? '0' : vertical,
+    paddingLeft: block.type === 'image' || isSpacer || isFooter ? '0' : '12%',
+    paddingRight: block.type === 'image' || isSpacer || isFooter ? '0' : '12%',
     position: 'relative',
     cursor: 'pointer',
     border: isActive ? '2px solid #4299e1' : 'none',
