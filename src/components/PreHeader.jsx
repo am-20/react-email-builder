@@ -1,66 +1,64 @@
 import React from 'react';
 
-const PreHeader = ({ template, onViewInBrowser }) => {
+const PreHeader = ({ template = {}, onViewInBrowser }) => {
+  const title = template?.title || 'Untitled Email Template';
+  const titleLabel = template?.titleLinkLabel;
+  const unsubLabel = template?.titleLinkLabelUnsub || '';
+  const unsubHref =
+    "<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru";
+
   return (
-    <div className='pre-header'>
+    <div className="pre-header">
       <table
-        role='presentation'
-        width='100%'
-        cellSpacing='0'
-        cellPadding='0'
-        border='0'
-        style={{
-          width: '100%',
-          margin: '0 auto',
-          padding: '0',
-          textAlign: 'center',
-        }}>
+        role="presentation"
+        width="100%"
+        cellSpacing="0"
+        cellPadding="0"
+        border="0"
+        style={{ width: '100%', margin: '0 auto', padding: 0, textAlign: 'center' }}
+      >
         <tbody>
           <tr>
-            <td style={{ padding: '20px' }} align='left' valign='middle'>
+            {/* Left: Title */}
+            <td align="left" valign="middle" style={{ padding: 20 }}>
               <span
                 style={{
                   fontFamily: 'Arial, Helvetica, sans-serif',
-                  fontSize: '12px',
-                  textAlign: 'center',
-                  color: '#000000',
-                  margin: '0',
-                  marginBottom: '6px',
-                  lineHeight: '1.1',
-                }}>
-                <span
-                  {...(template.titleLinkLabel && { _label: template.titleLinkLabel })}>
-                  {template.title || 'Untitled Email Template'}
-                </span>
+                  fontSize: 12,
+                  color: '#000',
+                  lineHeight: 1.1,
+                  margin: 0,
+                  display: 'inline-block',
+                }}
+              >
+                <span {...(titleLabel ? { _label: titleLabel } : {})}>{title}</span>
               </span>
             </td>
-            <td style={{ padding: '20px' }} valign='middle' align='right'>
+
+            {/* Middle/Right: View in Browser */}
+            <td align="right" valign="middle" style={{ padding: 20 }}>
               <a
-                href='#'
-                _label='Mirror Page'
-                _type='mirrorPage'
-                style={{
-                  color: '#000000',
-                  textDecoration: 'underline',
-                  fontSize: '12px',
+                href="#"
+                _label="Mirror Page"
+                _type="mirrorPage"
+                style={{ color: '#000', textDecoration: 'underline', fontSize: 12 }}
+                onClick={(e) => {
+                  if (onViewInBrowser) onViewInBrowser(e);
+                  else e.preventDefault();
                 }}
-                onClick={onViewInBrowser}>
+              >
                 View in Browser →
               </a>
             </td>
-            <td
-              style={{ padding: '20px 20px 20px 0' }}
-              valign='right'
-              align='right'>
+
+            {/* Right: Unsubscribe */}
+            <td align="right" valign="middle" style={{ padding: '20px 20px 20px 0' }}>
               <a
-                style={{
-                  fontSize: '12px',
-                  color: '#000000',
-                  textDecoration: 'underline',
-                }}
-                href="<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru"
-                _type='optout'
-                _label={template.titleLinkLabelUnsub}>
+                href={unsubHref}
+                _type="optout"
+                _label={unsubLabel}
+                style={{ fontSize: 12, color: '#000', textDecoration: 'underline' }}
+              >
                 Отписаться
               </a>
             </td>
