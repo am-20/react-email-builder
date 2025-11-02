@@ -1,5 +1,19 @@
-import React, { useMemo, useState } from 'react';
-import { Save, Code, Eye } from 'lucide-react';
+import React, { useState } from 'react';
+import {
+  GripVertical,
+  Trash2,
+  Copy,
+  Settings,
+  Type,
+  Image,
+  Grid,
+  Columns,
+  FileText,
+  Save,
+  Code,
+  Eye,
+  Layout,
+} from 'lucide-react';
 import { initialTemplate, components } from '../config/emailTemplateConfig.jsx';
 import renderBlockHtml from './BlockHtmlRenderer';
 import BlockRenderer from './BlockRenderer';
@@ -31,19 +45,12 @@ const EmailBuilder = () => {
   const [showCode, setShowCode] = useState(false);
   const [hoveredBlockId, setHoveredBlockId] = useState(null);
 
-  // Generate full HTML once per template change
-  const htmlOutput = useMemo(() => generateHtmlOutput(template, renderBlockHtml), [template]);
-
   const handleViewInBrowser = (e) => {
     e.preventDefault();
-    try {
-      const blob = new Blob([htmlOutput], { type: 'text/html' });
-      const url = URL.createObjectURL(blob);
-      window.open(url, '_blank');
-    } catch (err) {
-      // no-op: UI stays intact; optional toast could be added
-      console.error('Failed to open preview:', err);
-    }
+    const htmlOutput = generateHtmlOutput(template, renderBlockHtml);
+    const blob = new Blob([htmlOutput], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    window.open(url, '_blank');
   };
 
   return (
@@ -57,8 +64,9 @@ const EmailBuilder = () => {
               key={component.type}
               className='component-item'
               draggable
-              onDragStart={(e) => handleDragStart(e, component, true, setDraggedItem)}
-            >
+              onDragStart={(e) =>
+                handleDragStart(e, component, true, setDraggedItem)
+              }>
               <div className='component-icon'>{component.icon}</div>
               {component.label}
             </div>
@@ -74,26 +82,40 @@ const EmailBuilder = () => {
                 type='text'
                 value={template.title}
                 onChange={(e) =>
-                  handleUpdateTemplateSetting('title', e.target.value, template, setTemplate)
+                  handleUpdateTemplateSetting(
+                    'title',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
                 }
                 className='settings-input full-width'
                 placeholder='Enter template title'
               />
             </div>
             <div className='setting-item'>
-              <label className='setting-label'>Title Link Label (optional)</label>
+              <label className='setting-label'>
+                Title Link Label (optional)
+              </label>
               <input
                 type='text'
                 value={template.titleLinkLabel}
                 onChange={(e) =>
-                  handleUpdateTemplateSetting('titleLinkLabel', e.target.value, template, setTemplate)
+                  handleUpdateTemplateSetting(
+                    'titleLinkLabel',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
                 }
                 className='settings-input full-width'
                 placeholder='Enter link label for the title'
               />
             </div>
             <div className='setting-item'>
-              <label className='setting-label'>Title Link Label Unsub (optional)</label>
+              <label className='setting-label'>
+                Title Link Label Unsub (optional)
+              </label>
               <input
                 type='text'
                 value={template.titleLinkLabelUnsub}
@@ -110,12 +132,19 @@ const EmailBuilder = () => {
               />
             </div>
             <div className='setting-item'>
-              <label className='setting-label'>Footer Link Label (optional)</label>
+              <label className='setting-label'>
+                Footer Link Label (optional)
+              </label>
               <input
                 type='text'
                 value={template.footerLinkLabel || ''}
                 onChange={(e) =>
-                  handleUpdateTemplateSetting('footerLinkLabel', e.target.value, template, setTemplate)
+                  handleUpdateTemplateSetting(
+                    'footerLinkLabel',
+                    e.target.value,
+                    template,
+                    setTemplate
+                  )
                 }
                 className='settings-input full-width'
                 placeholder='Enter default link label for footer unsubscribe links'
@@ -134,27 +163,28 @@ const EmailBuilder = () => {
             <button
               className={`toolbar-button ${showPreview ? 'active' : ''}`}
               onClick={() => {
-                setShowPreview((v) => !v);
+                setShowPreview(!showPreview);
                 setShowCode(false);
-              }}
-            >
+              }}>
               <Eye size={16} />
               <span>Preview</span>
             </button>
             <button
               className={`toolbar-button ${showCode ? 'active' : ''}`}
               onClick={() => {
-                setShowCode((v) => !v);
+                setShowCode(!showCode);
                 setShowPreview(false);
-              }}
-            >
+              }}>
               <Code size={16} />
               <span>HTML</span>
             </button>
             <button
               className='toolbar-button primary'
-              onClick={() => handleSaveTemplate(() => htmlOutput)}
-            >
+              onClick={() =>
+                handleSaveTemplate(() =>
+                  generateHtmlOutput(template, renderBlockHtml)
+                )
+              }>
               <Save size={16} />
               <span>Save</span>
             </button>
@@ -169,11 +199,15 @@ const EmailBuilder = () => {
           {showCode ? (
             <div className='code-container'>
               <div className='code-header'>
-                <button className='close-button' onClick={() => setShowCode(false)}>
+                <button
+                  className='close-button'
+                  onClick={() => setShowCode(false)}>
                   Close
                 </button>
               </div>
-              <pre className='code-output'>{htmlOutput}</pre>
+              <pre className='code-output'>
+                {generateHtmlOutput(template, renderBlockHtml)}
+              </pre>
             </div>
           ) : (
             <div
@@ -205,11 +239,12 @@ const EmailBuilder = () => {
                 e.preventDefault();
                 setDragOverIndex(null);
               }}
-              style={{ width: '640px' }}
-            >
+              style={{ width: '640px' }}>
               {template.blocks.map((block, index) => (
                 <React.Fragment key={block.id}>
-                  {dragOverIndex === index && <div className='drop-indicator' />}
+                  {dragOverIndex === index && (
+                    <div className='drop-indicator' />
+                  )}
                   <BlockRenderer
                     block={block}
                     index={index}
@@ -221,8 +256,12 @@ const EmailBuilder = () => {
                     settings={block.settings}
                     template={template}
                     setTemplate={setTemplate}
-                    handleDragStart={(e) => handleDragStart(e, block, false, setDraggedItem)}
-                    handleDragOver={(e) => handleDragOver(e, index, setDragOverIndex)}
+                    handleDragStart={(e) =>
+                      handleDragStart(e, block, false, setDraggedItem)
+                    }
+                    handleDragOver={(e) =>
+                      handleDragOver(e, index, setDragOverIndex)
+                    }
                     handleDrop={(e) =>
                       handleDrop(
                         e,
@@ -238,11 +277,33 @@ const EmailBuilder = () => {
                     setActiveBlockId={setActiveBlockId}
                     setHoveredBlockId={setHoveredBlockId}
                     setDragOverIndex={setDragOverIndex}
-                    handleDuplicateBlock={(i) => handleDuplicateBlock(i, template, setTemplate)}
-                    handleDeleteBlock={(i) => handleDeleteBlock(i, template, setTemplate, setActiveBlockId)}
-                    handleUpdateBlockContent={(i, c) => handleUpdateBlockContent(i, c, template, setTemplate)}
-                    handleUpdateBlockSettings={(i, k, v) =>
-                      handleUpdateBlockSettings(i, k, v, template, setTemplate)
+                    handleDuplicateBlock={(index) =>
+                      handleDuplicateBlock(index, template, setTemplate)
+                    }
+                    handleDeleteBlock={(index) =>
+                      handleDeleteBlock(
+                        index,
+                        template,
+                        setTemplate,
+                        setActiveBlockId
+                      )
+                    }
+                    handleUpdateBlockContent={(index, content) =>
+                      handleUpdateBlockContent(
+                        index,
+                        content,
+                        template,
+                        setTemplate
+                      )
+                    }
+                    handleUpdateBlockSettings={(index, setting, value) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        setting,
+                        value,
+                        template,
+                        setTemplate
+                      )
                     }
                   />
                 </React.Fragment>
@@ -264,8 +325,7 @@ const EmailBuilder = () => {
                       setDragOverIndex,
                       createNewBlock
                     )
-                  }
-                >
+                  }>
                   Drag components here
                 </div>
               )}
@@ -273,11 +333,16 @@ const EmailBuilder = () => {
               {/* Final drop zone */}
               {template.blocks.length > 0 && draggedItem && (
                 <div
-                  className={`drop-zone ${dragOverIndex === template.blocks.length ? 'active' : ''}`}
-                  onDragOver={(e) => handleDragOver(e, template.blocks.length, setDragOverIndex)}
-                />
+                  className={`drop-zone ${
+                    dragOverIndex === template.blocks.length ? 'active' : ''
+                  }`}
+                  onDragOver={(e) =>
+                    handleDragOver(e, template.blocks.length, setDragOverIndex)
+                  }></div>
               )}
-              {dragOverIndex === template.blocks.length && <div className='drop-indicator' />}
+              {dragOverIndex === template.blocks.length && (
+                <div className='drop-indicator' />
+              )}
             </div>
           )}
         </div>
