@@ -170,15 +170,6 @@ const EmailBuilder = () => {
               <span>Preview</span>
             </button>
             <button
-              className={`toolbar-button ${showCode ? 'active' : ''}`}
-              onClick={() => {
-                setShowCode(!showCode);
-                setShowPreview(false);
-              }}>
-              <Code size={16} />
-              <span>HTML</span>
-            </button>
-            <button
               className='toolbar-button primary'
               onClick={() =>
                 handleSaveTemplate(() =>
@@ -278,7 +269,7 @@ const EmailBuilder = () => {
                     setHoveredBlockId={setHoveredBlockId}
                     setDragOverIndex={setDragOverIndex}
                     handleDuplicateBlock={(index) =>
-                      handleDuplicateBlock(index, template, setTemplate)
+                      handleDuplicateBlock(index++, template, setTemplate)
                     }
                     handleDeleteBlock={(index) =>
                       handleDeleteBlock(

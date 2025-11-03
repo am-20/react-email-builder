@@ -151,9 +151,9 @@
     margin: 0 auto;
   }
   
-  .email-canvas {
+  /* .email-canvas {
     padding: 20px;
-  }
+  } */
   
   /* Email Blocks */
   .email-block {
@@ -505,9 +505,9 @@
     gap: 8px;
   }
 
-  .pre-header {
+  /* .pre-header {
     padding: 0 16px;
-  }
+  } */
 
   .pre-header table {
     width: 100%;

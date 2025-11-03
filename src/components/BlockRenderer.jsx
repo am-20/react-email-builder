@@ -2,7 +2,13 @@ import React from 'react';
 import { GripVertical, Trash2, Copy } from 'lucide-react';
 import { getImagePath, socialIcons } from '../utils/imageUtils';
 
-const tableProps = { role: 'presentation', width: '100%', cellSpacing: '0', cellPadding: '0', border: '0' };
+const tableProps = {
+  role: 'presentation',
+  width: '100%',
+  cellSpacing: '0',
+  cellPadding: '0',
+  border: '0',
+};
 
 const BlockRenderer = ({
   block,
@@ -28,7 +34,12 @@ const BlockRenderer = ({
 }) => {
   const { type, content } = block;
 
-  const handleImageUpload = (e, buttonIndex = null, columnIndex = null, isHalfText = false) => {
+  const handleImageUpload = (
+    e,
+    buttonIndex = null,
+    columnIndex = null,
+    isHalfText = false
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
     const reader = new FileReader();
@@ -52,37 +63,17 @@ const BlockRenderer = ({
     reader.readAsDataURL(file);
   };
 
-  // Columns helpers
-  const getCols = (i = index) => template.blocks[i].columns || [];
-  const setCols = (cols, i = index) => {
-    const newBlocks = [...template.blocks];
-    newBlocks[i].columns = cols;
-    setTemplate({ ...template, blocks: newBlocks });
-  };
-  const setColCount = (nextCount, i = index) => {
-    const cols = getCols(i);
-    const count = Math.max(1, Number(nextCount) || 1);
-    if (count === cols.length) return;
-    if (count > cols.length) {
-      const toAdd = Array.from({ length: count - cols.length }, () => ({
-        content: '',
-        settings: { altText: '', linkUrl: '', linkLabel: '' },
-      }));
-      setCols([...cols, ...toAdd], i);
-    } else {
-      setCols(cols.slice(0, count), i);
-    }
-  };
-
   const shouldShowToolbar = isHovered || isActive;
 
   // Padding (separate)
-  const topPad = settings?.paddingTop ?? settings?.padding ?? '10px';
-  const bottomPad = settings?.paddingBottom ?? settings?.padding ?? '10px';
+  const topPad = settings?.paddingTop ?? settings?.padding ?? '0';
+  const bottomPad = settings?.paddingBottom ?? settings?.padding ?? '0';
 
   const isSpacer = type === 'spacer';
   const isFooter =
-    type === 'footer' || type === 'footer_general_kz' || type === 'footer_sendpulse';
+    type === 'footer' ||
+    type === 'footer_general_kz' ||
+    type === 'footer_sendpulse';
 
   const blockStyle = {
     backgroundColor: settings?.backgroundColor || 'white',
@@ -116,13 +107,23 @@ const BlockRenderer = ({
       <table {...tableProps}>
         <tbody>
           <tr>
-            <td style={{ height: 50, fontSize: 0, lineHeight: 0, backgroundColor: canvas }}>&nbsp;</td>
+            <td
+              style={{
+                height: 50,
+                fontSize: 0,
+                lineHeight: 0,
+                backgroundColor: canvas,
+              }}>
+              &nbsp;
+            </td>
           </tr>
 
           {/* Socials */}
           <tr>
-            <td style={{ backgroundColor: canvas }} align="center">
-              <table {...tableProps} style={{ width: '100%', margin: 0, padding: 0 }}>
+            <td style={{ backgroundColor: canvas }} align='center'>
+              <table
+                {...tableProps}
+                style={{ width: '100%', margin: 0, padding: 0 }}>
                 <tbody>
                   <tr>
                     <td style={{ width: 120 }}>&nbsp;</td>
@@ -135,8 +136,13 @@ const BlockRenderer = ({
                       ['linkedin', 'LinkedIn'],
                     ].map(([key, alt]) => (
                       <td key={key} style={{ padding: '0 16px' }}>
-                        <a href={urls?.[key] || '#'} title="Samsung Kazakhstan">
-                          <img width="57" src={getImagePath(socialIcons[key])} alt={alt} style={{ display: 'block', border: 0 }} />
+                        <a href={urls?.[key] || '#'} title='Samsung Kazakhstan'>
+                          <img
+                            width='57'
+                            src={getImagePath(socialIcons[key])}
+                            alt={alt}
+                            style={{ display: 'block', border: 0 }}
+                          />
                         </a>
                       </td>
                     ))}
@@ -149,7 +155,14 @@ const BlockRenderer = ({
 
           {/* Contact */}
           <tr>
-            <td style={{ backgroundColor: canvas, textAlign: 'center', paddingTop: 16, paddingLeft: '10%', paddingRight: '10%' }}>
+            <td
+              style={{
+                backgroundColor: canvas,
+                textAlign: 'center',
+                paddingTop: 16,
+                paddingLeft: '10%',
+                paddingRight: '10%',
+              }}>
               <h1
                 style={{
                   margin: '0 0 13px 0',
@@ -158,37 +171,53 @@ const BlockRenderer = ({
                   fontWeight: 'bold',
                   color: text,
                   lineHeight: 1,
-                }}
-              >
+                }}>
                 Есть вопросы?
               </h1>
-              <table {...tableProps} style={{ width: 'auto', margin: '0 auto', textAlign: 'center', color: text }}>
+              <table
+                {...tableProps}
+                style={{
+                  width: 'auto',
+                  margin: '0 auto',
+                  textAlign: 'center',
+                  color: text,
+                }}>
                 <tbody>
                   <tr>
-                    <td align="center" style={{ padding: 7 }}>
+                    <td align='center' style={{ padding: 7 }}>
                       <a
                         href={urls?.livechat || '#'}
                         style={{
-                          fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                          fontFamily:
+                            settings?.fontFamily || 'Arial, sans-serif',
                           fontSize: 11,
                           color: text,
                           textDecoration: 'none',
-                        }}
-                      >
-                        • Онлайн чат
+                        }}>
+                        <img
+                          width='11'
+                          src={getImagePath(socialIcons['livechat'])}
+                          alt='online chat'
+                        />{' '}
+                        Онлайн чат
                       </a>
                     </td>
-                    <td align="center" style={{ padding: 7 }}>
+                    <td align='center' style={{ padding: 7 }}>
                       <a
                         href={urls?.call || '#'}
                         style={{
-                          fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                          fontFamily:
+                            settings?.fontFamily || 'Arial, sans-serif',
                           fontSize: 11,
                           color: text,
                           textDecoration: 'none',
-                        }}
-                      >
-                        • Call Center 7700
+                        }}>
+                        <img
+                          width='11'
+                          src={getImagePath(socialIcons['call'])}
+                          alt='call center'
+                        />{' '}
+                        Call Center 7700
                       </a>
                     </td>
                   </tr>
@@ -199,8 +228,15 @@ const BlockRenderer = ({
 
           {/* Legal */}
           <tr>
-            <td style={{ backgroundColor: canvas }} align="center">
-              <table {...tableProps} style={{ width: 500, margin: '0 auto', textAlign: 'center', color: disclaimer }}>
+            <td style={{ backgroundColor: canvas }} align='center'>
+              <table
+                {...tableProps}
+                style={{
+                  width: 500,
+                  margin: '0 auto',
+                  textAlign: 'center',
+                  color: disclaimer,
+                }}>
                 <tbody>
                   <tr>
                     <td style={{ height: 26 }}>&nbsp;</td>
@@ -211,26 +247,31 @@ const BlockRenderer = ({
                         fontSize: 14,
                         color: disclaimer,
                         fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                      }}
-                    >
-                      Вы получили это письмо, потому что подписались на&nbsp;рассылку Samsung.
-                      Не отвечайте на&nbsp;данное письмо. Оно является автоматической рассылкой.
-                      Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по&nbsp;этой&nbsp;
+                      }}>
+                      Вы получили это письмо, потому что подписались
+                      на&nbsp;рассылку Samsung. Не&nbsp;отвечайте на&nbsp;данное
+                      письмо. Оно является автоматической рассылкой. Чтобы
+                      отказаться от получения наших рассылок, пожалуйста,
+                      перейдите&nbsp;по&nbsp;этой&nbsp;
                       <a
                         href={urls?.optout || '#'}
-                        style={{ textDecoration: 'underline', color: disclaimer }}
-                      >
+                        style={{
+                          textDecoration: 'underline',
+                          color: disclaimer,
+                        }}>
                         ссылке
-                      </a>.
+                      </a>
+                      .
                       <br />
-                      <br />
-                      ©{new Date().getFullYear()} Samsung Electronics Co., Ltd. Все права защищены.
+                      <br />©{new Date().getFullYear()} Samsung Electronics Co.,
+                      Ltd. Все права защищены.
                       <br />
                       ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA»
                       <br />
                       (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)
                       <br />
-                      Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115,
+                      Республика Казахстан, г. Алматы, 050000, улица Желтоксан,
+                      д. 115,
                       <br />
                       Торгово-офисный центр «Kaisar Plaza», 3 этаж.
                     </td>
@@ -239,12 +280,29 @@ const BlockRenderer = ({
                     <td style={{ height: 24 }}>&nbsp;</td>
                   </tr>
                   <tr>
-                    <td style={{ height: 24, fontSize: 14, fontFamily: settings?.fontFamily || 'Arial, sans-serif' }}>
-                      <a href={urls?.legal || '#'} style={{ fontSize: 14, color: settings?.textcolor || '#000', textDecoration: 'underline' }}>
+                    <td
+                      style={{
+                        height: 24,
+                        fontSize: 14,
+                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                      }}>
+                      <a
+                        href={urls?.legal || '#'}
+                        style={{
+                          fontSize: 14,
+                          color: settings?.textcolor || '#000',
+                          textDecoration: 'underline',
+                        }}>
                         Правовая информация
                       </a>
                       &nbsp;|&nbsp;
-                      <a href={urls?.privacy || '#'} style={{ fontSize: 14, color: settings?.textcolor || '#000', textDecoration: 'underline' }}>
+                      <a
+                        href={urls?.privacy || '#'}
+                        style={{
+                          fontSize: 14,
+                          color: settings?.textcolor || '#000',
+                          textDecoration: 'underline',
+                        }}>
                         Политика конфиденциальности
                       </a>
                     </td>
@@ -274,8 +332,9 @@ const BlockRenderer = ({
                   style={contentStyle}
                   contentEditable={isActive}
                   suppressContentEditableWarning
-                  onBlur={(e) => handleUpdateBlockContent(index, e.target.innerText)}
-                >
+                  onBlur={(e) =>
+                    handleUpdateBlockContent(index, e.target.textContent)
+                  }>
                   {content}
                 </h1>
               </td>
@@ -291,13 +350,15 @@ const BlockRenderer = ({
           <tbody>
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'left' }}>
-                <div
+                <p
                   style={contentStyle}
                   contentEditable={isActive}
                   suppressContentEditableWarning
-                  onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
-                  dangerouslySetInnerHTML={{ __html: content }}
-                />
+                  onBlur={(e) =>
+                    handleUpdateBlockContent(index, e.target.innerText)
+                  }>
+                  {content}
+                </p>
               </td>
             </tr>
           </tbody>
@@ -312,23 +373,84 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'left' }}>
                 {settings?.linkUrl ? (
-                  <a href={`${settings.linkUrl}`} target="_blank" rel="noopener noreferrer">
-                    <img src={content} alt={settings?.altText || ''} style={imgBlockStyle} />
+                  <a
+                    href={`${settings.linkUrl}`}
+                    target='_blank'
+                    rel='noopener noreferrer'>
+                    <img
+                      src={content}
+                      alt={settings?.altText || ''}
+                      style={imgBlockStyle}
+                    />
                   </a>
                 ) : (
-                  <img src={content} alt={settings?.altText || ''} style={imgBlockStyle} />
+                  <img
+                    src={content}
+                    alt={settings?.altText || ''}
+                    style={imgBlockStyle}
+                  />
                 )}
                 {isActive && (
                   <table {...tableProps} style={{ marginTop: 8 }}>
                     <tbody>
                       <tr>
                         <td>
-                          <div className="button-settings">
-                            <input type="file" accept="image/*" className="settings-input" onChange={handleImageUpload} style={{ marginBottom: 8 }} />
-                            <input type="text" className="settings-input" placeholder="Image URL" value={content} onChange={(e) => handleUpdateBlockContent(index, e.target.value)} />
-                            <input type="text" className="settings-input" placeholder="Alt text" value={settings?.altText || ''} onChange={(e) => handleUpdateBlockSettings(index, 'altText', e.target.value)} />
-                            <input type="text" className="settings-input" placeholder="Link URL (optional)" value={settings?.linkUrl || ''} onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)} />
-                            <input type="text" className="settings-input" placeholder="Link Label (optional)" value={settings?.linkLabel || ''} onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)} />
+                          <div className='button-settings'>
+                            <input
+                              type='file'
+                              accept='image/*'
+                              className='settings-input'
+                              onChange={handleImageUpload}
+                              style={{ marginBottom: 8 }}
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Image URL'
+                              value={content}
+                              onChange={(e) =>
+                                handleUpdateBlockContent(index, e.target.value)
+                              }
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Alt text'
+                              value={settings?.altText || ''}
+                              onChange={(e) =>
+                                handleUpdateBlockSettings(
+                                  index,
+                                  'altText',
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link URL (optional)'
+                              value={settings?.linkUrl || ''}
+                              onChange={(e) =>
+                                handleUpdateBlockSettings(
+                                  index,
+                                  'linkUrl',
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link Label (optional)'
+                              value={settings?.linkLabel || ''}
+                              onChange={(e) =>
+                                handleUpdateBlockSettings(
+                                  index,
+                                  'linkLabel',
+                                  e.target.value
+                                )
+                              }
+                            />
                           </div>
                         </td>
                       </tr>
@@ -348,32 +470,95 @@ const BlockRenderer = ({
           <tbody>
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'center' }}>
-                <a href={`${settings?.linkUrl}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                <a
+                  href={`${settings?.linkUrl}`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  style={{ display: 'inline-block' }}>
                   <img
                     src={settings?.imageUrl}
                     alt={settings?.imageAlt}
-                    style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 'auto', border: 0 }}
+                    style={{
+                      display: 'block',
+                      margin: '0 auto',
+                      maxWidth: '100%',
+                      height: 'auto',
+                      border: 0,
+                    }}
                   />
                 </a>
                 {isActive && (
-                  <div className="button-settings">
+                  <div className='button-settings'>
                     <input
-                      type="file"
-                      accept="image/*"
-                      className="settings-input"
+                      type='file'
+                      accept='image/*'
+                      className='settings-input'
                       onChange={(e) => {
                         const file = e.target.files?.[0];
                         if (!file) return;
                         const reader = new FileReader();
-                        reader.onloadend = () => handleUpdateBlockSettings(index, 'imageUrl', reader.result);
+                        reader.onloadend = () =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'imageUrl',
+                            reader.result
+                          );
                         reader.readAsDataURL(file);
                       }}
                       style={{ marginBottom: 8 }}
                     />
-                    <input type="text" className="settings-input" placeholder="Image URL" value={settings?.imageUrl || ''} onChange={(e) => handleUpdateBlockSettings(index, 'imageUrl', e.target.value)} />
-                    <input type="text" className="settings-input" placeholder="Alt text" value={settings?.imageAlt || ''} onChange={(e) => handleUpdateBlockSettings(index, 'imageAlt', e.target.value)} />
-                    <input type="text" className="settings-input" placeholder="Link URL" value={settings?.linkUrl || ''} onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)} />
-                    <input type="text" className="settings-input" placeholder="Link Label (optional)" value={settings?.linkLabel || ''} onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)} />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Image URL'
+                      value={settings?.imageUrl || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'imageUrl',
+                          e.target.value
+                        )
+                      }
+                    />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Alt text'
+                      value={settings?.imageAlt || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'imageAlt',
+                          e.target.value
+                        )
+                      }
+                    />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link URL'
+                      value={settings?.linkUrl || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkUrl',
+                          e.target.value
+                        )
+                      }
+                    />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link Label (optional)'
+                      value={settings?.linkLabel || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkLabel',
+                          e.target.value
+                        )
+                      }
+                    />
                   </div>
                 )}
               </td>
@@ -398,11 +583,21 @@ const BlockRenderer = ({
                 <div style={container}>
                   {block.buttons?.map((button, i) => (
                     <div key={i}>
-                      <a href={`${button.settings?.linkUrl}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                      <a
+                        href={`${button.settings?.linkUrl}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        style={{ display: 'inline-block' }}>
                         <img
                           src={button.settings?.imageUrl}
                           alt={button.settings?.imageAlt}
-                          style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 'auto', border: 0 }}
+                          style={{
+                            display: 'block',
+                            margin: '0 auto',
+                            maxWidth: '100%',
+                            height: 'auto',
+                            border: 0,
+                          }}
                         />
                       </a>
                     </div>
@@ -425,7 +620,12 @@ const BlockRenderer = ({
                 <table {...tableProps}>
                   <tbody>
                     <tr>
-                      <td style={{ height: settings?.lineHeight || '1px', backgroundColor: settings?.lineColor || '#ddd' }} />
+                      <td
+                        style={{
+                          height: settings?.lineHeight || '1px',
+                          backgroundColor: settings?.lineColor || '#ddd',
+                        }}
+                      />
                     </tr>
                   </tbody>
                 </table>
@@ -445,7 +645,13 @@ const BlockRenderer = ({
                 <table {...tableProps}>
                   <tbody>
                     <tr>
-                      <td style={{ backgroundColor: settings?.backgroundColor || '#e5e5e5', height: settings?.height || '40px' }} />
+                      <td
+                        style={{
+                          backgroundColor:
+                            settings?.backgroundColor || '#e5e5e5',
+                          height: settings?.height || '40px',
+                        }}
+                      />
                     </tr>
                   </tbody>
                 </table>
@@ -462,11 +668,19 @@ const BlockRenderer = ({
       const gap = settings?.columnGap || '0';
       const widthPercent = `${(100 / count).toFixed(4)}%`;
       const halfGap =
-        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap) ? `calc((${gap}) / 2)` : '0';
+        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
+          ? `calc((${gap}) / 2)`
+          : '0';
 
       const addColumn = () => {
         const newBlocks = [...template.blocks];
-        newBlocks[index].columns = [...(newBlocks[index].columns || []), { content: '', settings: { altText: '', linkUrl: '', linkLabel: '' } }];
+        newBlocks[index].columns = [
+          ...(newBlocks[index].columns || []),
+          {
+            content: '',
+            settings: { altText: '', linkUrl: '', linkLabel: '' },
+          },
+        ];
         setTemplate({ ...template, blocks: newBlocks });
       };
 
@@ -502,7 +716,7 @@ const BlockRenderer = ({
           <tbody>
             <tr>
               <td>
-                <table {...tableProps} className="columns-container">
+                <table {...tableProps} className='columns-container'>
                   <tbody>
                     <tr>
                       {cols.map((c, colIndex) => (
@@ -512,25 +726,87 @@ const BlockRenderer = ({
                           style={{
                             paddingLeft: colIndex === 0 ? 0 : halfGap,
                             paddingRight: colIndex === count - 1 ? 0 : halfGap,
-                          }}
-                        >
+                          }}>
                           {c?.settings?.linkUrl ? (
-                            <a href={`${c.settings.linkUrl}`} target="_blank" rel="noopener noreferrer">
-                              <img src={c?.content} alt={c?.settings?.altText || ''} style={imgBlockStyle} />
+                            <a
+                              href={`${c.settings.linkUrl}`}
+                              target='_blank'
+                              rel='noopener noreferrer'>
+                              <img
+                                src={c?.content}
+                                alt={c?.settings?.altText || ''}
+                                style={imgBlockStyle}
+                              />
                             </a>
                           ) : (
-                            <img src={c?.content} alt={c?.settings?.altText || ''} style={imgBlockStyle} />
+                            <img
+                              src={c?.content}
+                              alt={c?.settings?.altText || ''}
+                              style={imgBlockStyle}
+                            />
                           )}
 
                           {isActive && (
-                            <div className="column-settings">
-                              <input type="file" accept="image/*" className="settings-input" onChange={(e) => onUpload(e, colIndex)} style={{ marginBottom: 8 }} />
-                              <input type="text" className="settings-input" placeholder="Image URL" value={c?.content || ''} onChange={(e) => updateCol(colIndex, 'content', e.target.value)} />
-                              <input type="text" className="settings-input" placeholder="Alt text" value={c?.settings?.altText || ''} onChange={(e) => updateCol(colIndex, 'altText', e.target.value)} />
-                              <input type="text" className="settings-input" placeholder="Link URL (optional)" value={c?.settings?.linkUrl || ''} onChange={(e) => updateCol(colIndex, 'linkUrl', e.target.value)} />
-                              <input type="text" className="settings-input" placeholder="Link Label (optional)" value={c?.settings?.linkLabel || ''} onChange={(e) => updateCol(colIndex, 'linkLabel', e.target.value)} />
-                              <div className="control-flex" style={{ gap: 8, marginTop: 6 }}>
-                                <button className="action-button" onClick={(e) => { e.stopPropagation(); removeColumn(colIndex); }} disabled={count <= 1}>Remove</button>
+                            <div className='column-settings'>
+                              <input
+                                type='file'
+                                accept='image/*'
+                                className='settings-input'
+                                onChange={(e) => onUpload(e, colIndex)}
+                                style={{ marginBottom: 8 }}
+                              />
+                              <input
+                                type='text'
+                                className='settings-input'
+                                placeholder='Image URL'
+                                value={c?.content || ''}
+                                onChange={(e) =>
+                                  updateCol(colIndex, 'content', e.target.value)
+                                }
+                              />
+                              <input
+                                type='text'
+                                className='settings-input'
+                                placeholder='Alt text'
+                                value={c?.settings?.altText || ''}
+                                onChange={(e) =>
+                                  updateCol(colIndex, 'altText', e.target.value)
+                                }
+                              />
+                              <input
+                                type='text'
+                                className='settings-input'
+                                placeholder='Link URL (optional)'
+                                value={c?.settings?.linkUrl || ''}
+                                onChange={(e) =>
+                                  updateCol(colIndex, 'linkUrl', e.target.value)
+                                }
+                              />
+                              <input
+                                type='text'
+                                className='settings-input'
+                                placeholder='Link Label (optional)'
+                                value={c?.settings?.linkLabel || ''}
+                                onChange={(e) =>
+                                  updateCol(
+                                    colIndex,
+                                    'linkLabel',
+                                    e.target.value
+                                  )
+                                }
+                              />
+                              <div
+                                className='control-flex'
+                                style={{ gap: 8, marginTop: 6 }}>
+                                <button
+                                  className='action-button'
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    removeColumn(colIndex);
+                                  }}
+                                  disabled={count <= 1}>
+                                  Remove
+                                </button>
                               </div>
                             </div>
                           )}
@@ -541,18 +817,139 @@ const BlockRenderer = ({
                 </table>
 
                 {isActive && (
-                  <div className="control-flex margin-top-small">
-                    <button className="action-button" onClick={(e) => { e.stopPropagation(); addColumn(); }}>+ Add column</button>
-                    <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Column gap (e.g. 16px)"
-                      value={settings?.columnGap || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'columnGap', e.target.value)}
-                      style={{ width: 160 }}
-                    />
+                  <div className='control-flex margin-top-small'>
+                    <button
+                      className='action-button'
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        addColumn();
+                      }}>
+                      + Add column
+                    </button>
                   </div>
                 )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+      break;
+    }
+
+    case 'halfText': {
+      const imageContainerStyle = {
+        width: settings?.imageWidth,
+        display: 'inline-block',
+        verticalAlign: 'top',
+      };
+
+      const textContainerStyle = {
+        width: `calc(100% - ${settings?.imageWidth})`,
+        display: 'inline-block',
+        verticalAlign: 'top',
+        padding: '0 20px',
+      };
+
+      const halfTextContentStyle = {
+        color: settings?.color,
+        fontSize: settings?.fontSize,
+        textAlign: settings?.textAlign,
+        fontFamily: settings?.fontFamily,
+      };
+
+      const tableStyle = {
+        backgroundColor: settings?.backgroundColor,
+        padding: settings?.padding,
+        width: '100%',
+      };
+
+      const renderImage = () =>
+        settings?.imageLinkUrl ? (
+          <a
+            href={`${settings.imageLinkUrl}`}
+            target='_blank'
+            rel='noopener noreferrer'>
+            <img
+              src={block.imageUrl}
+              alt={settings?.altText || ''}
+              style={imgBlockStyle}
+            />
+          </a>
+        ) : (
+          <img
+            src={block.imageUrl}
+            alt={settings?.altText || ''}
+            style={imgBlockStyle}
+          />
+        );
+
+      const Button = () =>
+        settings?.showButton ? (
+          <a
+            href={`${settings?.buttonUrl}`}
+            target='_blank'
+            rel='noopener noreferrer'
+            style={{
+              display: 'inline-block',
+              padding: '8px 16px',
+              backgroundColor: settings?.buttonColor,
+              color: settings?.buttonTextColor,
+              textDecoration: 'none',
+              borderRadius: 4,
+              marginTop: 16,
+            }}>
+            {settings?.buttonText}
+          </a>
+        ) : null;
+
+      const TextBlock = () => (
+        <div>
+          <div
+            style={halfTextContentStyle}
+            contentEditable={isActive}
+            suppressContentEditableWarning
+            onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
+            dangerouslySetInnerHTML={{ __html: content }}
+          />
+          <Button />
+        </div>
+      );
+
+      blockContent = (
+        <table {...tableProps} style={tableStyle}>
+          <tbody>
+            <tr>
+              <td>
+                <table {...tableProps}>
+                  <tbody>
+                    <tr>
+                      <td
+                        style={
+                          settings?.imagePosition === 'left'
+                            ? imageContainerStyle
+                            : textContainerStyle
+                        }>
+                        {settings?.imagePosition === 'left' ? (
+                          renderImage()
+                        ) : (
+                          <TextBlock />
+                        )}
+                      </td>
+                      <td
+                        style={
+                          settings?.imagePosition === 'left'
+                            ? textContainerStyle
+                            : imageContainerStyle
+                        }>
+                        {settings?.imagePosition === 'left' ? (
+                          <TextBlock />
+                        ) : (
+                          renderImage()
+                        )}
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
               </td>
             </tr>
           </tbody>
@@ -574,32 +971,64 @@ const BlockRenderer = ({
   return (
     <div
       key={block.id}
-      className={`block-container ${dragOverIndex === index ? 'drag-over' : ''}`}
+      className={`block-container ${
+        dragOverIndex === index ? 'drag-over' : ''
+      }`}
       data-index={index}
       draggable
       onMouseEnter={() => !isNestedBlock && setHoveredBlockId(block.id)}
       onMouseLeave={() => !isNestedBlock && setHoveredBlockId(null)}
-      onDragStart={(e) => { e.stopPropagation(); handleDragStart(e, block); }}
-      onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); handleDragOver(e, index); }}
-      onDragLeave={(e) => { e.stopPropagation(); setDragOverIndex(null); }}
-      onDrop={(e) => { e.preventDefault(); e.stopPropagation(); handleDrop(e, index); }}
-      onClick={() => !isNestedBlock && setActiveBlockId(block.id)}
-    >
+      onDragStart={(e) => {
+        e.stopPropagation();
+        handleDragStart(e, block);
+      }}
+      onDragOver={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleDragOver(e, index);
+      }}
+      onDragLeave={(e) => {
+        e.stopPropagation();
+        setDragOverIndex(null);
+      }}
+      onDrop={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleDrop(e, index);
+      }}
+      onClick={() => !isNestedBlock && setActiveBlockId(block.id)}>
       <div style={blockStyle}>
         {!showPreview && !isNestedBlock && (
-          <div className="block-type-indicator" style={{ color: type === 'header' || type === 'text' ? settings?.color : undefined }}>
-            <GripVertical size={14} className="drag-handle" />
-            <div className="block-type-text">{type}</div>
+          <div
+            className='block-type-indicator'
+            style={{
+              color:
+                type === 'header' || type === 'text'
+                  ? settings?.color
+                  : undefined,
+            }}>
+            <GripVertical size={14} className='drag-handle' />
+            <div className='block-type-text'>{type}</div>
           </div>
         )}
 
         {!showPreview && shouldShowToolbar && !isNestedBlock && (
-          <div className="block-actions">
-            <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDuplicateBlock(index); }}>
-              <Copy size={14} className="action-icon" />
+          <div className='block-actions'>
+            <button
+              className='action-button'
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDuplicateBlock(index);
+              }}>
+              <Copy size={14} className='action-icon' />
             </button>
-            <button className="action-button" onClick={(e) => { e.stopPropagation(); handleDeleteBlock(index); }}>
-              <Trash2 size={14} className="action-icon" />
+            <button
+              className='action-button'
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteBlock(index);
+              }}>
+              <Trash2 size={14} className='action-icon' />
             </button>
           </div>
         )}
@@ -607,79 +1036,206 @@ const BlockRenderer = ({
         {blockContent}
 
         {!showPreview && isActive && !isNestedBlock && (
-          <div className="block-settings">
-            <div className="control-flex margin-bottom-small">
-              <input type="color" value={settings?.backgroundColor || '#ffffff'} onChange={(e) => handleUpdateBlockSettings(index, 'backgroundColor', e.target.value)} className="color-input" />
+          <div className='block-settings'>
+            <div className='control-flex margin-bottom-small'>
+              <input
+                type='color'
+                value={settings?.backgroundColor || '#ffffff'}
+                onChange={(e) =>
+                  handleUpdateBlockSettings(
+                    index,
+                    'backgroundColor',
+                    e.target.value
+                  )
+                }
+                className='color-input'
+              />
 
               {type === 'spacer' && (
-                <input type="text" className="settings-input" placeholder="Height (e.g. 40px)" value={settings?.height || ''} onChange={(e) => handleUpdateBlockSettings(index, 'height', e.target.value)} style={{ width: 80 }} />
+                <input
+                  type='text'
+                  className='settings-input'
+                  placeholder='Height (e.g. 40px)'
+                  value={settings?.height || ''}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(index, 'height', e.target.value)
+                  }
+                  style={{ width: 80 }}
+                />
               )}
 
-              {(type === 'header' || type === 'text' || type === 'halfText') && (
+              {(type === 'header' ||
+                type === 'text' ||
+                type === 'halfText') && (
                 <>
-                  <input type="color" value={settings?.color || '#000000'} onChange={(e) => handleUpdateBlockSettings(index, 'color', e.target.value)} className="color-input" />
-                  <input type="text" className="control-select" value={settings?.fontSize || ''} onChange={(e) => handleUpdateBlockSettings(index, 'fontSize', e.target.value)} />
+                  <input
+                    type='color'
+                    value={settings?.color || '#000000'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'color', e.target.value)
+                    }
+                    className='color-input'
+                  />
+                  <input
+                    type='text'
+                    className='control-select'
+                    value={settings?.fontSize || ''}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'fontSize',
+                        e.target.value
+                      )
+                    }
+                  />
                 </>
               )}
 
               {/* Separate vertical paddings */}
               {type !== 'spacer' && (
                 <>
-                  <select className="control-select flex-grow" value={settings?.paddingTop ?? settings?.padding ?? '10px'} onChange={(e) => handleUpdateBlockSettings(index, 'paddingTop', e.target.value)} title="Padding top">
-                    <option value="0px">No padding top</option>
-                    <option value="16px">Small top</option>
-                    <option value="24px">Medium top</option>
-                    <option value="40px">Large top</option>
+                  <select
+                    className='control-select flex-grow'
+                    value={settings?.paddingTop ?? settings?.padding ?? '10px'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'paddingTop',
+                        e.target.value
+                      )
+                    }
+                    title='Padding top'>
+                    <option value='0px'>No padding top</option>
+                    <option value='16px'>Small top</option>
+                    <option value='24px'>Medium top</option>
+                    <option value='40px'>Large top</option>
                   </select>
 
-                  <select className="control-select flex-grow" value={settings?.paddingBottom ?? settings?.padding ?? '10px'} onChange={(e) => handleUpdateBlockSettings(index, 'paddingBottom', e.target.value)} title="Padding bottom">
-                    <option value="0px">No padding bottom</option>
-                    <option value="16px">Small bottom</option>
-                    <option value="24px">Medium bottom</option>
-                    <option value="40px">Large bottom</option>
+                  <select
+                    className='control-select flex-grow'
+                    value={
+                      settings?.paddingBottom ?? settings?.padding ?? '10px'
+                    }
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'paddingBottom',
+                        e.target.value
+                      )
+                    }
+                    title='Padding bottom'>
+                    <option value='0px'>No padding bottom</option>
+                    <option value='16px'>Small bottom</option>
+                    <option value='24px'>Medium bottom</option>
+                    <option value='40px'>Large bottom</option>
                   </select>
                 </>
               )}
 
               {type === 'columns' && (
                 <>
-                  <div className="control-flex" style={{ alignItems: 'center', gap: 8 }}>
-                    <div style={{ fontSize: 12, color: '#6b7280' }}>Number of columns — adds/removes cells in this block</div>
-                    <button className="action-button" onClick={(e) => { e.stopPropagation(); setColCount(getCols().length - 1); }} disabled={getCols().length <= 1}>−</button>
-                    <input type="number" min={1} step={1} className="settings-input" value={getCols().length} onChange={(e) => setColCount(e.target.value)} style={{ width: 72 }} />
-                    <button className="action-button" onClick={(e) => { e.stopPropagation(); setColCount(getCols().length + 1); }}>+</button>
-                  </div>
-                  <div className="control-flex" style={{ flexDirection: 'column', gap: 6 }}>
-                    <div style={{ fontSize: 12, color: '#6b7280' }}>Column gap — CSS size like <code>16px</code>, applied as padding between cells</div>
-                    <input type="text" className="settings-input" placeholder="e.g. 16px" value={settings?.columnGap || ''} onChange={(e) => handleUpdateBlockSettings(index, 'columnGap', e.target.value)} style={{ width: 160 }} />
+                  <div
+                    className='control-flex'
+                    style={{ flexDirection: 'column', gap: 6 }}>
+                    <div style={{ fontSize: 12, color: '#6b7280' }}>
+                      Column gap
+                    </div>
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='e.g. 16px'
+                      value={settings?.columnGap || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'columnGap',
+                          e.target.value
+                        )
+                      }
+                      style={{ width: 160 }}
+                    />
                   </div>
                 </>
               )}
 
               {type === 'buttonGroup' && (
-                <div className="checkbox-container">
-                  <input type="checkbox" id={`inline-${block.id}`} checked={!!settings?.inline} onChange={(e) => {
-                    const newBlocks = [...template.blocks];
-                    newBlocks[index].settings.inline = e.target.checked;
-                    setTemplate({ ...template, blocks: newBlocks });
-                  }} />
-                  <label htmlFor={`inline-${block.id}`}>Display buttons inline</label>
+                <div className='checkbox-container'>
+                  <input
+                    type='checkbox'
+                    id={`inline-${block.id}`}
+                    checked={!!settings?.inline}
+                    onChange={(e) => {
+                      const newBlocks = [...template.blocks];
+                      newBlocks[index].settings.inline = e.target.checked;
+                      setTemplate({ ...template, blocks: newBlocks });
+                    }}
+                  />
+                  <label htmlFor={`inline-${block.id}`}>
+                    Display buttons inline
+                  </label>
                 </div>
               )}
 
-              {(type === 'header' || type === 'text' || type === 'image' || type === 'halfText') && (
-                <select className="control-select" value={settings?.textAlign || 'left'} onChange={(e) => handleUpdateBlockSettings(index, 'textAlign', e.target.value)}>
-                  <option value="left">Left</option>
-                  <option value="center">Center</option>
-                  <option value="right">Right</option>
+              {(type === 'header' ||
+                type === 'text' ||
+                type === 'image' ||
+                type === 'halfText') && (
+                <select
+                  className='control-select'
+                  value={settings?.textAlign || 'left'}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'textAlign',
+                      e.target.value
+                    )
+                  }>
+                  <option value='left'>Left</option>
+                  <option value='center'>Center</option>
+                  <option value='right'>Right</option>
                 </select>
               )}
 
-              {(type === 'footer' || type === 'footer_general_kz' || type === 'footer_sendpulse') && (
-                <div className="control-flex margin-bottom-small">
-                  <input type="color" value={settings?.canvascolor || '#f5f5f5'} onChange={(e) => handleUpdateBlockSettings(index, 'canvascolor', e.target.value)} className="color-input" />
-                  <input type="color" value={settings?.textcolor || '#000000'} onChange={(e) => handleUpdateBlockSettings(index, 'textcolor', e.target.value)} className="color-input" />
-                  <input type="color" value={settings?.disclaimercolor || '#555555'} onChange={(e) => handleUpdateBlockSettings(index, 'disclaimercolor', e.target.value)} className="color-input" />
+              {(type === 'footer' ||
+                type === 'footer_general_kz' ||
+                type === 'footer_sendpulse') && (
+                <div className='control-flex margin-bottom-small'>
+                  <input
+                    type='color'
+                    value={settings?.canvascolor || '#f5f5f5'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'canvascolor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
+                  />
+                  <input
+                    type='color'
+                    value={settings?.textcolor || '#000000'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'textcolor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
+                  />
+                  <input
+                    type='color'
+                    value={settings?.disclaimercolor || '#555555'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'disclaimercolor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
+                  />
                 </div>
               )}
             </div>
