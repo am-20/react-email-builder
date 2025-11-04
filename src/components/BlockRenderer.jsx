@@ -10,6 +10,246 @@ const tableProps = {
   border: '0',
 };
 
+  const LANGUAGE_STRINGS = {
+    ru: { questions: 'Есть вопросы?' },
+    kz: { questions: 'Сұрақтарыңыз бар ма?' },
+  };
+
+  // --- Editor preview for footer ---
+const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
+    const canvas = settings?.canvascolor || '#f5f5f5';
+    const text = settings?.textcolor || '#000000';
+    const disclaimer = settings?.disclaimercolor || '#555555';
+    const urls = settings?.urls || {};
+
+    return (
+      <table {...tableProps}>
+        <tbody>
+          <tr>
+            <td
+              style={{
+                height: 50,
+                fontSize: 0,
+                lineHeight: 0,
+                backgroundColor: canvas,
+              }}>
+              &nbsp;
+            </td>
+          </tr>
+
+          {/* Socials */}
+          <tr>
+            <td style={{ backgroundColor: canvas }} align='center'>
+              <table
+                {...tableProps}
+                style={{ width: '100%', margin: 0, padding: 0 }}>
+                <tbody>
+                  <tr>
+                    <td style={{ width: 120 }}>&nbsp;</td>
+                    {[
+                      ['facebook', 'Facebook'],
+                      ['instagram', 'Instagram'],
+                      ['vkontakte', 'VK'],
+                      ['youtube', 'YouTube'],
+                      ['twitter', 'Twitter'],
+                      ['linkedin', 'LinkedIn'],
+                    ].map(([key, alt]) => (
+                      <td key={key} style={{ padding: '0 16px' }}>
+                        <a href={urls?.[key] || '#'} title='Samsung Kazakhstan'>
+                          <img
+                            width='57'
+                            src={getImagePath(socialIcons[key])}
+                            alt={alt}
+                            style={{ display: 'block', border: 0 }}
+                          />
+                        </a>
+                      </td>
+                    ))}
+                    <td style={{ width: 120 }}>&nbsp;</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+
+          {/* Contact */}
+          <tr>
+            <td
+              style={{
+                backgroundColor: canvas,
+                textAlign: 'center',
+                paddingTop: 16,
+                paddingLeft: '10%',
+                paddingRight: '10%',
+              }}>
+              <h1
+                style={{
+                  margin: '0 0 13px 0',
+                  fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                  fontSize: 24,
+                  fontWeight: 'bold',
+                  color: text,
+                  lineHeight: 1,
+                }}>
+                {LANGUAGE_STRINGS[type === 'footer_general_kz' ? 'kz' : 'ru'].questions}
+              </h1>
+              <table
+                {...tableProps}
+                style={{
+                  width: 'auto',
+                  margin: '0 auto',
+                  textAlign: 'center',
+                  color: text,
+                }}>
+                <tbody>
+                  <tr>
+                    <td align='center' style={{ padding: 7 }}>
+                      <a
+                        href={urls?.livechat || '#'}
+                        style={{
+                          fontFamily:
+                            settings?.fontFamily || 'Arial, sans-serif',
+                          fontSize: 11,
+                          color: text,
+                          textDecoration: 'none',
+                        }}>
+                        <img
+                          width='11'
+                          src={getImagePath(socialIcons['livechat'])}
+                          alt='online chat'
+                        />{' '}
+                        Онлайн чат
+                      </a>
+                    </td>
+                    <td align='center' style={{ padding: 7 }}>
+                      <a
+                        href={urls?.call || '#'}
+                        style={{
+                          fontFamily:
+                            settings?.fontFamily || 'Arial, sans-serif',
+                          fontSize: 11,
+                          color: text,
+                          textDecoration: 'none',
+                        }}>
+                        <img
+                          width='11'
+                          src={getImagePath(socialIcons['call'])}
+                          alt='call center'
+                        />{' '}
+                        Call Center 7700
+                      </a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+
+          {/* Legal */}
+          <tr>
+            <td style={{ backgroundColor: canvas }} align='center'>
+              <table
+                {...tableProps}
+                style={{
+                  width: 500,
+                  margin: '0 auto',
+                  textAlign: 'center',
+                  color: disclaimer,
+                }}>
+                <tbody>
+                  <tr>
+                    <td style={{ height: 26 }}>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        fontSize: 14,
+                        color: disclaimer,
+                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                      }}>
+                      {type !== 'footer_sendpulse' ? (
+                        <>
+                        <p>
+                          Вы получили это письмо, потому что подписались
+                          на&nbsp;рассылку Samsung. Не&nbsp;отвечайте
+                          на&nbsp;данное письмо. Оно является автоматической
+                          рассылкой. Чтобы отказаться от получения наших
+                          рассылок, пожалуйста,
+                          перейдите&nbsp;по&nbsp;этой&nbsp;
+                          {urls?.optout ? (
+                            <a
+                              href={urls.optout}
+                              style={{
+                                textDecoration: 'underline',
+                                color: disclaimer,
+                              }}>
+                              ссылке
+                            </a>
+                          ) : (
+                            'ссылке.'
+                          )}
+                          .
+                        </p><br />
+                        </>
+                      ) : null}
+                      ©{new Date().getFullYear()} Samsung Electronics Co.,
+                      Ltd. Все права защищены.
+                      <br />
+                      ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA»
+                      <br />
+                      (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)
+                      <br />
+                      Республика Казахстан, г. Алматы, 050000, улица Желтоксан,
+                      д. 115,
+                      <br />
+                      Торгово-офисный центр «Kaisar Plaza», 3 этаж.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ height: 24 }}>&nbsp;</td>
+                  </tr>
+                  <tr>
+                    <td
+                      style={{
+                        height: 24,
+                        fontSize: 14,
+                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                      }}>
+                      <a
+                        href={urls?.legal || '#'}
+                        style={{
+                          fontSize: 14,
+                          color: settings?.textcolor || '#000',
+                          textDecoration: 'underline',
+                        }}>
+                        Правовая информация
+                      </a>
+                      &nbsp;|&nbsp;
+                      <a
+                        href={urls?.privacy || '#'}
+                        style={{
+                          fontSize: 14,
+                          color: settings?.textcolor || '#000',
+                          textDecoration: 'underline',
+                        }}>
+                        Политика конфиденциальности
+                      </a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style={{ height: 115 }}>&nbsp;</td>
+                  </tr>
+                </tbody>
+              </table>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    );
+});
+
+export { FooterPreview };
+
 const BlockRenderer = ({
   block,
   index,
@@ -97,244 +337,7 @@ const BlockRenderer = ({
 
   const imgBlockStyle = { maxWidth: '100%', border: 0, display: 'block' };
 
-  const LANGUAGE_STRINGS = {
-    ru: { questions: 'Есть вопросы?' },
-    kz: { questions: 'Сұрақтарыңыз бар ма?' },
-  };
 
-  // --- Editor preview for footer ---
-  const FooterPreview = (type = { type }) => {
-    const canvas = settings?.canvascolor || '#f5f5f5';
-    const text = settings?.textcolor || '#000000';
-    const disclaimer = settings?.disclaimercolor || '#555555';
-    const urls = settings?.urls || {};
-
-    console.log('type = ', type);
-
-    return (
-      <table {...tableProps}>
-        <tbody>
-          <tr>
-            <td
-              style={{
-                height: 50,
-                fontSize: 0,
-                lineHeight: 0,
-                backgroundColor: canvas,
-              }}>
-              &nbsp;
-            </td>
-          </tr>
-
-          {/* Socials */}
-          <tr>
-            <td style={{ backgroundColor: canvas }} align='center'>
-              <table
-                {...tableProps}
-                style={{ width: '100%', margin: 0, padding: 0 }}>
-                <tbody>
-                  <tr>
-                    <td style={{ width: 120 }}>&nbsp;</td>
-                    {[
-                      ['facebook', 'Facebook'],
-                      ['instagram', 'Instagram'],
-                      ['vkontakte', 'VK'],
-                      ['youtube', 'YouTube'],
-                      ['twitter', 'Twitter'],
-                      ['linkedin', 'LinkedIn'],
-                    ].map(([key, alt]) => (
-                      <td key={key} style={{ padding: '0 16px' }}>
-                        <a href={urls?.[key] || '#'} title='Samsung Kazakhstan'>
-                          <img
-                            width='57'
-                            src={getImagePath(socialIcons[key])}
-                            alt={alt}
-                            style={{ display: 'block', border: 0 }}
-                          />
-                        </a>
-                      </td>
-                    ))}
-                    <td style={{ width: 120 }}>&nbsp;</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-
-          {/* Contact */}
-          <tr>
-            <td
-              style={{
-                backgroundColor: canvas,
-                textAlign: 'center',
-                paddingTop: 16,
-                paddingLeft: '10%',
-                paddingRight: '10%',
-              }}>
-              <h1
-                style={{
-                  margin: '0 0 13px 0',
-                  fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                  fontSize: 24,
-                  fontWeight: 'bold',
-                  color: text,
-                  lineHeight: 1,
-                }}>
-                {LANGUAGE_STRINGS[type === 'footer' ? 'ru' : 'kz'].questions}
-                {/* call footer only when the component is added */}
-              </h1>
-              <table
-                {...tableProps}
-                style={{
-                  width: 'auto',
-                  margin: '0 auto',
-                  textAlign: 'center',
-                  color: text,
-                }}>
-                <tbody>
-                  <tr>
-                    <td align='center' style={{ padding: 7 }}>
-                      <a
-                        href={urls?.livechat || '#'}
-                        style={{
-                          fontFamily:
-                            settings?.fontFamily || 'Arial, sans-serif',
-                          fontSize: 11,
-                          color: text,
-                          textDecoration: 'none',
-                        }}>
-                        <img
-                          width='11'
-                          src={getImagePath(socialIcons['livechat'])}
-                          alt='online chat'
-                        />{' '}
-                        Онлайн чат
-                      </a>
-                    </td>
-                    <td align='center' style={{ padding: 7 }}>
-                      <a
-                        href={urls?.call || '#'}
-                        style={{
-                          fontFamily:
-                            settings?.fontFamily || 'Arial, sans-serif',
-                          fontSize: 11,
-                          color: text,
-                          textDecoration: 'none',
-                        }}>
-                        <img
-                          width='11'
-                          src={getImagePath(socialIcons['call'])}
-                          alt='call center'
-                        />{' '}
-                        Call Center 7700
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-
-          {/* Legal */}
-          <tr>
-            <td style={{ backgroundColor: canvas }} align='center'>
-              <table
-                {...tableProps}
-                style={{
-                  width: 500,
-                  margin: '0 auto',
-                  textAlign: 'center',
-                  color: disclaimer,
-                }}>
-                <tbody>
-                  <tr>
-                    <td style={{ height: 26 }}>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td
-                      style={{
-                        fontSize: 14,
-                        color: disclaimer,
-                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                      }}>
-                      {type !== 'footer_sendpulse' ? (
-                        <p>
-                          Вы получили это письмо, потому что подписались
-                          на&nbsp;рассылку Samsung. Не&nbsp;отвечайте
-                          на&nbsp;данное письмо. Оно является автоматической
-                          рассылкой. Чтобы отказаться от получения наших
-                          рассылок, пожалуйста,
-                          перейдите&nbsp;по&nbsp;этой&nbsp;
-                          {urls?.optout ? (
-                            <a
-                              href={urls.optout}
-                              style={{
-                                textDecoration: 'underline',
-                                color: disclaimer,
-                              }}>
-                              ссылке
-                            </a>
-                          ) : (
-                            'ссылке.'
-                          )}
-                          .
-                        </p>
-                      ) : null}
-                      <br />©{new Date().getFullYear()} Samsung Electronics Co.,
-                      Ltd. Все права защищены.
-                      <br />
-                      ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA»
-                      <br />
-                      (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)
-                      <br />
-                      Республика Казахстан, г. Алматы, 050000, улица Желтоксан,
-                      д. 115,
-                      <br />
-                      Торгово-офисный центр «Kaisar Plaza», 3 этаж.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ height: 24 }}>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td
-                      style={{
-                        height: 24,
-                        fontSize: 14,
-                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                      }}>
-                      <a
-                        href={urls?.legal || '#'}
-                        style={{
-                          fontSize: 14,
-                          color: settings?.textcolor || '#000',
-                          textDecoration: 'underline',
-                        }}>
-                        Правовая информация
-                      </a>
-                      &nbsp;|&nbsp;
-                      <a
-                        href={urls?.privacy || '#'}
-                        style={{
-                          fontSize: 14,
-                          color: settings?.textcolor || '#000',
-                          textDecoration: 'underline',
-                        }}>
-                        Политика конфиденциальности
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ height: 115 }}>&nbsp;</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    );
-  };
 
   let blockContent;
 
@@ -1125,7 +1128,7 @@ const BlockRenderer = ({
     case 'footer':
     case 'footer_general_kz':
     case 'footer_sendpulse':
-      blockContent = <FooterPreview type={type} />;
+      blockContent = <FooterPreview type={type} settings={settings} />;
       break;
 
     default:

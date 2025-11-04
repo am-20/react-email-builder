@@ -58,6 +58,17 @@ const renderBlockHtml = (block, template = null) => {
       ? ''
       : 'padding-left: 12%; padding-right: 12%;';
 
+      const isKZ = type === 'footer_general_kz';
+const isSendpulse = type === 'footer_sendpulse';
+
+const t = isKZ
+  ? {
+      title: 'Сұрақтарыңыз бар ма?'
+    }
+  : {
+      title: 'Есть вопросы?'
+    };
+
   switch (type) {
     case 'header':
       blockHtml = `
@@ -324,7 +335,7 @@ const renderBlockHtml = (block, template = null) => {
               } 24px ${settings.fontFamily || 'Arial, sans-serif'};color:${
         settings.textcolor
       };line-height:1;">
-                Есть вопросы?
+      ${t.title}
               </h1>
       
               <table role="presentation" cellspacing="0" cellpadding="7" border="0" style="margin:0 auto;color:${
@@ -365,9 +376,9 @@ const renderBlockHtml = (block, template = null) => {
                     <td>
                       Вы получили это письмо, потому что подписались на рассылку Samsung. Не отвечайте на данное письмо — оно является автоматической рассылкой.
                       Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по этой
-                      <a href="${
+                      <a href='${
                         settings.urls.optout
-                      }" _type="optout" _label="${
+                      }' _type="optout" _label="${
         settings.linklabel || template?.footerLinkLabel || ''
       }" style="text-decoration:underline;color:${settings.disclaimercolor};">
                         ссылке
