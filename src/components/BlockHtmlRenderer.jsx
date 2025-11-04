@@ -61,12 +61,12 @@ const renderBlockHtml = (block, template = null) => {
   switch (type) {
     case 'header':
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle} ">
         <tr>
           <td style="text-align: ${
             settings.textAlign || 'left'
           }; margin: 0; padding: 0;">
-            <h1 style="margin: 0; ${styleString}">${content}</h1>
+            <h1 style="margin: 0; white-space:pre-wrap; ${styleString}">${content}</h1>
           </td>
         </tr>
       </table>`;
@@ -79,7 +79,7 @@ const renderBlockHtml = (block, template = null) => {
           <td style="text-align: ${
             settings.textAlign || 'left'
           }; margin: 0; padding: 0;">
-            <div>${content}</div>
+            <div style="white-space:pre-wrap;">${content}</div>
           </td>
         </tr>
       </table>`;
@@ -163,7 +163,7 @@ const renderBlockHtml = (block, template = null) => {
 
     case 'divider':
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}; padding: 10px 12%">
         <tr>
           <td style="height: ${settings.lineHeight}; background-color: ${settings.lineColor};"></td>
         </tr>
@@ -250,7 +250,7 @@ const renderBlockHtml = (block, template = null) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr>
           <td>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding: 0 12%">
               <tr>
                 <td style="${
                   settings.imagePosition === 'left'

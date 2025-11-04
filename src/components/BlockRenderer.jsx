@@ -92,16 +92,24 @@ const BlockRenderer = ({
     color: settings?.color,
     fontSize: settings?.fontSize,
     textAlign: settings?.textAlign,
+    whiteSpace: 'pre-wrap',
   };
 
   const imgBlockStyle = { maxWidth: '100%', border: 0, display: 'block' };
 
+  const LANGUAGE_STRINGS = {
+    ru: { questions: 'Есть вопросы?' },
+    kz: { questions: 'Сұрақтарыңыз бар ма?' },
+  };
+
   // --- Editor preview for footer ---
-  const FooterPreview = () => {
+  const FooterPreview = (type = { type }) => {
     const canvas = settings?.canvascolor || '#f5f5f5';
     const text = settings?.textcolor || '#000000';
     const disclaimer = settings?.disclaimercolor || '#555555';
     const urls = settings?.urls || {};
+
+    console.log('type = ', type);
 
     return (
       <table {...tableProps}>
@@ -172,7 +180,8 @@ const BlockRenderer = ({
                   color: text,
                   lineHeight: 1,
                 }}>
-                Есть вопросы?
+                {LANGUAGE_STRINGS[type === 'footer' ? 'ru' : 'kz'].questions}
+                {/* call footer only when the component is added */}
               </h1>
               <table
                 {...tableProps}
@@ -248,21 +257,29 @@ const BlockRenderer = ({
                         color: disclaimer,
                         fontFamily: settings?.fontFamily || 'Arial, sans-serif',
                       }}>
-                      Вы получили это письмо, потому что подписались
-                      на&nbsp;рассылку Samsung. Не&nbsp;отвечайте на&nbsp;данное
-                      письмо. Оно является автоматической рассылкой. Чтобы
-                      отказаться от получения наших рассылок, пожалуйста,
-                      перейдите&nbsp;по&nbsp;этой&nbsp;
-                      <a
-                        href={urls?.optout || '#'}
-                        style={{
-                          textDecoration: 'underline',
-                          color: disclaimer,
-                        }}>
-                        ссылке
-                      </a>
-                      .
-                      <br />
+                      {type !== 'footer_sendpulse' ? (
+                        <p>
+                          Вы получили это письмо, потому что подписались
+                          на&nbsp;рассылку Samsung. Не&nbsp;отвечайте
+                          на&nbsp;данное письмо. Оно является автоматической
+                          рассылкой. Чтобы отказаться от получения наших
+                          рассылок, пожалуйста,
+                          перейдите&nbsp;по&nbsp;этой&nbsp;
+                          {urls?.optout ? (
+                            <a
+                              href={urls.optout}
+                              style={{
+                                textDecoration: 'underline',
+                                color: disclaimer,
+                              }}>
+                              ссылке
+                            </a>
+                          ) : (
+                            'ссылке.'
+                          )}
+                          .
+                        </p>
+                      ) : null}
                       <br />©{new Date().getFullYear()} Samsung Electronics Co.,
                       Ltd. Все права защищены.
                       <br />
@@ -327,13 +344,16 @@ const BlockRenderer = ({
         <table {...tableProps}>
           <tbody>
             <tr>
-              <td style={{ textAlign: settings?.textAlign || 'left' }}>
+              <td
+                style={{
+                  textAlign: settings?.textAlign || 'left',
+                }}>
                 <h1
                   style={contentStyle}
                   contentEditable={isActive}
                   suppressContentEditableWarning
                   onBlur={(e) =>
-                    handleUpdateBlockContent(index, e.target.textContent)
+                    handleUpdateBlockContent(index, e.target.innerText)
                   }>
                   {content}
                 </h1>
@@ -581,8 +601,8 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: 'center' }}>
                 <div style={container}>
-                  {block.buttons?.map((button, i) => (
-                    <div key={i}>
+                  {block.buttons?.map((button, buttonIndex) => (
+                    <div key={buttonIndex}>
                       <a
                         href={`${button.settings?.linkUrl}`}
                         target='_blank'
@@ -600,6 +620,69 @@ const BlockRenderer = ({
                           }}
                         />
                       </a>
+                      {isActive && (
+                        <>
+                          <input
+                            type='file'
+                            accept='image/*'
+                            className='settings-input'
+                            onChange={(e) => handleImageUpload(e, buttonIndex)}
+                            style={{ marginBottom: 8 }}
+                          />
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Image URL'
+                            value={button.settings?.imageUrl || ''}
+                            onChange={(e) => {
+                              const newBlocks = [...template.blocks];
+                              newBlocks[index].buttons[
+                                buttonIndex
+                              ].settings.imageUrl = e.target.value;
+                              setTemplate({ ...template, blocks: newBlocks });
+                            }}
+                          />
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Alt text'
+                            value={button.settings?.imageAlt || ''}
+                            onChange={(e) => {
+                              const newBlocks = [...template.blocks];
+                              newBlocks[index].buttons[
+                                buttonIndex
+                              ].settings.imageAlt = e.target.value;
+                              setTemplate({ ...template, blocks: newBlocks });
+                            }}
+                          />
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Link URL'
+                            value={button.settings?.linkUrl || ''}
+                            onChange={(e) => {
+                              const newBlocks = [...template.blocks];
+                              newBlocks[index].buttons[
+                                buttonIndex
+                              ].settings.linkUrl = e.target.value;
+                              setTemplate({ ...template, blocks: newBlocks });
+                            }}
+                          />
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Link Label (optional)'
+                            value={button.settings?.linkLabel || ''}
+                            onChange={(e) => {
+                              const newBlocks = [...template.blocks];
+                              newBlocks[index].buttons[
+                                buttonIndex
+                              ].settings.linkLabel = e.target.value;
+                              setTemplate({ ...template, blocks: newBlocks });
+                            }}
+                          />
+                        </>
+                      )}
                     </div>
                   ))}
                 </div>
@@ -961,7 +1044,7 @@ const BlockRenderer = ({
     case 'footer':
     case 'footer_general_kz':
     case 'footer_sendpulse':
-      blockContent = <FooterPreview />;
+      blockContent = <FooterPreview type={type} />;
       break;
 
     default:
@@ -1062,6 +1145,37 @@ const BlockRenderer = ({
                   }
                   style={{ width: 80 }}
                 />
+              )}
+
+              {type === 'divider' && (
+                <>
+                  <input
+                    type='color'
+                    value={settings?.lineColor || '#dddddd'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'lineColor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
+                  />
+                  <input
+                    type='text'
+                    className='settings-input'
+                    placeholder='Height (e.g. 1px)'
+                    value={settings?.lineHeight || ''}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'lineHeight',
+                        e.target.value
+                      )
+                    }
+                    style={{ width: 80 }}
+                  />
+                </>
               )}
 
               {(type === 'header' ||
@@ -1178,7 +1292,6 @@ const BlockRenderer = ({
 
               {(type === 'header' ||
                 type === 'text' ||
-                type === 'image' ||
                 type === 'halfText') && (
                 <select
                   className='control-select'
