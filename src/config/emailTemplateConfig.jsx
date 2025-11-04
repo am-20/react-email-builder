@@ -83,6 +83,7 @@ export const components = [
   { type: 'text', label: 'Text Block', icon: <FileText size={16} /> },
   { type: 'image', label: 'Image', icon: <Image size={16} /> },
   { type: 'button', label: 'Button', icon: <Layout size={16} /> },
+  { type: 'buttonCoded', label: 'Button Coded', icon: <Layout size={16} /> },
   { type: 'buttonGroup', label: 'Button Group', icon: <Layout size={16} /> },
   { type: 'divider', label: 'Divider', icon: <Columns size={16} /> },
   { type: 'spacer', label: 'Spacer', icon: <Layout size={16} /> },

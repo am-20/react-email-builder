@@ -62,6 +62,24 @@ export const createNewBlock = (type, template = null) => {
           fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
         },
       };
+    case 'buttonCoded':
+      return {
+        id,
+        type,
+        content: 'Click Me',
+        settings: {
+          backgroundColor: '#ffffff',
+          buttonBgColor: '#000000',
+          color: '#ffffff',
+          padding: '12px 24px',
+          fontSize: '16px',
+          border: '1px solid #000000',
+          textAlign: 'center',
+          linkUrl: '',
+          linkLabel: '',
+          fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
+        },
+      };
     case 'buttonGroup':
       return {
         id,
@@ -137,14 +155,16 @@ export const createNewBlock = (type, template = null) => {
             vkontakte: 'https://vk.com/samsungkazakhstan',
             youtube: 'https://www.youtube.com/user/SamsungKZ',
             twitter: 'https://twitter.com/SamsungKZ',
-            linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
+            linkedin:
+              'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
             livechat: 'https://www.samsung.com/kz_ru/support/',
             call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
-            optout: '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
+            optout:
+              '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
             privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
-            legal: 'https://www.samsung.com/kz_ru/info/legal/'
-          }
-        }
+            legal: 'https://www.samsung.com/kz_ru/info/legal/',
+          },
+        },
       };
     case 'footer_general_kz':
       return {
@@ -162,14 +182,16 @@ export const createNewBlock = (type, template = null) => {
             vkontakte: 'https://vk.com/samsungkazakhstan',
             youtube: 'https://www.youtube.com/user/SamsungKZ',
             twitter: 'https://twitter.com/SamsungKZ',
-            linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
+            linkedin:
+              'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
             livechat: 'https://www.samsung.com/kz_kz/support/',
             call: 'https://www.samsung.com/kz_kz/support/contact/#onlinesupport',
-            optout: '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_kz',
+            optout:
+              '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_kz',
             privacy: 'https://www.samsung.com/kz_kz/info/privacy/',
-            legal: 'https://www.samsung.com/kz_kz/info/legal/'
-          }
-        }
+            legal: 'https://www.samsung.com/kz_kz/info/legal/',
+          },
+        },
       };
     case 'footer_sendpulse':
       return {
@@ -187,37 +209,39 @@ export const createNewBlock = (type, template = null) => {
             vkontakte: 'https://vk.com/samsungkazakhstan',
             youtube: 'https://www.youtube.com/user/SamsungKZ',
             twitter: 'https://twitter.com/SamsungKZ',
-            linkedin: 'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
+            linkedin:
+              'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
             livechat: 'https://www.samsung.com/kz_ru/support/',
             call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
-            optout: '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
+            optout:
+              '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
             privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
-            legal: 'https://www.samsung.com/kz_ru/info/legal/'
-          }
-        }
+            legal: 'https://www.samsung.com/kz_ru/info/legal/',
+          },
+        },
       };
     case 'columns':
       return {
         id,
         type,
         columns: [
-          { 
-            content: 'https://placehold.co/300x200', 
-            settings: { 
+          {
+            content: 'https://placehold.co/300x200',
+            settings: {
               padding: '10px',
               altText: 'Left column image',
               linkUrl: '',
-              linkLabel: ''
-            } 
+              linkLabel: '',
+            },
           },
-          { 
-            content: 'https://placehold.co/300x200', 
-            settings: { 
+          {
+            content: 'https://placehold.co/300x200',
+            settings: {
               padding: '10px',
               altText: 'Right column image',
               linkUrl: '',
-              linkLabel: ''
-            } 
+              linkLabel: '',
+            },
           },
         ],
         settings: {
@@ -261,7 +285,12 @@ export const createNewBlock = (type, template = null) => {
 };
 
 // Delete a block
-export const handleDeleteBlock = (index, template, setTemplate, setActiveBlockId) => {
+export const handleDeleteBlock = (
+  index,
+  template,
+  setTemplate,
+  setActiveBlockId
+) => {
   const newBlocks = [...template.blocks];
   newBlocks.splice(index, 1);
   setTemplate({ ...template, blocks: newBlocks });
@@ -280,11 +309,16 @@ export const handleDuplicateBlock = (index, template, setTemplate) => {
 };
 
 // Update block content
-export const handleUpdateBlockContent = (index, content, template, setTemplate) => {
+export const handleUpdateBlockContent = (
+  index,
+  content,
+  template,
+  setTemplate
+) => {
   // Create a temporary div to parse the HTML content
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = content;
-  
+
   // Remove all inline styles from the content
   const removeInlineStyles = (element) => {
     if (element.style) {
@@ -293,17 +327,23 @@ export const handleUpdateBlockContent = (index, content, template, setTemplate) 
     Array.from(element.children).forEach(removeInlineStyles);
   };
   removeInlineStyles(tempDiv);
-  
+
   // Get the sanitized content
   const sanitizedContent = tempDiv.innerHTML;
-  
+
   const newBlocks = [...template.blocks];
   newBlocks[index] = { ...newBlocks[index], content: sanitizedContent };
   setTemplate({ ...template, blocks: newBlocks });
 };
 
 // Update block settings
-export const handleUpdateBlockSettings = (index, setting, value, template, setTemplate) => {
+export const handleUpdateBlockSettings = (
+  index,
+  setting,
+  value,
+  template,
+  setTemplate
+) => {
   const newBlocks = [...template.blocks];
   newBlocks[index] = {
     ...newBlocks[index],
@@ -313,30 +353,35 @@ export const handleUpdateBlockSettings = (index, setting, value, template, setTe
 };
 
 // Update template settings
-export const handleUpdateTemplateSetting = (setting, value, template, setTemplate) => {
+export const handleUpdateTemplateSetting = (
+  setting,
+  value,
+  template,
+  setTemplate
+) => {
   setTemplate({ ...template, [setting]: value });
 };
 
 // Save template handler
 export const handleSaveTemplate = (generateHtmlOutput) => {
   const htmlOutput = generateHtmlOutput();
-  
+
   // Create a blob with the HTML content
   const blob = new Blob([htmlOutput], { type: 'text/html' });
-  
+
   // Create a download link
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
-  
+
   // Set the filename with timestamp
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   link.download = `email-template-${timestamp}.html`;
-  
+
   // Append to body, click, and remove
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
-  
+
   // Clean up the URL object
   URL.revokeObjectURL(link.href);
 };
@@ -360,7 +405,16 @@ export const handleDragOver = (e, index, setDragOverIndex) => {
   setDragOverIndex(index);
 };
 
-export const handleDrop = (e, dropIndex, draggedItem, template, setTemplate, setDraggedItem, setDragOverIndex, createNewBlock) => {
+export const handleDrop = (
+  e,
+  dropIndex,
+  draggedItem,
+  template,
+  setTemplate,
+  setDraggedItem,
+  setDragOverIndex,
+  createNewBlock
+) => {
   e.preventDefault();
 
   const newBlocks = [...template.blocks];
@@ -377,4 +431,4 @@ export const handleDrop = (e, dropIndex, draggedItem, template, setTemplate, set
   setTemplate({ ...template, blocks: newBlocks });
   setDraggedItem(null);
   setDragOverIndex(null);
-}; 
+};

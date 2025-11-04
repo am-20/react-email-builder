@@ -588,6 +588,87 @@ const BlockRenderer = ({
       );
       break;
 
+    case 'buttonCoded': {
+      const buttonStyles = {
+        textDecoration: 'none',
+        letterSpacing: 0,
+        display: 'inline',
+        borderRadius: '30px',
+        fontWeight: 'bold',
+        fontSize: settings?.fontSize,
+        color: settings?.color,
+        padding: settings?.padding,
+        backgroundColor: settings?.buttonBgColor,
+        border: settings?.border,
+      };
+      blockContent = (
+        <table {...tableProps}>
+          <tbody>
+            <tr>
+              <td
+                style={{
+                  textAlign: settings?.textAlign || 'center',
+                  padding: '16px 0',
+                }}>
+                <a
+                  href={`${settings?.linkUrl}`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  style={{ display: 'inline-block', textDecoration: 'none' }}>
+                  <p style={buttonStyles}>{content}</p>
+                </a>
+                {isActive && (
+                  <div className='button-settings'>
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Click Me'
+                      value={content || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'content',
+                          e.target.value
+                        )
+                      }
+                    />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link URL'
+                      value={settings?.linkUrl || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkUrl',
+                          e.target.value
+                        )
+                      }
+                    />
+
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link Label (optional)'
+                      value={settings?.linkLabel || ''}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkLabel',
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                )}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+      break;
+    }
+
     case 'buttonGroup': {
       const container = {
         display: 'flex',
