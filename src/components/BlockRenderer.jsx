@@ -618,7 +618,7 @@ const BlockRenderer = ({
                   target='_blank'
                   rel='noopener noreferrer'
                   style={{ display: 'inline-block', textDecoration: 'none' }}>
-                  <p style={buttonStyles}>{content}</p>
+                  <p style={buttonStyles}>{settings?.content || 'Click Me'}</p>
                 </a>
                 {isActive && (
                   <div className='button-settings'>
@@ -626,13 +626,9 @@ const BlockRenderer = ({
                       type='text'
                       className='settings-input'
                       placeholder='Click Me'
-                      value={content || ''}
+                      value={settings?.content || ''}
                       onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'content',
-                          e.target.value
-                        )
+                        handleUpdateBlockSettings(index, 'content', e.target.value)
                       }
                     />
                     <input
@@ -1024,31 +1020,33 @@ const BlockRenderer = ({
         fontFamily: settings?.fontFamily,
       };
 
-      const tableStyle = {
-        backgroundColor: settings?.backgroundColor,
-        padding: settings?.padding,
-        width: '100%',
+      const handleHalfImageUpload = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          handleUpdateBlockSettings(index, 'imageUrl', reader.result);
+        };
+        reader.readAsDataURL(file);
       };
 
       const renderImage = () =>
         settings?.imageLinkUrl ? (
-          <a
-            href={`${settings.imageLinkUrl}`}
-            target='_blank'
-            rel='noopener noreferrer'>
+          <a href={settings.imageLinkUrl} target="_blank" rel="noopener noreferrer">
             <img
-              src={block.imageUrl}
+              src={settings?.imageUrl || ''}
               alt={settings?.altText || ''}
               style={imgBlockStyle}
             />
           </a>
         ) : (
           <img
-            src={block.imageUrl}
+            src={settings?.imageUrl || ''}
             alt={settings?.altText || ''}
             style={imgBlockStyle}
           />
         );
+      
 
       const Button = () =>
         settings?.showButton ? (
@@ -1083,45 +1081,78 @@ const BlockRenderer = ({
       );
 
       blockContent = (
-        <table {...tableProps} style={tableStyle}>
-          <tbody>
-            <tr>
-              <td>
-                <table {...tableProps}>
-                  <tbody>
-                    <tr>
-                      <td
-                        style={
-                          settings?.imagePosition === 'left'
-                            ? imageContainerStyle
-                            : textContainerStyle
-                        }>
-                        {settings?.imagePosition === 'left' ? (
-                          renderImage()
-                        ) : (
-                          <TextBlock />
-                        )}
-                      </td>
-                      <td
-                        style={
-                          settings?.imagePosition === 'left'
-                            ? textContainerStyle
-                            : imageContainerStyle
-                        }>
-                        {settings?.imagePosition === 'left' ? (
-                          <TextBlock />
-                        ) : (
-                          renderImage()
-                        )}
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <>
+          <table {...tableProps}>
+            <tbody>
+              <tr>
+                <td style={settings?.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}>
+                  {settings?.imagePosition === 'left' ? renderImage() : <TextBlock />}
+                </td>
+                <td style={settings?.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}>
+                  {settings?.imagePosition === 'left' ? <TextBlock /> : renderImage()}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      
+          {isActive && (
+            <div className="image-settings" style={{ marginTop: 12 }}>
+      
+              <input
+                type="file"
+                accept="image/*"
+                className="settings-input"
+                onChange={handleHalfImageUpload}
+                style={{ marginBottom: 8 }}
+              />
+      
+              <input
+                type="text"
+                className="settings-input"
+                placeholder="Image URL"
+                value={settings?.imageUrl || ''}
+                onChange={(e) => handleUpdateBlockSettings(index, 'imageUrl', e.target.value)}
+              />
+      
+              <input
+                type="text"
+                className="settings-input"
+                placeholder="Alt text"
+                value={settings?.altText || ''}
+                onChange={(e) => handleUpdateBlockSettings(index, 'altText', e.target.value)}
+              />
+      
+              <input
+                type="text"
+                className="settings-input"
+                placeholder="Link URL (optional)"
+                value={settings?.imageLinkUrl || ''}
+                onChange={(e) => handleUpdateBlockSettings(index, 'imageLinkUrl', e.target.value)}
+              />
+      
+              <div className="control-flex" style={{ gap: 8 }}>
+                <select
+                  className="control-select"
+                  value={settings?.imagePosition || 'left'}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'imagePosition', e.target.value)}
+                >
+                  <option value="left">Image left</option>
+                  <option value="right">Image right</option>
+                </select>
+      
+                <input
+                  type="text"
+                  className="control-select"
+                  placeholder="Image width (e.g., 260px)"
+                  value={settings?.imageWidth || '260px'}
+                  onChange={(e) => handleUpdateBlockSettings(index, 'imageWidth', e.target.value)}
+                />
+              </div>
+            </div>
+          )}
+        </>
       );
+      
       break;
     }
 

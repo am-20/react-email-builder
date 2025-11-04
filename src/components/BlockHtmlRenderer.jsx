@@ -136,6 +136,53 @@ const t = isKZ
       </table>`;
       break;
 
+      case 'buttonCoded': {
+        const paddingTop = settings?.paddingTop ?? '12px';
+        const paddingBottom = settings?.paddingBottom ?? '12px';
+        const paddingX = settings?.paddingX ?? '24px';
+        const color = settings?.color ?? '#ffffff';
+        const bg = settings?.buttonBgColor ?? '#000000';
+        const border = settings?.border ?? 'none';
+        const radius = settings?.borderRadius ?? '30px';
+        const fontSize = settings?.fontSize ?? '16px';
+        const fontWeight = settings?.fontWeight ?? 'bold';
+        const text = settings?.content || 'Click Me';
+        const href = settings?.linkUrl || '#';
+        const align = settings?.textAlign || 'center';
+      
+        blockHtml = `
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+            <tr>
+              <td align="${align}" style="padding:16px 0;">
+                <a
+                  href="${href}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style="
+                    display:inline-block;
+                    text-decoration:none;
+                    color:${color};
+                    background-color:${bg};
+                    border:${border};
+                    border-radius:${radius};
+                    font-weight:${fontWeight};
+                    font-size:${fontSize};
+                    padding:${paddingTop} ${paddingX} ${paddingBottom} ${paddingX};
+                    letter-spacing:0;
+                    line-height:120%;
+                    font-family: ${settings.fontFamily};
+                  "
+                >
+                  ${text}
+                </a>
+              </td>
+            </tr>
+          </table>
+        `;
+        break;
+      }
+      
+
     case 'buttonGroup': {
       const buttonStyle = settings.inline
         ? 'display: inline-block;'
@@ -226,17 +273,12 @@ const t = isKZ
     }
 
     case 'halfText': {
+      const imageSrc = settings.imageUrl || ''; 
+
       const imageHtml = settings.imageLinkUrl
-        ? `<a href="${
-            settings.imageLinkUrl
-          }" target="_blank" rel="noopener noreferrer"><img src="${
-            block.imageUrl
-          }" alt="${
-            settings.altText || ''
-          }" style="max-width: 100%; border: 0; display: block;"></a>`
-        : `<img src="${block.imageUrl}" alt="${
-            settings.altText || ''
-          }" style="max-width: 100%; border: 0; display: block;">`;
+        ? `<a href="${settings.imageLinkUrl}" target="_blank" rel="noopener noreferrer"><img src="${imageSrc}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
+        : `<img src="${imageSrc}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">`;
+      
 
       const textContent = `
         <div style="color: ${settings.color}; font-size: ${
