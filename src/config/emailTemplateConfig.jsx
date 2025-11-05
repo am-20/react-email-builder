@@ -68,7 +68,7 @@ export const initialTemplate = {
           livechat: 'https://www.samsung.com/kz_ru/support/',
           call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
           optout:
-            "<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru",
+            '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
           privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
           legal: 'https://www.samsung.com/kz_ru/info/legal/',
         },

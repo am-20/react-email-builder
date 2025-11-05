@@ -10,172 +10,194 @@ const tableProps = {
   border: '0',
 };
 
-  const LANGUAGE_STRINGS = {
-    ru: { questions: 'Есть вопросы?' },
-    kz: { questions: 'Сұрақтарыңыз бар ма?' },
-  };
+const LANGUAGE_STRINGS = {
+  ru: {
+    questions: 'Есть вопросы?',
+    disclaimer:
+      'Вы получили это письмо, потому что подписались на рассылку Samsung. Не отвечайте на данное письмо. Оно является автоматической рассылкой. Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по этой ',
+    link: 'ссылке',
+    disclaimer_end: '',
+    all_rights: ' Все права защищены.',
+    address:
+      'ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA» (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ) Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115, Торгово-офисный центр «Kaisar Plaza», 3 этаж.',
+    legal: 'Правовая информация',
+    privacy: 'Политика конфиденциальности',
+  },
+  kz: {
+    questions: 'Сұрақтарыңыз бар ма?',
+    disclaimer:
+      'Сіз Samsung хабарламаларының таратылымына жазылғандықтан осы хатты алдыңыз. Осы хатқа жауап қайтармаңыз. Бұл автоматты түрде жолданатын хабарлама. Біздің хабарламаларымызды алудан бас тарту үшін, осы ',
+    link: 'сілтеме',
+    disclaimer_end: ' арқылы өтуіңізді сұраймыз',
+    all_rights: ' Барлық құқықтар қорғалған.',
+    address:
+      'ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA» ЖШС (САМСУНГ ЭЛЕКТРОНИКС ОРТАЛЫҚ ЕУРАЗИЯ) Қазақстан Республикасы, Алматы қ., 050000, Желтоқсан көшесі, 115 үй, «Kaisar Plaza» сауда-кеңсе орталығы, 3-қабат.',
+    legal: 'Құқықтық ақпарат',
+    privacy: 'Құпиялылық саясаты',
+  },
+};
 
-  // --- Editor preview for footer ---
+// --- Editor preview for footer ---
 const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
-    const canvas = settings?.canvascolor || '#f5f5f5';
-    const text = settings?.textcolor || '#000000';
-    const disclaimer = settings?.disclaimercolor || '#555555';
-    const urls = settings?.urls || {};
+  const canvas = settings?.canvascolor || '#f5f5f5';
+  const text = settings?.textcolor || '#000000';
+  const disclaimer = settings?.disclaimercolor || '#555555';
+  const urls = settings?.urls || {};
 
-    return (
-      <table {...tableProps}>
-        <tbody>
-          <tr>
-            <td
+  return (
+    <table {...tableProps}>
+      <tbody>
+        <tr>
+          <td
+            style={{
+              height: 50,
+              fontSize: 0,
+              lineHeight: 0,
+              backgroundColor: canvas,
+            }}>
+            &nbsp;
+          </td>
+        </tr>
+
+        {/* Socials */}
+        <tr>
+          <td style={{ backgroundColor: canvas }} align='center'>
+            <table
+              {...tableProps}
+              style={{ width: '100%', margin: 0, padding: 0 }}>
+              <tbody>
+                <tr>
+                  <td style={{ width: 120 }}>&nbsp;</td>
+                  {[
+                    ['facebook', 'Facebook'],
+                    ['instagram', 'Instagram'],
+                    ['vkontakte', 'VK'],
+                    ['youtube', 'YouTube'],
+                    ['twitter', 'Twitter'],
+                    ['linkedin', 'LinkedIn'],
+                  ].map(([key, alt]) => (
+                    <td key={key} style={{ padding: '0 16px' }}>
+                      <a href={urls?.[key] || '#'} title='Samsung Kazakhstan'>
+                        <img
+                          width='57'
+                          src={getImagePath(socialIcons[key])}
+                          alt={alt}
+                          style={{ display: 'block', border: 0 }}
+                        />
+                      </a>
+                    </td>
+                  ))}
+                  <td style={{ width: 120 }}>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        {/* Contact */}
+        <tr>
+          <td
+            style={{
+              backgroundColor: canvas,
+              textAlign: 'center',
+              paddingTop: 16,
+              paddingLeft: '10%',
+              paddingRight: '10%',
+            }}>
+            <h1
               style={{
-                height: 50,
-                fontSize: 0,
-                lineHeight: 0,
-                backgroundColor: canvas,
+                margin: '0 0 13px 0',
+                fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                fontSize: 24,
+                fontWeight: 'bold',
+                color: text,
+                lineHeight: 1,
               }}>
-              &nbsp;
-            </td>
-          </tr>
-
-          {/* Socials */}
-          <tr>
-            <td style={{ backgroundColor: canvas }} align='center'>
-              <table
-                {...tableProps}
-                style={{ width: '100%', margin: 0, padding: 0 }}>
-                <tbody>
-                  <tr>
-                    <td style={{ width: 120 }}>&nbsp;</td>
-                    {[
-                      ['facebook', 'Facebook'],
-                      ['instagram', 'Instagram'],
-                      ['vkontakte', 'VK'],
-                      ['youtube', 'YouTube'],
-                      ['twitter', 'Twitter'],
-                      ['linkedin', 'LinkedIn'],
-                    ].map(([key, alt]) => (
-                      <td key={key} style={{ padding: '0 16px' }}>
-                        <a href={urls?.[key] || '#'} title='Samsung Kazakhstan'>
-                          <img
-                            width='57'
-                            src={getImagePath(socialIcons[key])}
-                            alt={alt}
-                            style={{ display: 'block', border: 0 }}
-                          />
-                        </a>
-                      </td>
-                    ))}
-                    <td style={{ width: 120 }}>&nbsp;</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-
-          {/* Contact */}
-          <tr>
-            <td
+              {
+                LANGUAGE_STRINGS[type === 'footer_general_kz' ? 'kz' : 'ru']
+                  .questions
+              }
+            </h1>
+            <table
+              {...tableProps}
               style={{
-                backgroundColor: canvas,
+                width: 'auto',
+                margin: '0 auto',
                 textAlign: 'center',
-                paddingTop: 16,
-                paddingLeft: '10%',
-                paddingRight: '10%',
+                color: text,
               }}>
-              <h1
-                style={{
-                  margin: '0 0 13px 0',
-                  fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                  fontSize: 24,
-                  fontWeight: 'bold',
-                  color: text,
-                  lineHeight: 1,
-                }}>
-                {LANGUAGE_STRINGS[type === 'footer_general_kz' ? 'kz' : 'ru'].questions}
-              </h1>
-              <table
-                {...tableProps}
-                style={{
-                  width: 'auto',
-                  margin: '0 auto',
-                  textAlign: 'center',
-                  color: text,
-                }}>
-                <tbody>
-                  <tr>
-                    <td align='center' style={{ padding: 7 }}>
-                      <a
-                        href={urls?.livechat || '#'}
-                        style={{
-                          fontFamily:
-                            settings?.fontFamily || 'Arial, sans-serif',
-                          fontSize: 11,
-                          color: text,
-                          textDecoration: 'none',
-                        }}>
-                        <img
-                          width='11'
-                          src={getImagePath(socialIcons['livechat'])}
-                          alt='online chat'
-                        />{' '}
-                        Онлайн чат
-                      </a>
-                    </td>
-                    <td align='center' style={{ padding: 7 }}>
-                      <a
-                        href={urls?.call || '#'}
-                        style={{
-                          fontFamily:
-                            settings?.fontFamily || 'Arial, sans-serif',
-                          fontSize: 11,
-                          color: text,
-                          textDecoration: 'none',
-                        }}>
-                        <img
-                          width='11'
-                          src={getImagePath(socialIcons['call'])}
-                          alt='call center'
-                        />{' '}
-                        Call Center 7700
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-
-          {/* Legal */}
-          <tr>
-            <td style={{ backgroundColor: canvas }} align='center'>
-              <table
-                {...tableProps}
-                style={{
-                  width: 500,
-                  margin: '0 auto',
-                  textAlign: 'center',
-                  color: disclaimer,
-                }}>
-                <tbody>
-                  <tr>
-                    <td style={{ height: 26 }}>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td
+              <tbody>
+                <tr>
+                  <td align='center' style={{ padding: 7 }}>
+                    <a
+                      href={urls?.livechat || '#'}
                       style={{
-                        fontSize: 14,
-                        color: disclaimer,
                         fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                        fontSize: 11,
+                        color: text,
+                        textDecoration: 'none',
                       }}>
-                      {type !== 'footer_sendpulse' ? (
-                        <>
+                      <img
+                        width='11'
+                        src={getImagePath(socialIcons['livechat'])}
+                        alt='online chat'
+                      />{' '}
+                      Онлайн чат
+                    </a>
+                  </td>
+                  <td align='center' style={{ padding: 7 }}>
+                    <a
+                      href={urls?.call || '#'}
+                      style={{
+                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                        fontSize: 11,
+                        color: text,
+                        textDecoration: 'none',
+                      }}>
+                      <img
+                        width='11'
+                        src={getImagePath(socialIcons['call'])}
+                        alt='call center'
+                      />{' '}
+                      Call Center 7700
+                    </a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        {/* Legal */}
+        <tr>
+          <td style={{ backgroundColor: canvas }} align='center'>
+            <table
+              {...tableProps}
+              style={{
+                width: 500,
+                margin: '0 auto',
+                textAlign: 'center',
+                color: disclaimer,
+              }}>
+              <tbody>
+                <tr>
+                  <td style={{ height: 26 }}>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      fontSize: 14,
+                      color: disclaimer,
+                      fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                    }}>
+                    {type !== 'footer_sendpulse' ? (
+                      <>
                         <p>
-                          Вы получили это письмо, потому что подписались
-                          на&nbsp;рассылку Samsung. Не&nbsp;отвечайте
-                          на&nbsp;данное письмо. Оно является автоматической
-                          рассылкой. Чтобы отказаться от получения наших
-                          рассылок, пожалуйста,
-                          перейдите&nbsp;по&nbsp;этой&nbsp;
+                          {
+                            LANGUAGE_STRINGS[
+                              type === 'footer_general_kz' ? 'kz' : 'ru'
+                            ].disclaimer
+                          }
                           {urls?.optout ? (
                             <a
                               href={urls.optout}
@@ -183,69 +205,90 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                                 textDecoration: 'underline',
                                 color: disclaimer,
                               }}>
-                              ссылке
+                              {
+                                LANGUAGE_STRINGS[
+                                  type === 'footer_general_kz' ? 'kz' : 'ru'
+                                ].link
+                              }
                             </a>
                           ) : (
-                            'ссылке.'
+                            LANGUAGE_STRINGS[
+                              type === 'footer_general_kz' ? 'kz' : 'ru'
+                            ].link
                           )}
+                          {
+                            LANGUAGE_STRINGS[
+                              type === 'footer_general_kz' ? 'kz' : 'ru'
+                            ].disclaimer_end
+                          }
                           .
-                        </p><br />
-                        </>
-                      ) : null}
-                      ©{new Date().getFullYear()} Samsung Electronics Co.,
-                      Ltd. Все права защищены.
-                      <br />
-                      ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA»
-                      <br />
-                      (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)
-                      <br />
-                      Республика Казахстан, г. Алматы, 050000, улица Желтоксан,
-                      д. 115,
-                      <br />
-                      Торгово-офисный центр «Kaisar Plaza», 3 этаж.
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ height: 24 }}>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td
+                        </p>
+                        <br />
+                      </>
+                    ) : null}
+                    ©{new Date().getFullYear()} Samsung Electronics Co., Ltd.
+                    {
+                      LANGUAGE_STRINGS[
+                        type === 'footer_general_kz' ? 'kz' : 'ru'
+                      ].all_rights
+                    }
+                    <br />
+                    {
+                      LANGUAGE_STRINGS[
+                        type === 'footer_general_kz' ? 'kz' : 'ru'
+                      ].address
+                    }
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ height: 24 }}>&nbsp;</td>
+                </tr>
+                <tr>
+                  <td
+                    style={{
+                      height: 24,
+                      fontSize: 14,
+                      fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                    }}>
+                    <a
+                      href={urls?.legal || '#'}
                       style={{
-                        height: 24,
                         fontSize: 14,
-                        fontFamily: settings?.fontFamily || 'Arial, sans-serif',
+                        color: settings?.textcolor || '#000',
+                        textDecoration: 'underline',
                       }}>
-                      <a
-                        href={urls?.legal || '#'}
-                        style={{
-                          fontSize: 14,
-                          color: settings?.textcolor || '#000',
-                          textDecoration: 'underline',
-                        }}>
-                        Правовая информация
-                      </a>
-                      &nbsp;|&nbsp;
-                      <a
-                        href={urls?.privacy || '#'}
-                        style={{
-                          fontSize: 14,
-                          color: settings?.textcolor || '#000',
-                          textDecoration: 'underline',
-                        }}>
-                        Политика конфиденциальности
-                      </a>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td style={{ height: 115 }}>&nbsp;</td>
-                  </tr>
-                </tbody>
-              </table>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    );
+                      {
+                        LANGUAGE_STRINGS[
+                          type === 'footer_general_kz' ? 'kz' : 'ru'
+                        ].legal
+                      }
+                    </a>
+                    &nbsp;|&nbsp;
+                    <a
+                      href={urls?.privacy || '#'}
+                      style={{
+                        fontSize: 14,
+                        color: settings?.textcolor || '#000',
+                        textDecoration: 'underline',
+                      }}>
+                      {
+                        LANGUAGE_STRINGS[
+                          type === 'footer_general_kz' ? 'kz' : 'ru'
+                        ].privacy
+                      }
+                    </a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ height: 115 }}>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  );
 });
 
 export { FooterPreview };
@@ -336,8 +379,6 @@ const BlockRenderer = ({
   };
 
   const imgBlockStyle = { maxWidth: '100%', border: 0, display: 'block' };
-
-
 
   let blockContent;
 
@@ -628,7 +669,11 @@ const BlockRenderer = ({
                       placeholder='Click Me'
                       value={settings?.content || ''}
                       onChange={(e) =>
-                        handleUpdateBlockSettings(index, 'content', e.target.value)
+                        handleUpdateBlockSettings(
+                          index,
+                          'content',
+                          e.target.value
+                        )
                       }
                     />
                     <input
@@ -1032,7 +1077,10 @@ const BlockRenderer = ({
 
       const renderImage = () =>
         settings?.imageLinkUrl ? (
-          <a href={settings.imageLinkUrl} target="_blank" rel="noopener noreferrer">
+          <a
+            href={settings.imageLinkUrl}
+            target='_blank'
+            rel='noopener noreferrer'>
             <img
               src={settings?.imageUrl || ''}
               alt={settings?.altText || ''}
@@ -1046,7 +1094,6 @@ const BlockRenderer = ({
             style={imgBlockStyle}
           />
         );
-      
 
       const Button = () =>
         settings?.showButton ? (
@@ -1085,74 +1132,112 @@ const BlockRenderer = ({
           <table {...tableProps}>
             <tbody>
               <tr>
-                <td style={settings?.imagePosition === 'left' ? imageContainerStyle : textContainerStyle}>
-                  {settings?.imagePosition === 'left' ? renderImage() : <TextBlock />}
+                <td
+                  style={
+                    settings?.imagePosition === 'left'
+                      ? imageContainerStyle
+                      : textContainerStyle
+                  }>
+                  {settings?.imagePosition === 'left' ? (
+                    renderImage()
+                  ) : (
+                    <TextBlock />
+                  )}
                 </td>
-                <td style={settings?.imagePosition === 'left' ? textContainerStyle : imageContainerStyle}>
-                  {settings?.imagePosition === 'left' ? <TextBlock /> : renderImage()}
+                <td
+                  style={
+                    settings?.imagePosition === 'left'
+                      ? textContainerStyle
+                      : imageContainerStyle
+                  }>
+                  {settings?.imagePosition === 'left' ? (
+                    <TextBlock />
+                  ) : (
+                    renderImage()
+                  )}
                 </td>
               </tr>
             </tbody>
           </table>
-      
+
           {isActive && (
-            <div className="image-settings" style={{ marginTop: 12 }}>
-      
+            <div className='image-settings' style={{ marginTop: 12 }}>
               <input
-                type="file"
-                accept="image/*"
-                className="settings-input"
+                type='file'
+                accept='image/*'
+                className='settings-input'
                 onChange={handleHalfImageUpload}
                 style={{ marginBottom: 8 }}
               />
-      
+
               <input
-                type="text"
-                className="settings-input"
-                placeholder="Image URL"
+                type='text'
+                className='settings-input'
+                placeholder='Image URL'
                 value={settings?.imageUrl || ''}
-                onChange={(e) => handleUpdateBlockSettings(index, 'imageUrl', e.target.value)}
+                onChange={(e) =>
+                  handleUpdateBlockSettings(index, 'imageUrl', e.target.value)
+                }
               />
-      
+
               <input
-                type="text"
-                className="settings-input"
-                placeholder="Alt text"
+                type='text'
+                className='settings-input'
+                placeholder='Alt text'
                 value={settings?.altText || ''}
-                onChange={(e) => handleUpdateBlockSettings(index, 'altText', e.target.value)}
+                onChange={(e) =>
+                  handleUpdateBlockSettings(index, 'altText', e.target.value)
+                }
               />
-      
+
               <input
-                type="text"
-                className="settings-input"
-                placeholder="Link URL (optional)"
+                type='text'
+                className='settings-input'
+                placeholder='Link URL (optional)'
                 value={settings?.imageLinkUrl || ''}
-                onChange={(e) => handleUpdateBlockSettings(index, 'imageLinkUrl', e.target.value)}
+                onChange={(e) =>
+                  handleUpdateBlockSettings(
+                    index,
+                    'imageLinkUrl',
+                    e.target.value
+                  )
+                }
               />
-      
-              <div className="control-flex" style={{ gap: 8 }}>
+
+              <div className='control-flex' style={{ gap: 8 }}>
                 <select
-                  className="control-select"
+                  className='control-select'
                   value={settings?.imagePosition || 'left'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'imagePosition', e.target.value)}
-                >
-                  <option value="left">Image left</option>
-                  <option value="right">Image right</option>
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'imagePosition',
+                      e.target.value
+                    )
+                  }>
+                  <option value='left'>Image left</option>
+                  <option value='right'>Image right</option>
                 </select>
-      
+
                 <input
-                  type="text"
-                  className="control-select"
-                  placeholder="Image width (e.g., 260px)"
+                  type='text'
+                  className='control-select'
+                  placeholder='Image width (e.g., 260px)'
                   value={settings?.imageWidth || '260px'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'imageWidth', e.target.value)}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'imageWidth',
+                      e.target.value
+                    )
+                  }
                 />
               </div>
             </div>
           )}
         </>
       );
-      
+
       break;
     }
 

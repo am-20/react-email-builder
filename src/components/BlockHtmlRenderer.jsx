@@ -58,16 +58,34 @@ const renderBlockHtml = (block, template = null) => {
       ? ''
       : 'padding-left: 12%; padding-right: 12%;';
 
-      const isKZ = type === 'footer_general_kz';
-const isSendpulse = type === 'footer_sendpulse';
+  const isKZ = type === 'footer_general_kz';
+  const isSendpulse = type === 'footer_sendpulse';
 
-const t = isKZ
-  ? {
-      title: 'Сұрақтарыңыз бар ма?'
-    }
-  : {
-      title: 'Есть вопросы?'
-    };
+  const t = isKZ
+    ? {
+        questions: 'Сұрақтарыңыз бар ма?',
+        disclaimer:
+          'Сіз Samsung хабарламаларының таратылымына жазылғандықтан осы хатты алдыңыз. Осы хатқа жауап қайтармаңыз. Бұл автоматты түрде жолданатын хабарлама. Біздің хабарламаларымызды алудан бас тарту үшін, осы ',
+        link: 'сілтеме',
+        disclaimer_end: 'арқылы өтуіңізді сұраймыз.',
+        all_rights: ' Барлық құқықтар қорғалған.',
+        address:
+          'ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA» ЖШС (САМСУНГ ЭЛЕКТРОНИКС ОРТАЛЫҚ ЕУРАЗИЯ) Қазақстан Республикасы, Алматы қ., 050000, Желтоқсан көшесі, 115 үй, «Kaisar Plaza» сауда-кеңсе орталығы, 3-қабат.',
+        legal: 'Құқықтық ақпарат',
+        privacy: 'Құпиялылық саясаты',
+      }
+    : {
+        questions: 'Есть вопросы?',
+        disclaimer:
+          'Вы получили это письмо, потому что подписались на рассылку Samsung. Не отвечайте на данное письмо. Оно является автоматической рассылкой. Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по этой ',
+        link: 'ссылке',
+        disclaimer_end: '',
+        all_rights: ' Все права защищены.',
+        address:
+          'ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA» (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ) Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115, Торгово-офисный центр «Kaisar Plaza», 3 этаж.',
+        legal: 'Правовая информация',
+        privacy: 'Политика конфиденциальности',
+      };
 
   switch (type) {
     case 'header':
@@ -136,21 +154,21 @@ const t = isKZ
       </table>`;
       break;
 
-      case 'buttonCoded': {
-        const paddingTop = settings?.paddingTop ?? '12px';
-        const paddingBottom = settings?.paddingBottom ?? '12px';
-        const paddingX = settings?.paddingX ?? '24px';
-        const color = settings?.color ?? '#ffffff';
-        const bg = settings?.buttonBgColor ?? '#000000';
-        const border = settings?.border ?? 'none';
-        const radius = settings?.borderRadius ?? '30px';
-        const fontSize = settings?.fontSize ?? '16px';
-        const fontWeight = settings?.fontWeight ?? 'bold';
-        const text = settings?.content || 'Click Me';
-        const href = settings?.linkUrl || '#';
-        const align = settings?.textAlign || 'center';
-      
-        blockHtml = `
+    case 'buttonCoded': {
+      const paddingTop = settings?.paddingTop ?? '12px';
+      const paddingBottom = settings?.paddingBottom ?? '12px';
+      const paddingX = settings?.paddingX ?? '24px';
+      const color = settings?.color ?? '#ffffff';
+      const bg = settings?.buttonBgColor ?? '#000000';
+      const border = settings?.border ?? 'none';
+      const radius = settings?.borderRadius ?? '30px';
+      const fontSize = settings?.fontSize ?? '16px';
+      const fontWeight = settings?.fontWeight ?? 'bold';
+      const text = settings?.content || 'Click Me';
+      const href = settings?.linkUrl || '#';
+      const align = settings?.textAlign || 'center';
+
+      blockHtml = `
           <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
             <tr>
               <td align="${align}" style="padding:16px 0;">
@@ -179,9 +197,8 @@ const t = isKZ
             </tr>
           </table>
         `;
-        break;
-      }
-      
+      break;
+    }
 
     case 'buttonGroup': {
       const buttonStyle = settings.inline
@@ -273,12 +290,17 @@ const t = isKZ
     }
 
     case 'halfText': {
-      const imageSrc = settings.imageUrl || ''; 
+      const imageSrc = settings.imageUrl || '';
 
       const imageHtml = settings.imageLinkUrl
-        ? `<a href="${settings.imageLinkUrl}" target="_blank" rel="noopener noreferrer"><img src="${imageSrc}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;"></a>`
-        : `<img src="${imageSrc}" alt="${settings.altText || ''}" style="max-width: 100%; border: 0; display: block;">`;
-      
+        ? `<a href="${
+            settings.imageLinkUrl
+          }" target="_blank" rel="noopener noreferrer"><img src="${imageSrc}" alt="${
+            settings.altText || ''
+          }" style="max-width: 100%; border: 0; display: block;"></a>`
+        : `<img src="${imageSrc}" alt="${
+            settings.altText || ''
+          }" style="max-width: 100%; border: 0; display: block;">`;
 
       const textContent = `
         <div style="color: ${settings.color}; font-size: ${
@@ -377,7 +399,7 @@ const t = isKZ
               } 24px ${settings.fontFamily || 'Arial, sans-serif'};color:${
         settings.textcolor
       };line-height:1;">
-      ${t.title}
+      ${t.questions}
               </h1>
       
               <table role="presentation" cellspacing="0" cellpadding="7" border="0" style="margin:0 auto;color:${
@@ -416,21 +438,27 @@ const t = isKZ
         
                   <tr>
                     <td>
-                      Вы получили это письмо, потому что подписались на рассылку Samsung. Не отвечайте на данное письмо — оно является автоматической рассылкой.
-                      Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по этой
+                    ${
+                      !isSendpulse
+                        ? `${t.disclaimer}
                       <a href='${
                         settings.urls.optout
                       }' _type="optout" _label="${
-        settings.linklabel || template?.footerLinkLabel || ''
-      }" style="text-decoration:underline;color:${settings.disclaimercolor};">
-                        ссылке
-                      </a>.
-                      <br><br>
-                      ©${new Date().getFullYear()} Samsung Electronics Co., Ltd. Все права защищены.<br>
-                      ТОО &laquo;SAMSUNG ELECTRONICS CENTRAL EURASIA&raquo;<br>
-                      (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ)<br>
-                      Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115,<br>
-                      Торгово-офисный центр &laquo;Kaisar Plaza&raquo;, 3 этаж.
+                            settings.linklabel ||
+                            template?.footerLinkLabel ||
+                            ''
+                          }" style="text-decoration:underline;color:${
+                            settings.disclaimercolor
+                          };">
+      ${t.link}
+                      </a> ${t.disclaimer_end}.
+                      <br><br>`
+                        : ''
+                    }
+                      ©${new Date().getFullYear()} Samsung Electronics Co., Ltd. ${
+        t.all_rights
+      }<br>
+                      ${t.address}
                     </td>
                   </tr>
         
@@ -440,11 +468,11 @@ const t = isKZ
                     <td>
                       <a href="${settings.urls.legal}" style="color:${
         settings.textcolor
-      };text-decoration:underline;">Правовая информация</a>
+      };text-decoration:underline;">${t.legal}</a>
                       &nbsp;|&nbsp;
                       <a href="${settings.urls.privacy}" style="color:${
         settings.textcolor
-      };text-decoration:underline;">Политика конфиденциальности</a>
+      };text-decoration:underline;">${t.privacy}</a>
                     </td>
                   </tr>
         
