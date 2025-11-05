@@ -236,6 +236,59 @@ const renderBlockHtml = (block, template = null) => {
       break;
     }
 
+    case 'buttonCodedGroup': {
+      const inline = settings?.inline;
+      const gap = settings?.gap || '0';
+      const buttonWrapStyle = inline ? 'display:inline-block;' : 'display:block;';
+      const gapStyle = inline ? `margin-right:${gap};` : `margin-bottom:${gap};`;
+    
+      const buttonsHtml = (block.buttons || [])
+        .map((btn, i, arr) => {
+          const s = btn?.settings || {};
+          const label = s.content || 'Click Me';
+          const href = s.linkUrl || '#';
+          const linkLabel = s.linkLabel || '';
+          const color = s.color ?? '#ffffff';
+          const bg = s.buttonBgColor ?? '#000000';
+          const padding = s.padding ?? '12px 24px';
+          const fontSize = s.fontSize ?? '16px';
+          const border = s.border ?? '1px solid #000000';
+    
+          // wrapper gets the layout/gap; anchor/span get the visual styles
+          return `
+            <div style="${buttonWrapStyle}${i < arr.length - 1 ? gapStyle : ''}">
+              <a href="${href}" target="_blank" rel="noopener noreferrer" _label="${linkLabel}" style="display:inline-block;text-decoration:none;">
+                <span style="
+                  display:inline-block;
+                  text-decoration:none;
+                  letter-spacing:0;
+                  border-radius:30px;
+                  font-weight:bold;
+                  font-size:${fontSize};
+                  color:${color};
+                  background-color:${bg};
+                  border:${border};
+                  padding:${padding};
+                  line-height:120%;
+                  font-family:${settings.fontFamily || 'Arial, sans-serif'};
+                ">${label}</span>
+              </a>
+            </div>`;
+        })
+        .join('');
+    
+      blockHtml = `
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
+          <tr>
+            <td style="text-align:center;">
+              ${buttonsHtml}
+            </td>
+          </tr>
+        </table>`;
+      break;
+    }
+    
+
     case 'divider':
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}; padding: 10px 12%">
