@@ -119,6 +119,49 @@ export const createNewBlock = (type, template = null) => {
           gap: '20px',
         },
       };
+    case 'buttonCodedGroup':
+      return {
+        id,
+        type,
+        buttons: [
+          {
+            content: 'Click Me',
+            settings: {
+              backgroundColor: '#ffffff',
+              buttonBgColor: '#000000',
+              color: '#ffffff',
+              padding: '12px 24px',
+              fontSize: '16px',
+              border: '1px solid #000000',
+              textAlign: 'center',
+              linkUrl: '',
+              linkLabel: '',
+              fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
+            },
+          },
+          {
+            content: 'Click Me',
+            settings: {
+              backgroundColor: '#ffffff',
+              buttonBgColor: '#000000',
+              color: '#ffffff',
+              padding: '12px 24px',
+              fontSize: '16px',
+              border: '1px solid #000000',
+              textAlign: 'center',
+              linkUrl: '',
+              linkLabel: '',
+              fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
+            },
+          },
+        ],
+        settings: {
+          backgroundColor: '#ffffff',
+          padding: '10px',
+          inline: true,
+          gap: '20px',
+        },
+      };
     case 'divider':
       return {
         id,

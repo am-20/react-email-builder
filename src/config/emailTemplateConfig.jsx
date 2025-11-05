@@ -85,6 +85,11 @@ export const components = [
   { type: 'button', label: 'Button', icon: <Layout size={16} /> },
   { type: 'buttonCoded', label: 'Button Coded', icon: <Layout size={16} /> },
   { type: 'buttonGroup', label: 'Button Group', icon: <Layout size={16} /> },
+  {
+    type: 'buttonCodedGroup',
+    label: 'Button Coded Group',
+    icon: <Layout size={16} />,
+  },
   { type: 'divider', label: 'Divider', icon: <Columns size={16} /> },
   { type: 'spacer', label: 'Spacer', icon: <Layout size={16} /> },
   { type: 'columns', label: '2 Columns', icon: <Grid size={16} /> },

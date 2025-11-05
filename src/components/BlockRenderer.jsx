@@ -819,6 +819,94 @@ const BlockRenderer = ({
       break;
     }
 
+    case 'buttonCodedGroup': {
+      const buttonStyles = {
+        textDecoration: 'none',
+        letterSpacing: 0,
+        display: 'inline',
+        borderRadius: '30px',
+        fontWeight: 'bold',
+        backgroundColor: settings?.buttonBgColor,
+        fontSize: settings?.fontSize,
+        color: settings?.color,
+        padding: settings?.padding,
+        border: settings?.border,
+      };
+      blockContent = (
+        <table {...tableProps}>
+          <tbody>
+            <tr>
+              <td style={{ textAlign: 'center' }}>
+                <div style={buttonStyles}>
+                  {block.buttons?.map((button, buttonIndex) => (
+                    <div key={buttonIndex}>
+                      <a
+                        href={`${button.settings?.linkUrl}`}
+                        target='_blank'
+                        rel='noopener noreferrer'
+                        style={{
+                          display: 'inline-block',
+                          textDecoration: 'none',
+                        }}>
+                        <p style={buttonStyles}>
+                          {button.settings?.content || 'Click Me'}
+                        </p>
+                      </a>
+                      {isActive && (
+                        <div className='button-settings'>
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Click Me'
+                            value={settings?.content || ''}
+                            onChange={(e) =>
+                              handleUpdateBlockSettings(
+                                buttonIndex,
+                                'content',
+                                e.target.value
+                              )
+                            }
+                          />
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Link URL'
+                            value={settings?.linkUrl || ''}
+                            onChange={(e) =>
+                              handleUpdateBlockSettings(
+                                buttonIndex,
+                                'linkUrl',
+                                e.target.value
+                              )
+                            }
+                          />
+
+                          <input
+                            type='text'
+                            className='settings-input'
+                            placeholder='Link Label (optional)'
+                            value={settings?.linkLabel || ''}
+                            onChange={(e) =>
+                              handleUpdateBlockSettings(
+                                index,
+                                'linkLabel',
+                                e.target.value
+                              )
+                            }
+                          />
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      );
+      break;
+    }
+
     case 'divider':
       blockContent = (
         <table {...tableProps}>
