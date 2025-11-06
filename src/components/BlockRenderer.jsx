@@ -826,7 +826,7 @@ const BlockRenderer = ({
         gap: settings?.gap || '0px',
         justifyContent: 'center',
       };
-    
+
       const getBtnStyles = (btn) => {
         const s = btn?.settings || {};
         return {
@@ -842,7 +842,7 @@ const BlockRenderer = ({
           border: s.border ?? '1px solid #000000',
         };
       };
-    
+
       const updateBtn = (buttonIndex, key, value) => {
         const newBlocks = [...template.blocks];
         const btn = newBlocks[index].buttons?.[buttonIndex] || { settings: {} };
@@ -850,7 +850,7 @@ const BlockRenderer = ({
         newBlocks[index].buttons[buttonIndex] = btn;
         setTemplate({ ...template, blocks: newBlocks });
       };
-    
+
       blockContent = (
         <table {...tableProps}>
           <tbody>
@@ -861,86 +861,152 @@ const BlockRenderer = ({
                     const btnStyles = getBtnStyles(button);
                     const s = button?.settings || {};
                     return (
-                      <div key={buttonIndex} style={{padding: '16px 0'}}>
+                      <div key={buttonIndex} style={{ padding: '16px 0' }}>
                         <a
                           href={`${s.linkUrl || '#'}`}
                           target='_blank'
                           rel='noopener noreferrer'
-                          style={{ display: 'inline-block', textDecoration: 'none' }}>
+                          style={{
+                            display: 'inline-block',
+                            textDecoration: 'none',
+                          }}>
                           <p style={btnStyles}>{s.content || 'Click Me'}</p>
                         </a>
-    
+
                         {isActive && (
-                          <div className='button-settings' style={{width: '100%'}}>
+                          <div
+                            className='button-settings'
+                            style={{ width: '100%' }}>
                             <input
                               type='text'
                               className='settings-input'
                               placeholder='Button text'
                               value={s.content || ''}
-                              onChange={(e) => updateBtn(buttonIndex, 'content', e.target.value)}
+                              onChange={(e) =>
+                                updateBtn(
+                                  buttonIndex,
+                                  'content',
+                                  e.target.value
+                                )
+                              }
                             />
-    
+
                             <input
                               type='text'
                               className='settings-input'
                               placeholder='Link URL'
                               value={s.linkUrl || ''}
-                              onChange={(e) => updateBtn(buttonIndex, 'linkUrl', e.target.value)}
+                              onChange={(e) =>
+                                updateBtn(
+                                  buttonIndex,
+                                  'linkUrl',
+                                  e.target.value
+                                )
+                              }
                             />
                             <input
                               type='text'
                               className='settings-input'
                               placeholder='Link label'
                               value={s.linkLabel || ''}
-                              onChange={(e) => updateBtn(buttonIndex, 'linkLabel', e.target.value)}
+                              onChange={(e) =>
+                                updateBtn(
+                                  buttonIndex,
+                                  'linkLabel',
+                                  e.target.value
+                                )
+                              }
                             />
-    
-                            <div className='control-flex' style={{ gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
-                              <div className='control-flex' style={{ alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontSize: 12, color: '#6b7280' }}>Bg</span>
+
+                            <div
+                              className='control-flex'
+                              style={{
+                                gap: 8,
+                                marginTop: 6,
+                                flexWrap: 'wrap',
+                              }}>
+                              <div
+                                className='control-flex'
+                                style={{ alignItems: 'center', gap: 6 }}>
+                                <span
+                                  style={{ fontSize: 12, color: '#6b7280' }}>
+                                  Bg
+                                </span>
                                 <input
                                   type='color'
                                   value={s.buttonBgColor ?? '#000000'}
-                                  onChange={(e) => updateBtn(buttonIndex, 'buttonBgColor', e.target.value)}
+                                  onChange={(e) =>
+                                    updateBtn(
+                                      buttonIndex,
+                                      'buttonBgColor',
+                                      e.target.value
+                                    )
+                                  }
                                   className='color-input'
                                 />
                               </div>
-    
-                              <div className='control-flex' style={{ alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontSize: 12, color: '#6b7280' }}>Text</span>
+
+                              <div
+                                className='control-flex'
+                                style={{ alignItems: 'center', gap: 6 }}>
+                                <span
+                                  style={{ fontSize: 12, color: '#6b7280' }}>
+                                  Text
+                                </span>
                                 <input
                                   type='color'
                                   value={s.color ?? '#ffffff'}
-                                  onChange={(e) => updateBtn(buttonIndex, 'color', e.target.value)}
+                                  onChange={(e) =>
+                                    updateBtn(
+                                      buttonIndex,
+                                      'color',
+                                      e.target.value
+                                    )
+                                  }
                                   className='color-input'
                                 />
                               </div>
-    
+
                               <input
                                 type='text'
                                 className='settings-input'
                                 placeholder='Padding (e.g. 12px 24px)'
                                 value={s.padding ?? '12px 24px'}
-                                onChange={(e) => updateBtn(buttonIndex, 'padding', e.target.value)}
-                                
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'padding',
+                                    e.target.value
+                                  )
+                                }
                               />
-    
+
                               <input
                                 type='text'
                                 className='settings-input'
                                 placeholder='Font size (e.g. 16px)'
                                 value={s.fontSize ?? '16px'}
-                                onChange={(e) => updateBtn(buttonIndex, 'fontSize', e.target.value)}
-                                
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'fontSize',
+                                    e.target.value
+                                  )
+                                }
                               />
-    
+
                               <input
                                 type='text'
                                 className='settings-input'
                                 placeholder='Border (e.g. 1px solid #000)'
                                 value={s.border ?? '1px solid #000000'}
-                                onChange={(e) => updateBtn(buttonIndex, 'border', e.target.value)}
-                                
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'border',
+                                    e.target.value
+                                  )
+                                }
                               />
                             </div>
                           </div>
@@ -956,7 +1022,6 @@ const BlockRenderer = ({
       );
       break;
     }
-    
 
     case 'divider':
       blockContent = (
@@ -1611,7 +1676,7 @@ const BlockRenderer = ({
                 </>
               )}
 
-              {type === 'buttonGroup' || type === 'buttonCodedGroup' && (
+              {(type === 'buttonGroup' || type === 'buttonCodedGroup') && (
                 <div className='checkbox-container'>
                   <input
                     type='checkbox'
@@ -1631,6 +1696,8 @@ const BlockRenderer = ({
 
               {(type === 'header' ||
                 type === 'text' ||
+                type === 'button' ||
+                type === 'buttonCoded' ||
                 type === 'halfText') && (
                 <select
                   className='control-select'
