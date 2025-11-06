@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { GripVertical, Trash2, Copy } from 'lucide-react';
 import { getImagePath, socialIcons } from '../utils/imageUtils';
+import { addFileAsset } from '../utils/assets';
 
 const tableProps = {
   role: 'presentation',
@@ -316,6 +317,7 @@ const BlockRenderer = ({
   handleUpdateBlockSettings,
 }) => {
   const { type, content } = block;
+  const [manualUrlValue, setManualUrlValue] = useState(settings?.imagePath || '');
 
   const handleImageUpload = (
     e,
@@ -325,25 +327,50 @@ const BlockRenderer = ({
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
+
+    const asset = addFileAsset(file); // { path: "i/1.png", previewUrl: "blob:..." }
+
+    setTemplate((prev) => {
+      const newBlocks = [...prev.blocks];
+
       if (buttonIndex !== null) {
-        const newBlocks = [...template.blocks];
-        newBlocks[index].buttons[buttonIndex].settings.imageUrl = reader.result;
-        setTemplate({ ...template, blocks: newBlocks });
+        const btn = newBlocks[index].buttons[buttonIndex];
+        btn.settings = {
+          ...(btn.settings || {}),
+          imagePath: asset.path,
+          imagePreviewUrl: asset.previewUrl,
+        };
       } else if (columnIndex !== null) {
-        const newBlocks = [...template.blocks];
-        newBlocks[index].columns[columnIndex].content = reader.result;
-        setTemplate({ ...template, blocks: newBlocks });
+        const col = newBlocks[index].columns[columnIndex] || {};
+        col.imagePath = asset.path;
+        col.imagePreviewUrl = asset.previewUrl;
+        // legacy fallback
+        col.content = asset.previewUrl;
+        newBlocks[index].columns[columnIndex] = col;
       } else if (isHalfText) {
-        const newBlocks = [...template.blocks];
-        newBlocks[index].imageUrl = reader.result;
-        setTemplate({ ...template, blocks: newBlocks });
+        const blk = newBlocks[index];
+        blk.imagePath = asset.path;
+        blk.imagePreviewUrl = asset.previewUrl;
+        if ('imageUrl' in blk) delete blk.imageUrl;
+      } else if (isHalfText) {
+        const blk = newBlocks[index];
+        blk.imagePath = asset.path;
+        blk.imagePreviewUrl = asset.previewUrl;
+        if ('imageUrl' in blk) delete blk.imageUrl;
       } else {
-        handleUpdateBlockContent(index, reader.result);
+        const blk = newBlocks[index];
+        blk.settings = {
+          ...(blk.settings || {}),
+          imagePath: asset.path,
+          imagePreviewUrl: asset.previewUrl,
+        };
+        if (typeof blk.content !== 'undefined') blk.content = asset.previewUrl;
       }
-    };
-    reader.readAsDataURL(file);
+
+      return { ...prev, blocks: newBlocks };
+    });
+
+    setManualUrlValue(asset.path);
   };
 
   const shouldShowToolbar = isHovered || isActive;
@@ -430,89 +457,88 @@ const BlockRenderer = ({
       );
       break;
 
-    case 'image':
+    case 'image': {
+      const srcForEditor = settings?.imagePreviewUrl || settings?.imagePath || 'https://placehold.co/640x300';
+
+      const handleManualUrl = (e) => {
+        const url = e.target.value;
+        setManualUrlValue(url);
+        handleUpdateBlockSettings(index, 'imagePath', url);
+        handleUpdateBlockSettings(index, 'imagePreviewUrl', url);
+      };
+
       blockContent = (
         <table {...tableProps}>
           <tbody>
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'left' }}>
                 {settings?.linkUrl ? (
-                  <a
-                    href={`${settings.linkUrl}`}
-                    target='_blank'
-                    rel='noopener noreferrer'>
+                  <a href={`${settings.linkUrl}`} target="_blank" rel="noopener noreferrer">
+                    {srcForEditor && (
+                      <img
+                        src={srcForEditor}
+                        alt={settings?.altText || ''}
+                        style={imgBlockStyle}
+                      />
+                    )}
+                  </a>
+                ) : (
+                  srcForEditor && (
                     <img
-                      src={content}
+                      src={srcForEditor}
                       alt={settings?.altText || ''}
                       style={imgBlockStyle}
                     />
-                  </a>
-                ) : (
-                  <img
-                    src={content}
-                    alt={settings?.altText || ''}
-                    style={imgBlockStyle}
-                  />
+                  )
                 )}
+
                 {isActive && (
                   <table {...tableProps} style={{ marginTop: 8 }}>
                     <tbody>
                       <tr>
                         <td>
-                          <div className='button-settings'>
+                          <div className="button-settings">
                             <input
-                              type='file'
-                              accept='image/*'
-                              className='settings-input'
+                              type="file"
+                              accept="image/*"
+                              className="settings-input"
                               onChange={handleImageUpload}
                               style={{ marginBottom: 8 }}
                             />
+
                             <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Image URL'
-                              value={content}
-                              onChange={(e) =>
-                                handleUpdateBlockContent(index, e.target.value)
-                              }
+                              type="text"
+                              className="settings-input"
+                              placeholder="Image path or URL (e.g. i/1.png or https://...)"
+                              value={manualUrlValue}
+                              onChange={handleManualUrl}
                             />
+
                             <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Alt text'
+                              type="text"
+                              className="settings-input"
+                              placeholder="Alt text"
                               value={settings?.altText || ''}
                               onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'altText',
-                                  e.target.value
-                                )
+                                handleUpdateBlockSettings(index, 'altText', e.target.value)
                               }
                             />
                             <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link URL (optional)'
+                              type="text"
+                              className="settings-input"
+                              placeholder="Link URL (optional)"
                               value={settings?.linkUrl || ''}
                               onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'linkUrl',
-                                  e.target.value
-                                )
+                                handleUpdateBlockSettings(index, 'linkUrl', e.target.value)
                               }
                             />
                             <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link Label (optional)'
+                              type="text"
+                              className="settings-input"
+                              placeholder="Link Label (optional)"
                               value={settings?.linkLabel || ''}
                               onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'linkLabel',
-                                  e.target.value
-                                )
+                                handleUpdateBlockSettings(index, 'linkLabel', e.target.value)
                               }
                             />
                           </div>
@@ -527,29 +553,61 @@ const BlockRenderer = ({
         </table>
       );
       break;
+    }
+    
+    case 'button': {
+      const btnSrc = settings?.imagePreviewUrl || settings?.imagePath || 'https://placehold.co/80x40';
+      const [btnManual, setBtnManual] = useState(settings?.imagePath || '');
 
-    case 'button':
+      const uploadBtn = (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        const asset = addFileAsset(file); // { path: "i/1.png", previewUrl: "blob:..." }
+        
+        setTemplate((prev) => {
+          const newBlocks = [...prev.blocks];
+          const blk = newBlocks[index];
+          blk.settings = {
+            ...(blk.settings || {}),
+            imagePath: asset.path,
+            imagePreviewUrl: asset.previewUrl,
+          };
+          return { ...prev, blocks: newBlocks };
+        });
+        
+        setBtnManual(asset.path);
+      };
+
+      const manualBtn = (e) => {
+        const url = e.target.value;
+        setBtnManual(url);
+        handleUpdateBlockSettings(index, 'imagePath', url);
+        handleUpdateBlockSettings(index, 'imagePreviewUrl', url);
+      };
+
       blockContent = (
         <table {...tableProps}>
           <tbody>
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'center' }}>
                 <a
-                  href={`${settings?.linkUrl}`}
+                  href={`${settings?.linkUrl || ''}`}
                   target='_blank'
                   rel='noopener noreferrer'
                   style={{ display: 'inline-block' }}>
-                  <img
-                    src={settings?.imageUrl}
-                    alt={settings?.imageAlt}
-                    style={{
-                      display: 'block',
-                      margin: '0 auto',
-                      maxWidth: '100%',
-                      height: 'auto',
-                      border: 0,
-                    }}
-                  />
+                  {btnSrc && (
+                    <img
+                      src={btnSrc}
+                      alt={settings?.imageAlt || ''}
+                      style={{
+                        display: 'block',
+                        margin: '0 auto',
+                        maxWidth: '100%',
+                        height: 'auto',
+                        border: 0,
+                      }}
+                    />
+                  )}
                 </a>
                 {isActive && (
                   <div className='button-settings'>
@@ -557,32 +615,15 @@ const BlockRenderer = ({
                       type='file'
                       accept='image/*'
                       className='settings-input'
-                      onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (!file) return;
-                        const reader = new FileReader();
-                        reader.onloadend = () =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'imageUrl',
-                            reader.result
-                          );
-                        reader.readAsDataURL(file);
-                      }}
+                      onChange={uploadBtn}
                       style={{ marginBottom: 8 }}
                     />
                     <input
                       type='text'
                       className='settings-input'
-                      placeholder='Image URL'
-                      value={settings?.imageUrl || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'imageUrl',
-                          e.target.value
-                        )
-                      }
+                      placeholder='Image path or URL'
+                      value={btnManual}
+                      onChange={manualBtn}
                     />
                     <input
                       type='text'
@@ -631,6 +672,7 @@ const BlockRenderer = ({
         </table>
       );
       break;
+    }
 
     case 'buttonCoded': {
       const buttonStyles = {
@@ -726,90 +768,102 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: 'center' }}>
                 <div style={container}>
-                  {block.buttons?.map((button, buttonIndex) => (
-                    <div key={buttonIndex}>
-                      <a
-                        href={`${button.settings?.linkUrl}`}
-                        target='_blank'
-                        rel='noopener noreferrer'
-                        style={{ display: 'inline-block' }}>
-                        <img
-                          src={button.settings?.imageUrl}
-                          alt={button.settings?.imageAlt}
-                          style={{
-                            display: 'block',
-                            margin: '0 auto',
-                            maxWidth: '100%',
-                            height: 'auto',
-                            border: 0,
-                          }}
-                        />
-                      </a>
-                      {isActive && (
-                        <>
-                          <input
-                            type='file'
-                            accept='image/*'
-                            className='settings-input'
-                            onChange={(e) => handleImageUpload(e, buttonIndex)}
-                            style={{ marginBottom: 8 }}
-                          />
-                          <input
-                            type='text'
-                            className='settings-input'
-                            placeholder='Image URL'
-                            value={button.settings?.imageUrl || ''}
-                            onChange={(e) => {
-                              const newBlocks = [...template.blocks];
-                              newBlocks[index].buttons[
-                                buttonIndex
-                              ].settings.imageUrl = e.target.value;
-                              setTemplate({ ...template, blocks: newBlocks });
-                            }}
-                          />
-                          <input
-                            type='text'
-                            className='settings-input'
-                            placeholder='Alt text'
-                            value={button.settings?.imageAlt || ''}
-                            onChange={(e) => {
-                              const newBlocks = [...template.blocks];
-                              newBlocks[index].buttons[
-                                buttonIndex
-                              ].settings.imageAlt = e.target.value;
-                              setTemplate({ ...template, blocks: newBlocks });
-                            }}
-                          />
-                          <input
-                            type='text'
-                            className='settings-input'
-                            placeholder='Link URL'
-                            value={button.settings?.linkUrl || ''}
-                            onChange={(e) => {
-                              const newBlocks = [...template.blocks];
-                              newBlocks[index].buttons[
-                                buttonIndex
-                              ].settings.linkUrl = e.target.value;
-                              setTemplate({ ...template, blocks: newBlocks });
-                            }}
-                          />
-                          <input
-                            type='text'
-                            className='settings-input'
-                            placeholder='Link Label (optional)'
-                            value={button.settings?.linkLabel || ''}
-                            onChange={(e) => {
-                              const newBlocks = [...template.blocks];
-                              newBlocks[index].buttons[
-                                buttonIndex
-                              ].settings.linkLabel = e.target.value;
-                              setTemplate({ ...template, blocks: newBlocks });
-                            }}
-                          />
-                        </>
-                      )}
-                    </div>
-                  ))}
+                  {block.buttons?.map((button, buttonIndex) => {
+                    const s = button.settings || {};
+                    const btnSrc = s.imagePreviewUrl || s.imagePath || 'https://placehold.co/80x40';
+                    return (
+                      <div key={buttonIndex}>
+                        <a
+                          href={`${s?.linkUrl || ''}`}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          style={{ display: 'inline-block' }}>
+                          {btnSrc && (
+                            <img
+                              src={btnSrc}
+                              alt={s?.imageAlt || ''}
+                              style={{
+                                display: 'block',
+                                margin: '0 auto',
+                                maxWidth: '100%',
+                                height: 'auto',
+                                border: 0,
+                              }}
+                            />
+                          )}
+                        </a>
+                        {isActive && (
+                          <>
+                            <input
+                              type='file'
+                              accept='image/*'
+                              className='settings-input'
+                              onChange={(e) => handleImageUpload(e, buttonIndex)}
+                              style={{ marginBottom: 8 }}
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Image path or URL'
+                              value={s.imagePath || ''}
+                              onChange={(e) => {
+                                const url = e.target.value;
+                                const newBlocks = [...template.blocks];
+                                const btn = newBlocks[index].buttons[
+                                  buttonIndex
+                                ];
+                                btn.settings = {
+                                  ...(btn.settings || {}),
+                                  imagePath: url,
+                                  imagePreviewUrl: url,
+                                };
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Alt text'
+                              value={s?.imageAlt || ''}
+                              onChange={(e) => {
+                                const newBlocks = [...template.blocks];
+                                newBlocks[index].buttons[
+                                  buttonIndex
+                                ].settings.imageAlt = e.target.value;
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link URL'
+                              value={s?.linkUrl || ''}
+                              onChange={(e) => {
+                                const newBlocks = [...template.blocks];
+                                newBlocks[index].buttons[
+                                  buttonIndex
+                                ].settings.linkUrl = e.target.value;
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                            <input
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link Label (optional)'
+                              value={s?.linkLabel || ''}
+                              onChange={(e) => {
+                                const newBlocks = [...template.blocks];
+                                newBlocks[index].buttons[
+                                  buttonIndex
+                                ].settings.linkLabel = e.target.value;
+                                setTemplate({ ...template, blocks: newBlocks });
+                              }}
+                            />
+                          </>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </td>
             </tr>
@@ -1104,11 +1158,14 @@ const BlockRenderer = ({
         setTemplate({ ...template, blocks: newBlocks });
       };
 
-      const updateCol = (colIndex, path, value) => {
+      const updateCol = (colIndex, key, value, isSetting = false) => {
         const newBlocks = [...template.blocks];
         const col = { ...(newBlocks[index].columns?.[colIndex] || {}) };
-        if (path === 'content') col.content = value;
-        else col.settings = { ...(col.settings || {}), [path]: value };
+        if (isSetting) {
+          col.settings = { ...(col.settings || {}), [key]: value };
+        } else {
+          col[key] = value;
+        }
         const arr = [...(newBlocks[index].columns || [])];
         arr[colIndex] = col;
         newBlocks[index].columns = arr;
@@ -1118,9 +1175,11 @@ const BlockRenderer = ({
       const onUpload = (e, colIndex) => {
         const file = e.target.files?.[0];
         if (!file) return;
-        const reader = new FileReader();
-        reader.onloadend = () => updateCol(colIndex, 'content', reader.result);
-        reader.readAsDataURL(file);
+        const asset = addFileAsset(file);
+        updateCol(colIndex, 'imagePath', asset.path, false);
+        updateCol(colIndex, 'imagePreviewUrl', asset.previewUrl, false);
+        updateCol(colIndex, 'content', asset.previewUrl, false)
+
       };
 
       blockContent = (
@@ -1131,99 +1190,105 @@ const BlockRenderer = ({
                 <table {...tableProps} className='columns-container'>
                   <tbody>
                     <tr>
-                      {cols.map((c, colIndex) => (
-                        <td
-                          key={colIndex}
-                          width={widthPercent}
-                          style={{
-                            paddingLeft: colIndex === 0 ? 0 : halfGap,
-                            paddingRight: colIndex === count - 1 ? 0 : halfGap,
-                          }}>
-                          {c?.settings?.linkUrl ? (
-                            <a
-                              href={`${c.settings.linkUrl}`}
-                              target='_blank'
-                              rel='noopener noreferrer'>
-                              <img
-                                src={c?.content}
-                                alt={c?.settings?.altText || ''}
-                                style={imgBlockStyle}
-                              />
-                            </a>
-                          ) : (
-                            <img
-                              src={c?.content}
-                              alt={c?.settings?.altText || ''}
-                              style={imgBlockStyle}
-                            />
-                          )}
+                      {cols.map((c, colIndex) => {
+                        const colSrc =
+                          c?.imagePreviewUrl || c?.imagePath || c?.content || '';
+                        return (
+                          <td
+                            key={colIndex}
+                            width={widthPercent}
+                            style={{
+                              paddingLeft: colIndex === 0 ? 0 : halfGap,
+                              paddingRight: colIndex === count - 1 ? 0 : halfGap,
+                            }}>
+                            {c?.settings?.linkUrl ? (
+                              <a
+                                href={`${c.settings.linkUrl}`}
+                                target='_blank'
+                                rel='noopener noreferrer'>
+                                {colSrc && (
+                                  <img
+                                    src={colSrc}
+                                    alt={c?.settings?.altText || ''}
+                                    style={imgBlockStyle}
+                                  />
+                                )}
+                              </a>
+                            ) : (
+                              colSrc && (
+                                <img
+                                  src={colSrc}
+                                  alt={c?.settings?.altText || ''}
+                                  style={imgBlockStyle}
+                                />
+                              )
+                            )}
 
-                          {isActive && (
-                            <div className='column-settings'>
-                              <input
-                                type='file'
-                                accept='image/*'
-                                className='settings-input'
-                                onChange={(e) => onUpload(e, colIndex)}
-                                style={{ marginBottom: 8 }}
-                              />
-                              <input
-                                type='text'
-                                className='settings-input'
-                                placeholder='Image URL'
-                                value={c?.content || ''}
-                                onChange={(e) =>
-                                  updateCol(colIndex, 'content', e.target.value)
-                                }
-                              />
-                              <input
-                                type='text'
-                                className='settings-input'
-                                placeholder='Alt text'
-                                value={c?.settings?.altText || ''}
-                                onChange={(e) =>
-                                  updateCol(colIndex, 'altText', e.target.value)
-                                }
-                              />
-                              <input
-                                type='text'
-                                className='settings-input'
-                                placeholder='Link URL (optional)'
-                                value={c?.settings?.linkUrl || ''}
-                                onChange={(e) =>
-                                  updateCol(colIndex, 'linkUrl', e.target.value)
-                                }
-                              />
-                              <input
-                                type='text'
-                                className='settings-input'
-                                placeholder='Link Label (optional)'
-                                value={c?.settings?.linkLabel || ''}
-                                onChange={(e) =>
-                                  updateCol(
-                                    colIndex,
-                                    'linkLabel',
-                                    e.target.value
-                                  )
-                                }
-                              />
-                              <div
-                                className='control-flex'
-                                style={{ gap: 8, marginTop: 6 }}>
-                                <button
-                                  className='action-button'
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    removeColumn(colIndex);
+                            {isActive && (
+                              <div className='column-settings'>
+                                <input
+                                  type='file'
+                                  accept='image/*'
+                                  className='settings-input'
+                                  onChange={(e) => onUpload(e, colIndex)}
+                                  style={{ marginBottom: 8 }}
+                                />
+                                <input
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Image path or URL'
+                                  value={c?.imagePath || ''}
+                                  onChange={(e) => {
+                                    const url = e.target.value;
+                                    updateCol(colIndex, 'imagePath', url, false);
+                                    updateCol(colIndex, 'imagePreviewUrl', url, false);
                                   }}
-                                  disabled={count <= 1}>
-                                  Remove
-                                </button>
+                                />
+                                <input
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Alt text'
+                                  value={c?.settings?.altText || ''}
+                                  onChange={(e) =>
+                                    updateCol(colIndex, 'altText', e.target.value, true)
+                                  }
+                                />
+                                <input
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Link URL (optional)'
+                                  value={c?.settings?.linkUrl || ''}
+                                  onChange={(e) =>
+                                    updateCol(colIndex, 'linkUrl', e.target.value, true)
+                                  }
+                                />
+                                <input
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Link Label (optional)'
+                                  value={c?.settings?.linkLabel || ''}
+                                  onChange={(e) =>
+                                    updateCol(colIndex, 'linkLabel', e.target.value, true)
+                                  }
+                                />
+                                <div
+                                  className='control-flex'
+                                  style={{ gap: 8, marginTop: 6 }}>
+                                  <button
+                                    className='action-button'
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      removeColumn(colIndex);
+                                    }}
+                                    disabled={count <= 1}>
+                                    Remove
+                                  </button>
+                                </div>
                               </div>
-                            </div>
-                          )}
-                        </td>
-                      ))}
+                            )}
+                          </td>
+                        );
+                      })}
                     </tr>
                   </tbody>
                 </table>
@@ -1269,15 +1334,28 @@ const BlockRenderer = ({
         fontFamily: settings?.fontFamily,
       };
 
-      const handleHalfImageUpload = (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          handleUpdateBlockSettings(index, 'imageUrl', reader.result);
-        };
-        reader.readAsDataURL(file);
+      const handleManualUrlHalf = (e) => {
+        const url = e.target.value;
+        setManualUrlValue(url);
+        setTemplate((prev) => {
+          const newBlocks = [...prev.blocks];
+          const blk = { ...(newBlocks[index] || {}) };
+          blk.imagePath = url;         // this is what HTML export will use
+          blk.imagePreviewUrl = url;   // editor shows it instantly
+          if ('imageUrl' in blk) delete blk.imageUrl; // clean legacy
+          newBlocks[index] = blk;
+          return { ...prev, blocks: newBlocks };
+        });
       };
+      
+
+      const srcForHalfText =
+        block.imagePreviewUrl ||
+        block.imagePath ||
+        settings?.imagePath ||
+        settings?.imagePreviewUrl ||
+        settings?.imageUrl ||
+        'https://placehold.co/320x100';
 
       const renderImage = () =>
         settings?.imageLinkUrl ? (
@@ -1285,18 +1363,10 @@ const BlockRenderer = ({
             href={settings.imageLinkUrl}
             target='_blank'
             rel='noopener noreferrer'>
-            <img
-              src={settings?.imageUrl || ''}
-              alt={settings?.altText || ''}
-              style={imgBlockStyle}
-            />
+            <img src={srcForHalfText} alt={settings?.altText || ''} style={imgBlockStyle} />
           </a>
         ) : (
-          <img
-            src={settings?.imageUrl || ''}
-            alt={settings?.altText || ''}
-            style={imgBlockStyle}
-          />
+          <img src={srcForHalfText} alt={settings?.altText || ''} style={imgBlockStyle} />
         );
 
       const Button = () =>
@@ -1370,18 +1440,16 @@ const BlockRenderer = ({
                 type='file'
                 accept='image/*'
                 className='settings-input'
-                onChange={handleHalfImageUpload}
+                onChange={(e) => handleImageUpload(e, null, null, true)}
                 style={{ marginBottom: 8 }}
               />
 
               <input
                 type='text'
                 className='settings-input'
-                placeholder='Image URL'
-                value={settings?.imageUrl || ''}
-                onChange={(e) =>
-                  handleUpdateBlockSettings(index, 'imageUrl', e.target.value)
-                }
+                placeholder='Image path or URL (used in export)'
+                value={manualUrlValue}
+                onChange={handleManualUrlHalf}
               />
 
               <input

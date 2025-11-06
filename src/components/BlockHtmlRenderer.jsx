@@ -6,6 +6,12 @@ const kebabCase = (str) => {
   return str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 };
 
+const getImageSrc = (s = {}) => {
+  const src = s.imagePath || s.imagePreviewUrl || s.imageUrl || '';
+  if (typeof src === 'string' && (src.startsWith('blob:') || src.startsWith('data:'))) return '';
+  return src;
+};
+
 // Render a block as HTML
 const renderBlockHtml = (block, template = null) => {
   const { type, content = '', settings = {} } = block;
@@ -38,6 +44,9 @@ const renderBlockHtml = (block, template = null) => {
           'canvascolor',
           'textcolor',
           'disclaimercolor',
+          'imagePreviewUrl',
+          'imagePath',
+          'imageLinkLabel',
           'imageLinkUrl',
           'imageUrl',
           'imageAlt',
@@ -115,7 +124,7 @@ const renderBlockHtml = (block, template = null) => {
       break;
 
     case 'image': {
-      const img = `<img src="${content}" alt="${
+      const img = `<img src="${settings.imagePath || settings.imagePreviewUrl || settings.imageUrl || 'https://placehold.co/640x300'}" alt="${
         settings.altText || ''
       }" style="max-width: 100%; border: 0; display: block;">`;
       blockHtml = `
@@ -135,7 +144,9 @@ const renderBlockHtml = (block, template = null) => {
       break;
     }
 
-    case 'button':
+    case 'button': {
+      const buttonImgSrc = getImageSrc(settings) || 'https://placehold.co/80x40';
+      
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} ${paddingStyle}">
         <tr>
@@ -145,14 +156,13 @@ const renderBlockHtml = (block, template = null) => {
             }" target="_blank" rel="noopener noreferrer" _label="${
         settings.linkLabel || ''
       }">
-              <img src="${settings.imageUrl}" alt="${
-        settings.imageAlt || ''
-      }" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
+              <img src="${buttonImgSrc}" alt="${settings.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
             </a>
           </td>
         </tr>
       </table>`;
       break;
+    }
 
     case 'buttonCoded': {
       const paddingTop = settings?.paddingTop ?? '12px';
@@ -223,9 +233,7 @@ const renderBlockHtml = (block, template = null) => {
                 }" target="_blank" rel="noopener noreferrer" _label="${
                   button.settings?.linkLabel || ''
                 }">
-                  <img src="${button.settings?.imageUrl}" alt="${
-                  button.settings?.imageAlt || ''
-                }" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
+                  <img src="${getImageSrc(button.settings || {}) || 'https://placehold.co/80x40'}" alt="${button.settings?.imageAlt || ''}" style="max-width: 100%; display: block; margin: 0 auto; height: auto; border: 0;">
                 </a>
               </div>`
               )
@@ -307,43 +315,54 @@ const renderBlockHtml = (block, template = null) => {
       </table>`;
       break;
 
-    case 'columns': {
-      const cols = Array.isArray(block.columns) ? block.columns : [];
-      const count = Math.max(cols.length, 1);
-      const gap = settings?.columnGap || '0';
-      const halfGap = /^-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-        ? `calc((${gap}) / 2)`
-        : '0';
-      const widthPercent = (100 / count).toFixed(4);
-
-      const cellHtml = cols
-        .map((c, idx) => {
-          const img = `<img src="${c?.content || ''}" alt="${
-            c?.settings?.altText || ''
-          }" style="max-width:100%;border:0;display:block;">`;
-          const inner = c?.settings?.linkUrl
-            ? `<a href="${c.settings.linkUrl}" _label="${
-                c?.settings?.linkLabel || ''
-              }">${img}</a>`
-            : img;
-          return `
-            <td width="${widthPercent}%" style="padding-left:${
-            idx === 0 ? '0' : halfGap
-          };padding-right:${idx === count - 1 ? '0' : halfGap};">
-              ${inner}
-            </td>`;
-        })
-        .join('');
-
-      blockHtml = `
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString} padding-left:12%;padding-right:12%;">
-          <tr>${cellHtml}</tr>
-        </table>`;
-      break;
-    }
+      case 'columns': {
+        const cols = Array.isArray(block.columns) ? block.columns : [];
+        const count = Math.max(cols.length, 1);
+        const gap = settings?.columnGap || '0';
+        const halfGap = /^-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
+          ? `calc((${gap}) / 2)`
+          : '0';
+        const widthPercent = (100 / count).toFixed(4);
+      
+        const cellHtml = cols
+          .map((c, idx) => {
+            const src =
+              c?.imagePath || c?.imagePreviewUrl || c?.content || '';
+      
+            const img = src
+              ? `<img src="${src}" alt="${c?.settings?.altText || ''}"
+                    style="max-width:100%;border:0;display:block;">`
+              : '';
+      
+            const inner = c?.settings?.linkUrl
+              ? `<a href="${c.settings.linkUrl}" _label="${
+                  c?.settings?.linkLabel || ''
+                }">${img}</a>`
+              : img;
+      
+            return `
+              <td width="${widthPercent}%" style="padding-left:${
+              idx === 0 ? '0' : halfGap
+            };padding-right:${idx === count - 1 ? '0' : halfGap};">
+                ${inner}
+              </td>`;
+          })
+          .join('');
+      
+        blockHtml = `
+          <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
+            style="${styleString} padding-left:12%;padding-right:12%;">
+            <tr>${cellHtml}</tr>
+          </table>`;
+        break;
+      }
 
     case 'halfText': {
-      const imageSrc = settings.imageUrl || '';
+      const imageSrc =
+      block.imagePath ||
+      block.imagePreviewUrl ||
+      getImageSrc(settings) ||
+      'https://placehold.co/640x300';
 
       const imageHtml = settings.imageLinkUrl
         ? `<a href="${
