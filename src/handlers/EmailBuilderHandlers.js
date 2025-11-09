@@ -185,6 +185,25 @@ export const createNewBlock = (type, template = null) => {
           height: '40px',
         },
       };
+    case 'roundContainer':
+      return {
+        id: `round-${Date.now()}`,
+        type: 'roundContainer',
+        settings: {
+          canvasColor: '#CFCFCF',
+          backgroundColor: '#FFFFFF',
+          bgWidth: 88,
+          borderColor: '#FFFFFF',
+          borderWidth: 3,
+          borderType: 'solid',
+          borderRadius: 24,
+          paddingTop: 8,
+          paddingBottom: 8,
+          paddingInnerTop: 64,
+          paddingInnerBottom: 64,
+        },
+        children: [],
+      };      
     case 'footer':
       return {
         id,
@@ -383,19 +402,20 @@ export const handleUpdateBlockContent = (
 };
 
 // Update block settings
-export const handleUpdateBlockSettings = (
-  index,
-  setting,
-  value,
-  template,
-  setTemplate
-) => {
-  const newBlocks = [...template.blocks];
-  newBlocks[index] = {
-    ...newBlocks[index],
-    settings: { ...newBlocks[index].settings, [setting]: value },
-  };
-  setTemplate({ ...template, blocks: newBlocks });
+export const handleUpdateBlockSettings = (blockIndex, key, value, parentIndex = null) => {
+  setTemplate(prev => {
+    const next = JSON.parse(JSON.stringify(prev));
+
+    if (parentIndex !== null && next.blocks[parentIndex]?.children?.[blockIndex]) {
+      // 🔧 nested child (like inside RoundContainer)
+      next.blocks[parentIndex].children[blockIndex].settings[key] = value;
+    } else if (next.blocks?.[blockIndex]) {
+      // 🔧 top-level block
+      next.blocks[blockIndex].settings[key] = value;
+    }
+
+    return next;
+  });
 };
 
 // Update template settings
@@ -476,6 +496,14 @@ async function addDefaultFooterIcons(assetsFolder, hasPath) {
 // Drag and drop handlers
 export const handleDragStart = (e, item, isNew, setDraggedItem) => {
   if (isNew) {
+    // Set dataTransfer data for components that read from it (like RoundContainer)
+    try {
+      e.dataTransfer.setData('text/block-type', item.type);
+      e.dataTransfer.setData('application/x-block-type', item.type);
+      e.dataTransfer.setData('text/plain', item.type);
+    } catch (err) {
+      // Some browsers may not support setData in certain contexts
+    }
     setDraggedItem({ ...item, isNew: true });
   } else {
     e.currentTarget.dataset.index = e.currentTarget.getAttribute('data-index');

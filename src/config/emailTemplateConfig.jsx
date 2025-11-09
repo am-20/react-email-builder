@@ -1,5 +1,5 @@
 import React from 'react';
-import { Type, FileText, Image, Layout, Columns, Grid } from 'lucide-react';
+import { Type, FileText, Image, Layout, Columns, Grid, SquareCode, SquareRoundCorner } from 'lucide-react';
 
 // Initial email template structure
 export const initialTemplate = {
@@ -83,17 +83,18 @@ export const components = [
   { type: 'text', label: 'Text Block', icon: <FileText size={16} /> },
   { type: 'image', label: 'Image', icon: <Image size={16} /> },
   { type: 'button', label: 'Button', icon: <Layout size={16} /> },
-  { type: 'buttonCoded', label: 'Button Coded', icon: <Layout size={16} /> },
+  { type: 'buttonCoded', label: 'Button Coded', icon: <SquareCode size={16} /> },
   { type: 'buttonGroup', label: 'Button Group', icon: <Layout size={16} /> },
   {
     type: 'buttonCodedGroup',
     label: 'Button Coded Group',
-    icon: <Layout size={16} />,
+    icon: <SquareCode size={16} />,
   },
   { type: 'divider', label: 'Divider', icon: <Columns size={16} /> },
   { type: 'spacer', label: 'Spacer', icon: <Layout size={16} /> },
-  { type: 'columns', label: '2 Columns', icon: <Grid size={16} /> },
+  { type: 'columns', label: 'Columns', icon: <Grid size={16} /> },
   { type: 'halfText', label: 'Half Text', icon: <FileText size={16} /> },
+  { type: 'roundContainer', label: 'Round Container', icon: <SquareRoundCorner size={16} /> },
   { type: 'footer', label: 'General Footer RU', icon: <Layout size={16} /> },
   {
     type: 'footer_general_kz',

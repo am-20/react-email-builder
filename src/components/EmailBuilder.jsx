@@ -297,6 +297,8 @@ const EmailBuilder = () => {
                         setTemplate
                       )
                     }
+                    activeBlockId={activeBlockId}
+                    hoveredBlockId={hoveredBlockId}
                   />
                 </React.Fragment>
               ))}

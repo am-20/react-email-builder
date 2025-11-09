@@ -99,3 +99,53 @@ export const generateHtmlOutput = (template, renderBlockHtml) => {
 </body>
 </html>`;
 }; 
+
+export function generateRoundContainerHTML(block, ctx) {
+  const s = block.settings || {};
+
+  const canvasColor       = s.canvasColor       || '#CFCFCF';
+  const backgroundColor   = s.backgroundColor   || '#FFFFFF';
+  const bgWidth           = Number(s.bgWidth ?? 88);
+  const borderColor       = s.borderColor       || '#FFFFFF';
+  const borderWidth       = Number(s.borderWidth ?? 3);
+  const borderType        = s.borderType        || 'solid';
+  const borderRadius      = Number(s.borderRadius ?? 24);
+  const paddingTop        = Number(s.paddingTop ?? 8);
+  const paddingBottom     = Number(s.paddingBottom ?? 8);
+  const paddingInnerTop   = Number(s.paddingInnerTop ?? 64);
+  const paddingInnerBottom= Number(s.paddingInnerBottom ?? 64);
+
+  // helper: children html
+  const childrenHTML = (Array.isArray(block.children) ? block.children : [])
+    .map(child => ctx.generateBlockHTML(child, ctx)) // assumes you pass ctx with generateBlockHTML
+    .join('');
+
+  const topPadRow = paddingTop > 0
+    ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingTop}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingTop}">&nbsp;</td></tr>`
+    : '';
+
+  const bottomPadRow = paddingBottom > 0
+    ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingBottom}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingBottom}">&nbsp;</td></tr>`
+    : '';
+
+  return `
+${topPadRow}
+<tr>
+  <td style="border:0;margin:0 auto;mso-line-height-rule:exactly;background-color:${canvasColor};padding-top:${paddingInnerTop}px;padding-bottom:${paddingInnerBottom}px;">
+    <table align="center" cellpadding="0" cellspacing="0" border="0"
+      style="border-collapse:separate;border:${borderWidth}px ${borderType} ${borderColor};
+             border-radius:${borderRadius}px;margin:0 auto;width:${bgWidth}%;
+             padding:0;text-align:center;background-color:${backgroundColor};">
+      <tbody>
+        <tr>
+          <td style="padding:0;">
+            ${childrenHTML}
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </td>
+</tr>
+${bottomPadRow}
+`.trim();
+}
