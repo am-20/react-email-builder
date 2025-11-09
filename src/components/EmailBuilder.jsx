@@ -172,8 +172,9 @@ const EmailBuilder = () => {
             <button
               className='toolbar-button primary'
               onClick={() =>
-                handleSaveTemplate(() =>
-                  generateHtmlOutput(template, renderBlockHtml)
+                handleSaveTemplate(
+                  () => generateHtmlOutput(template, renderBlockHtml),
+                  template.title   // pass title for zip name
                 )
               }>
               <Save size={16} />

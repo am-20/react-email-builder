@@ -1,4 +1,7 @@
 // Handler functions for EmailBuilder component
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
+import { getAllAssets } from '../utils/assets';
 
 // Create a new block based on type
 export const createNewBlock = (type, template = null) => {
@@ -406,28 +409,69 @@ export const handleUpdateTemplateSetting = (
 };
 
 // Save template handler
-export const handleSaveTemplate = (generateHtmlOutput) => {
+export const handleSaveTemplate = async (generateHtmlOutput, templateTitle) => {
   const htmlOutput = generateHtmlOutput();
 
-  // Create a blob with the HTML content
-  const blob = new Blob([htmlOutput], { type: 'text/html' });
+  const safeTitle = (templateTitle || 'Template')
+    .trim()
+    .replace(/[\\/:*?"<>|]/g, '_');
 
-  // Create a download link
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
+  const zip = new JSZip();
+  zip.file('index.html', htmlOutput);
 
-  // Set the filename with timestamp
-  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-  link.download = `email-template-${timestamp}.html`;
+  const assetsFolder = zip.folder('i');
 
-  // Append to body, click, and remove
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+  // 1) Add uploaded assets 
+  const assets = getAllAssets();
+  const existingPaths = new Set(assets.map(a => a.path?.toLowerCase()).filter(Boolean));
+  const hasPath = (p) => existingPaths.has(p.toLowerCase());
 
-  // Clean up the URL object
-  URL.revokeObjectURL(link.href);
+  for (const a of assets) {
+    // a.filename like "1.svg"
+    assetsFolder.file(a.filename, a.file);
+  }
+
+  // 2) Auto-include default footer icons from public/i if missing
+  await addDefaultFooterIcons(assetsFolder, hasPath);
+
+  // 3) Download zip
+  const blob = await zip.generateAsync({ type: 'blob' });
+  saveAs(blob, `${safeTitle}.zip`);
 };
+
+const DEFAULT_ICON_KEYS = [
+  'facebook',
+  'instagram',
+  'vk',
+  'youtube',
+  'twitter',
+  'linkedin',
+  'chat',
+  'call',
+];
+
+// Fetch /i/<name>.png from the app and add to zip if not already present via uploads
+async function addDefaultFooterIcons(assetsFolder, hasPath) {
+  const origin = window.location.origin;
+
+  for (const key of DEFAULT_ICON_KEYS) {
+    const path = `i/${key}.png`; // must match what HTML uses
+    if (hasPath(path)) continue; // don’t duplicate or override user-uploaded assets
+
+    try {
+      const url = new URL(`/${path}`, origin);     // absolute fetch from public/i
+      const res = await fetch(url);
+      if (!res.ok) {
+        console.warn('[export] footer icon not found:', url.toString());
+        continue;
+      }
+      const blob = await res.blob();
+      assetsFolder.file(`${key}.png`, blob);       // saved as /i/<key>.png in the zip
+    } catch (err) {
+      console.warn('[export] footer icon fetch failed:', path, err);
+    }
+  }
+}
 
 // Drag and drop handlers
 export const handleDragStart = (e, item, isNew, setDraggedItem) => {

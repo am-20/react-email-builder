@@ -1,6 +1,5 @@
 // BlockHtmlRenderer.jsx
 import React from 'react';
-import { getFooterIconBase64 } from '../utils/imageUtils';
 
 /** kebab-case helper for inline styles */
 const kebabCase = (str) =>
@@ -8,7 +7,8 @@ const kebabCase = (str) =>
 
 /** Resolve a safe image src (ignore blob:/data: for final HTML) */
 const getImageSrc = (s = {}) => {
-  const src = s.imagePath || s.imagePreviewUrl || s.imageUrl || '';
+  const src = s.settings?.imagePath || s.settings?.imageUrl || '';
+
   return typeof src === 'string' &&
     (src.startsWith('blob:') || src.startsWith('data:'))
     ? ''
@@ -135,11 +135,8 @@ const renderBlockHtml = (block, template = null) => {
 
     /** IMAGE */
     case 'image': {
-      const src =
-        settings.imagePath ||
-        settings.imagePreviewUrl ||
-        settings.imageUrl ||
-        'https://placehold.co/640x300';
+      const src = settings?.imagePath || settings?.imageUrl || 'https://placehold.co/640x300';
+
       const img = `<img src="${src}" alt="${
         settings.altText || ''
       }" style="max-width:100%;border:0;display:block;margin:${
@@ -325,7 +322,8 @@ const renderBlockHtml = (block, template = null) => {
 
       const cells = cols
         .map((c, idx) => {
-          const src = c?.imagePath || c?.imagePreviewUrl || c?.content || '';
+          const src = c?.imagePath || c?.imageUrl || c?.content || '';
+
           const img = src
             ? `<img src="${src}" alt="${
                 c?.settings?.altText || ''
@@ -357,7 +355,7 @@ const renderBlockHtml = (block, template = null) => {
     case 'halfText': {
       const imageSrc =
         block.imagePath ||
-        block.imagePreviewUrl ||
+        block.imageUrl ||
         getImageSrc(settings) ||
         'https://placehold.co/640x300';
 
@@ -453,17 +451,13 @@ const renderBlockHtml = (block, template = null) => {
                 ]
                   .map(
                     (key) => `
-                  <td style="padding:0 16px;">
-                    <a title="Samsung Kazakhstan" href="${
-                      settings.urls?.[key] || '#'
-                    }">
-                      <img width="57" src="${getFooterIconBase64(
-                        key
-                      )}" alt="${key}" style="display:block;border:0;">
-                    </a>
-                  </td>`
+                      <td style="padding:0 16px;">
+                        <a title="Samsung Kazakhstan" href="${settings.urls?.[key] || '#'}">
+                          <img width="57" src="i/${key}.png" alt="${key}" style="display:block;border:0;">
+                        </a>
+                      </td>`
                   )
-                  .join('')}
+                  .join('')}                
                 <td style="width:120px;">&nbsp;</td>
               </tr>
             </table>
@@ -491,18 +485,14 @@ const renderBlockHtml = (block, template = null) => {
                   }" style="font:11px ${
         settings.fontFamily || 'Arial, sans-serif'
       };color:${settings.textcolor};text-decoration:none;">
-                    <img width="13" src="${getFooterIconBase64(
-                      'chat'
-                    )}" alt="chat" style="vertical-align:middle;">&nbsp;&nbsp;Онлайн чат
+                    <img width="13" src="i/chat.png" alt="chat" style="vertical-align:middle;">&nbsp;&nbsp;Онлайн чат
                   </a>
                 </td>
                 <td align="center">
                   <a href="${settings.urls?.call || '#'}" style="font:11px ${
         settings.fontFamily || 'Arial, sans-serif'
       };color:${settings.textcolor};text-decoration:none;">
-                    <img width="13" src="${getFooterIconBase64(
-                      'call'
-                    )}" alt="call" style="vertical-align:middle;">&nbsp;&nbsp;Call Center 7700
+                    <img width="13" src="i/call.png" alt="call" style="vertical-align:middle;">&nbsp;&nbsp;Call Center 7700
                   </a>
                 </td>
               </tr>
