@@ -1,4 +1,3 @@
-// BlockHtmlRenderer.jsx
 import React from 'react';
 
 /** kebab-case helper for inline styles */
@@ -305,7 +304,7 @@ const renderBlockHtml = (block, template = null) => {
     /** DIVIDER & SPACER */
     case 'divider':
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:10px 12%;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-top:10px;padding-bottom:10px;padding-left:12%;padding-right:12%;">
         <tr><td style="height:${
           settings.lineHeight || '1px'
         };background-color:${settings.lineColor || '#ddd'};"></td></tr>
@@ -423,7 +422,7 @@ const renderBlockHtml = (block, template = null) => {
         .join('');
 
       blockHtml += `
-        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${bg};padding:${paddingTop} ${paddingLeftRight} ${paddingBottom};">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${bg};padding-top:${paddingTop};padding-bottom:${paddingBottom};padding-left:${paddingLeftRight};padding-right:${paddingLeftRight};">
           <tbody>
             <tr>
               <td>
@@ -638,7 +637,7 @@ const renderBlockHtml = (block, template = null) => {
 
         <!-- Contact -->
         <tr>
-          <td align="center" style="padding:16px 10%;text-align:center;">
+          <td align="center" style="padding-top:16px;padding-bottom:16px;padding-left:10%;padding-right:10%;text-align:center;">
             <h1 style="margin:0 0 13px;font:${
               settings.fontWeight || 'bold'
             } 24px ${settings.fontFamily || 'Arial, sans-serif'};color:${
