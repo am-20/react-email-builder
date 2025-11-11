@@ -315,7 +315,49 @@ export const createNewBlock = (type, template = null) => {
         settings: {
           backgroundColor: '#ffffff',
           padding: '10px',
-          columnGap: '20px',
+          columnGap: '16px',
+        },
+      };
+    case 'columnsContent':
+      return {
+        id,
+        type,
+        columns: [
+          {
+            imgUrl: 'https://placehold.co/300x200',
+            title: 'Title 1',
+            text: 'Text 1',
+            textAlign: 'center',
+            settings: {
+              padding: '10px',
+              altText: 'Left column image',
+              linkUrl: '',
+              linkLabel: '',
+              titleFontSize: '24px',
+              textFontSize: '12px',
+            },
+          },
+          {
+            imgUrl: 'https://placehold.co/300x200',
+            title: 'Title 2',
+            text: 'Text 2',
+            settings: {
+              padding: '10px',
+              altText: 'Right column image',
+              linkUrl: '',
+              linkLabel: '',
+              titleFontSize: '24px',
+              textFontSize: '12px',
+            },
+          },
+        ],
+        settings: {
+          backgroundColor: '#ffffff',
+          color: '#000000',
+          padding: '10px',
+          columnGap: '16px',
+          hidetitle: false,
+          isBold: false,
         },
       };
     case 'halfText':

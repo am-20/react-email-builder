@@ -105,12 +105,13 @@ const renderBlockHtml = (block, template = null) => {
   const { type, content = '', settings = {} } = block;
   const styleString = buildStyle(type, settings);
   let blockHtml = '';
+  const paddingLeftRight = settings?.paddingX ?? '12%';
 
   switch (type) {
     /** HEADERS & TEXT */
     case 'header':
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}; padding: 0 ${paddingLeftRight}">
         <tr>
           <td style="text-align:${
             settings.textAlign || 'left'
@@ -205,13 +206,14 @@ const renderBlockHtml = (block, template = null) => {
       const fontWeight = settings.fontWeight ?? 'bold';
       const text = settings.content || 'Click Me';
       const href = settings.linkUrl || '#';
+      const linkLabel = settings.linkLabel || '#';
       const align = settings.textAlign || 'center';
 
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td align="${align}" style="padding:16px 0;">
-            <a href="${href}" target="_blank" rel="noopener noreferrer" style="
+            <a href="${href}" target="_blank" _label="${linkLabel}" rel="noopener noreferrer" style="
               display:inline-block;text-decoration:none;color:${color};background-color:${bg};
               border:${border};border-radius:${radius};font-weight:${fontWeight};font-size:${fontSize};
               padding:${paddingTop} ${paddingX} ${paddingBottom} ${paddingX};letter-spacing:0;line-height:120%;
@@ -355,6 +357,87 @@ const renderBlockHtml = (block, template = null) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:12%;padding-right:12%;">
         <tr>${cells}</tr>
       </table>`;
+      break;
+    }
+
+    /** COLUMNS */
+    case 'columnsContent': {
+      const cols = Array.isArray(block.columns) ? block.columns : [];
+      const count = Math.max(cols.length, 1);
+
+      const gap = settings?.columnGap || '0';
+      const halfGap =
+        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
+          ? `calc((${gap}) / 2)`
+          : '0';
+
+      const widthPercent = `${(100 / count).toFixed(4)}%`;
+
+      const bg = settings?.backgroundColor || '#ffffff';
+      const color = settings?.color || '#000000';
+      const isBold = settings?.isBold || false;
+      const fontFamily =
+        settings?.fontFamily || 'SamsungOne, Arial, Helvetica, sans-serif';
+
+      const paddingTop = settings?.paddingTop ?? settings?.padding ?? '0';
+      const paddingBottom = settings?.paddingBottom ?? settings?.padding ?? '0';
+      const paddingLeftRight = settings?.paddingX ?? '12%';
+
+      const cellsHtml = (cols.length ? cols : [{}, {}, ...[]].slice(0, 1))
+        .map((c, idx) => {
+          const src = c?.imagePath || c?.imgUrl || '';
+          const alt = (c?.settings?.altText || '').replace(/"/g, '&quot;');
+          const textAlign = c?.textAlign || 'center';
+          const titleSize = c?.settings?.titleFontSize || '24px';
+          const textSize = c?.settings?.textFontSize || '12px';
+
+          const imgHtml = src
+            ? `<img src="${src}" alt="${alt}" style="max-width:100%;display:block;height:auto;border:0;margin: 0 auto;">`
+            : ``;
+
+          const wrappedImg = c?.settings?.linkUrl
+            ? `<a href="${c.settings.linkUrl}" target="_blank" rel="noopener noreferrer">${imgHtml}</a>`
+            : imgHtml;
+
+          const titleHtml = settings?.hidetitle
+            ? ``
+            : `<h1 style="font-family:${fontFamily};font-size:${titleSize};line-height:1.2;color:${color};padding:16px 0 8px;text-align:${textAlign};">${
+                c?.title || ''
+              }</h1>`;
+
+          const textPad = settings?.hidetitle ? '16px 0' : '0';
+          const textHtml = `<p style="font-family:${fontFamily};font-size:${textSize};line-height:1.4;color:${color};padding:${textPad};text-align:${textAlign};font-weight:${
+            isBold ? 'bold' : 'normal'
+          }">${c?.text || ''}</p>`;
+
+          const padLeft = idx === 0 ? '0' : halfGap;
+          const padRight = idx === count - 1 ? '0' : halfGap;
+
+          return `
+            <td width="${widthPercent}" valign="top" style="text-align:${textAlign};padding-left:${padLeft};padding-right:${padRight};">
+              ${wrappedImg}
+              ${titleHtml}
+              ${textHtml}
+            </td>`;
+        })
+        .join('');
+
+      blockHtml += `
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${bg};padding:${paddingTop} ${paddingLeftRight} ${paddingBottom};">
+          <tbody>
+            <tr>
+              <td>
+                <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
+                  <tbody>
+                    <tr>
+                      ${cellsHtml}
+                    </tr>
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>`;
       break;
     }
 

@@ -105,7 +105,12 @@ export const components = [
   },
   { type: 'divider', label: 'Divider', icon: <Columns size={16} /> },
   { type: 'spacer', label: 'Spacer', icon: <Layout size={16} /> },
-  { type: 'columns', label: 'Columns', icon: <Grid size={16} /> },
+  { type: 'columns', label: 'Img Columns', icon: <Grid size={16} /> },
+  {
+    type: 'columnsContent',
+    label: 'Content Columns',
+    icon: <Grid size={16} />,
+  },
   { type: 'halfText', label: 'Half Text', icon: <FileText size={16} /> },
   {
     type: 'roundContainer',
