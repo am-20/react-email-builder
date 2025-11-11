@@ -63,7 +63,11 @@ const buildStyle = (type, raw = {}) => {
     .map(([k, v]) => `${kebabCase(k)}: ${v};`);
 
   // side padding for most blocks (keep images/spacers tight)
-  const needsSidePad = !(type === 'image' || type === 'spacer');
+  const needsSidePad = !(
+    type === 'image' ||
+    type === 'spacer' ||
+    type === 'header'
+  );
   if (needsSidePad)
     stylePairs.push('padding-left: 12%;', 'padding-right: 12%;');
 
@@ -135,7 +139,10 @@ const renderBlockHtml = (block, template = null) => {
 
     /** IMAGE */
     case 'image': {
-      const src = settings?.imagePath || settings?.imageUrl || 'https://placehold.co/640x300';
+      const src =
+        settings?.imagePath ||
+        settings?.imageUrl ||
+        'https://placehold.co/640x300';
 
       const img = `<img src="${src}" alt="${
         settings.altText || ''
@@ -327,7 +334,9 @@ const renderBlockHtml = (block, template = null) => {
           const img = src
             ? `<img src="${src}" alt="${
                 c?.settings?.altText || ''
-              }" style="max-width:100%;border:0;display:block;">`
+              }" style="padding-left: ${
+                idx === 0 ? '0' : idx === count - 1 ? gap : halfGap
+              };border:0;display:block;width:100%!important;">`
             : '';
           const inner = c?.settings?.linkUrl
             ? `<a href="${c.settings.linkUrl}" _label="${
@@ -336,9 +345,7 @@ const renderBlockHtml = (block, template = null) => {
             : img;
 
           return `
-            <td width="${widthPercent}%" style="padding-left:${
-            idx === 0 ? '0' : halfGap
-          };padding-right:${idx === count - 1 ? '0' : halfGap};">
+            <td width="${widthPercent}%" style=" vertical-align:top;font-size:0;line-height:0;">
               ${inner}
             </td>`;
         })
@@ -424,33 +431,33 @@ const renderBlockHtml = (block, template = null) => {
     // ROUND CONTAINER
     case 'roundContainer': {
       const s = settings || {};
-      const canvasColor        = s.canvasColor       || '#CFCFCF';
-      const backgroundColor    = s.backgroundColor   || '#FFFFFF';
-      const bgWidth            = Number(s.bgWidth ?? 88);
-      const borderColor        = s.borderColor       || '#FFFFFF';
-      const borderWidth        = Number(s.borderWidth ?? 3);
-      const borderType         = s.borderType        || 'solid';
-      const borderRadius       = Number(s.borderRadius ?? 24);
-      const paddingTop         = Number(s.paddingTop ?? 8);
-      const paddingBottom      = Number(s.paddingBottom ?? 8);
-      const paddingInnerTop    = Number(s.paddingInnerTop ?? 64);
+      const canvasColor = s.canvasColor || '#CFCFCF';
+      const backgroundColor = s.backgroundColor || '#FFFFFF';
+      const bgWidth = Number(s.bgWidth ?? 88);
+      const borderColor = s.borderColor || '#FFFFFF';
+      const borderWidth = Number(s.borderWidth ?? 3);
+      const borderType = s.borderType || 'solid';
+      const borderRadius = Number(s.borderRadius ?? 24);
+      const paddingTop = Number(s.paddingTop ?? 8);
+      const paddingBottom = Number(s.paddingBottom ?? 8);
+      const paddingInnerTop = Number(s.paddingInnerTop ?? 64);
       const paddingInnerBottom = Number(s.paddingInnerBottom ?? 64);
-    
+
       const kids = Array.isArray(block.children) ? block.children : [];
-    
+
       // Wrap each child in a 1x1 table that can carry corner radii.
       const childrenHTML = kids
         .map((child, i) => {
           const isFirst = i === 0;
-          const isLast  = i === kids.length - 1;
-    
-          const topLeft     = isFirst ? borderRadius : 0;
-          const topRight    = isFirst ? borderRadius : 0;
-          const bottomLeft  = isLast  ? borderRadius : 0;
-          const bottomRight = isLast  ? borderRadius : 0;
-    
+          const isLast = i === kids.length - 1;
+
+          const topLeft = isFirst ? borderRadius : 0;
+          const topRight = isFirst ? borderRadius : 0;
+          const bottomLeft = isLast ? borderRadius : 0;
+          const bottomRight = isLast ? borderRadius : 0;
+
           const childHtml = renderBlockHtml(child, template);
-    
+
           // Email-safe wrapper table with separate border-radius on corners, no padding
           return `
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
@@ -467,15 +474,17 @@ const renderBlockHtml = (block, template = null) => {
           `;
         })
         .join('');
-    
-      const topPadRow = paddingTop > 0
-        ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingTop}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingTop}">&nbsp;</td></tr>`
-        : '';
-    
-      const bottomPadRow = paddingBottom > 0
-        ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingBottom}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingBottom}">&nbsp;</td></tr>`
-        : '';
-    
+
+      const topPadRow =
+        paddingTop > 0
+          ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingTop}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingTop}">&nbsp;</td></tr>`
+          : '';
+
+      const bottomPadRow =
+        paddingBottom > 0
+          ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingBottom}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingBottom}">&nbsp;</td></tr>`
+          : '';
+
       blockHtml = `
         ${topPadRow}
         <tr>
@@ -498,7 +507,7 @@ const renderBlockHtml = (block, template = null) => {
       `;
       break;
     }
-    
+
     /** FOOTERS */
     case 'footer':
     case 'footer_general_kz':
@@ -530,7 +539,9 @@ const renderBlockHtml = (block, template = null) => {
                   .map(
                     (key) => `
                       <td style="padding:0 16px;">
-                        <a title="Samsung Kazakhstan" href="${settings.urls?.[key] || '#'}">
+                        <a title="Samsung Kazakhstan" href="${
+                          settings.urls?.[key] || '#'
+                        }">
                           <img width="57" src="i/${key}.png" alt="${key}" style="display:block;border:0;">
                         </a>
                       </td>`

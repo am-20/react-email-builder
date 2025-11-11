@@ -19,7 +19,12 @@ export const socialIcons = {
 
 export const getImagePath = (iconName) => getFooterIcon(iconName);
 
-export function handleImageUploadForBlock(e, blockIndex, template, setTemplate) {
+export function handleImageUploadForBlock(
+  e,
+  blockIndex,
+  template,
+  setTemplate
+) {
   const file = e.target.files?.[0];
   if (!file) return;
 
@@ -30,7 +35,7 @@ export function handleImageUploadForBlock(e, blockIndex, template, setTemplate) 
   const b = { ...newBlocks[blockIndex] };
   b.settings = {
     ...b.settings,
-    imagePath: asset.path,           // used in HTML export
+    imagePath: asset.path, // used in HTML export
     imagePreviewUrl: asset.previewUrl, // used in editor preview
   };
   newBlocks[blockIndex] = b;

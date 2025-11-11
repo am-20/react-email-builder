@@ -75,6 +75,7 @@ export const createNewBlock = (type, template = null) => {
           buttonBgColor: '#000000',
           color: '#ffffff',
           padding: '12px 24px',
+          borderRadius: '30px',
           fontSize: '16px',
           border: '1px solid #000000',
           textAlign: 'center',
@@ -135,6 +136,7 @@ export const createNewBlock = (type, template = null) => {
               color: '#ffffff',
               padding: '12px 24px',
               fontSize: '16px',
+              borderRadius: '30px',
               border: '1px solid #000000',
               textAlign: 'center',
               linkUrl: '',
@@ -150,6 +152,7 @@ export const createNewBlock = (type, template = null) => {
               color: '#ffffff',
               padding: '12px 24px',
               fontSize: '16px',
+              borderRadius: '30px',
               border: '1px solid #000000',
               textAlign: 'center',
               linkUrl: '',
@@ -203,7 +206,7 @@ export const createNewBlock = (type, template = null) => {
           paddingInnerBottom: 64,
         },
         children: [],
-      };      
+      };
     case 'footer':
       return {
         id,
@@ -402,15 +405,25 @@ export const handleUpdateBlockContent = (
 };
 
 // Update block settings
-export const handleUpdateBlockSettings = (blockIndex, key, value, parentIndex = null) => {
-  setTemplate(prev => {
+export const handleUpdateBlockSettings = (
+  blockIndex,
+  key,
+  value,
+  template,
+  setTemplate,
+  parentIndex = null
+) => {
+  setTemplate((prev) => {
     const next = JSON.parse(JSON.stringify(prev));
 
-    if (parentIndex !== null && next.blocks[parentIndex]?.children?.[blockIndex]) {
-      // 🔧 nested child (like inside RoundContainer)
+    if (
+      parentIndex !== null &&
+      next.blocks[parentIndex]?.children?.[blockIndex]
+    ) {
+      // nested child (like inside RoundContainer)
       next.blocks[parentIndex].children[blockIndex].settings[key] = value;
     } else if (next.blocks?.[blockIndex]) {
-      // 🔧 top-level block
+      // top-level block
       next.blocks[blockIndex].settings[key] = value;
     }
 
@@ -441,9 +454,11 @@ export const handleSaveTemplate = async (generateHtmlOutput, templateTitle) => {
 
   const assetsFolder = zip.folder('i');
 
-  // 1) Add uploaded assets 
+  // Add uploaded assets
   const assets = getAllAssets();
-  const existingPaths = new Set(assets.map(a => a.path?.toLowerCase()).filter(Boolean));
+  const existingPaths = new Set(
+    assets.map((a) => a.path?.toLowerCase()).filter(Boolean)
+  );
   const hasPath = (p) => existingPaths.has(p.toLowerCase());
 
   for (const a of assets) {
@@ -451,10 +466,10 @@ export const handleSaveTemplate = async (generateHtmlOutput, templateTitle) => {
     assetsFolder.file(a.filename, a.file);
   }
 
-  // 2) Auto-include default footer icons from public/i if missing
+  // Auto-include default footer icons from public/i if missing
   await addDefaultFooterIcons(assetsFolder, hasPath);
 
-  // 3) Download zip
+  // Download zip
   const blob = await zip.generateAsync({ type: 'blob' });
   saveAs(blob, `${safeTitle}.zip`);
 };
@@ -479,14 +494,14 @@ async function addDefaultFooterIcons(assetsFolder, hasPath) {
     if (hasPath(path)) continue; // don’t duplicate or override user-uploaded assets
 
     try {
-      const url = new URL(`/${path}`, origin);     // absolute fetch from public/i
+      const url = new URL(`/${path}`, origin); // absolute fetch from public/i
       const res = await fetch(url);
       if (!res.ok) {
         console.warn('[export] footer icon not found:', url.toString());
         continue;
       }
       const blob = await res.blob();
-      assetsFolder.file(`${key}.png`, blob);       // saved as /i/<key>.png in the zip
+      assetsFolder.file(`${key}.png`, blob); // saved as /i/<key>.png in the zip
     } catch (err) {
       console.warn('[export] footer icon fetch failed:', path, err);
     }
@@ -503,6 +518,7 @@ export const handleDragStart = (e, item, isNew, setDraggedItem) => {
       e.dataTransfer.setData('text/plain', item.type);
     } catch (err) {
       // Some browsers may not support setData in certain contexts
+      console.log('Error: ', err);
     }
     setDraggedItem({ ...item, isNew: true });
   } else {

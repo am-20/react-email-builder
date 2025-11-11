@@ -75,24 +75,25 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
               fontSize: 0,
               lineHeight: 0,
               backgroundColor: canvas,
-            }}
-          >
+            }}>
             &nbsp;
           </td>
         </tr>
 
         {/* Socials */}
         <tr>
-          <td style={{ backgroundColor: canvas }} align="center">
-            <table {...tableProps} style={{ width: '100%', margin: 0, padding: 0 }}>
+          <td style={{ backgroundColor: canvas }} align='center'>
+            <table
+              {...tableProps}
+              style={{ width: '100%', margin: 0, padding: 0 }}>
               <tbody>
                 <tr>
                   <td style={{ width: 120 }}>&nbsp;</td>
                   {socials.map(([key, alt]) => (
                     <td key={key} style={{ padding: '0 16px' }}>
-                      <a href={urls?.[key] || '#'} title="Samsung Kazakhstan">
+                      <a href={urls?.[key] || '#'} title='Samsung Kazakhstan'>
                         <img
-                          width="57"
+                          width='57'
                           src={getImagePath(socialIcons[key])}
                           alt={alt}
                           style={{ display: 'block', border: 0 }}
@@ -116,8 +117,7 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
               paddingTop: 16,
               paddingLeft: '10%',
               paddingRight: '10%',
-            }}
-          >
+            }}>
             <h1
               style={{
                 margin: '0 0 13px 0',
@@ -126,8 +126,7 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                 fontWeight: 'bold',
                 color: text,
                 lineHeight: 1,
-              }}
-            >
+              }}>
               {dict.questions}
             </h1>
             <table
@@ -137,11 +136,10 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                 margin: '0 auto',
                 textAlign: 'center',
                 color: text,
-              }}
-            >
+              }}>
               <tbody>
                 <tr>
-                  <td align="center" style={{ padding: 7 }}>
+                  <td align='center' style={{ padding: 7 }}>
                     <a
                       href={urls?.livechat || '#'}
                       style={{
@@ -149,12 +147,16 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                         fontSize: 11,
                         color: text,
                         textDecoration: 'none',
-                      }}
-                    >
-                      <img width="11" src={getImagePath(socialIcons['livechat'])} alt="online chat" /> Онлайн чат
+                      }}>
+                      <img
+                        width='11'
+                        src={getImagePath(socialIcons['livechat'])}
+                        alt='online chat'
+                      />{' '}
+                      Онлайн чат
                     </a>
                   </td>
-                  <td align="center" style={{ padding: 7 }}>
+                  <td align='center' style={{ padding: 7 }}>
                     <a
                       href={urls?.call || '#'}
                       style={{
@@ -162,9 +164,13 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                         fontSize: 11,
                         color: text,
                         textDecoration: 'none',
-                      }}
-                    >
-                      <img width="11" src={getImagePath(socialIcons['call'])} alt="call center" /> Call Center 7700
+                      }}>
+                      <img
+                        width='11'
+                        src={getImagePath(socialIcons['call'])}
+                        alt='call center'
+                      />{' '}
+                      Call Center 7700
                     </a>
                   </td>
                 </tr>
@@ -175,11 +181,15 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
 
         {/* Legal */}
         <tr>
-          <td style={{ backgroundColor: canvas }} align="center">
+          <td style={{ backgroundColor: canvas }} align='center'>
             <table
               {...tableProps}
-              style={{ width: 500, margin: '0 auto', textAlign: 'center', color: disclaimer }}
-            >
+              style={{
+                width: 500,
+                margin: '0 auto',
+                textAlign: 'center',
+                color: disclaimer,
+              }}>
               <tbody>
                 <tr>
                   <td style={{ height: 26 }}>&nbsp;</td>
@@ -190,8 +200,7 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                       fontSize: 14,
                       color: disclaimer,
                       fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                    }}
-                  >
+                    }}>
                     {type !== 'footer_sendpulse' ? (
                       <>
                         <p>
@@ -199,8 +208,10 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                           {urls?.optout ? (
                             <a
                               href={urls.optout}
-                              style={{ textDecoration: 'underline', color: disclaimer }}
-                            >
+                              style={{
+                                textDecoration: 'underline',
+                                color: disclaimer,
+                              }}>
                               {dict.link}
                             </a>
                           ) : (
@@ -211,7 +222,8 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                         <br />
                       </>
                     ) : null}
-                    ©{new Date().getFullYear()} Samsung Electronics Co., Ltd. {dict.all_rights}
+                    ©{new Date().getFullYear()} Samsung Electronics Co., Ltd.{' '}
+                    {dict.all_rights}
                     <br />
                     {dict.address}
                   </td>
@@ -225,19 +237,24 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                       height: 24,
                       fontSize: 14,
                       fontFamily: settings?.fontFamily || 'Arial, sans-serif',
-                    }}
-                  >
+                    }}>
                     <a
                       href={urls?.legal || '#'}
-                      style={{ fontSize: 14, color: settings?.textcolor || '#000', textDecoration: 'underline' }}
-                    >
+                      style={{
+                        fontSize: 14,
+                        color: settings?.textcolor || '#000',
+                        textDecoration: 'underline',
+                      }}>
                       {dict.legal}
                     </a>
                     &nbsp;|&nbsp;
                     <a
                       href={urls?.privacy || '#'}
-                      style={{ fontSize: 14, color: settings?.textcolor || '#000', textDecoration: 'underline' }}
-                    >
+                      style={{
+                        fontSize: 14,
+                        color: settings?.textcolor || '#000',
+                        textDecoration: 'underline',
+                      }}>
                       {dict.privacy}
                     </a>
                   </td>
@@ -281,7 +298,9 @@ const BlockRenderer = ({
   hoveredBlockId,
 }) => {
   const { type, content } = block;
-  const [manualUrlValue, setManualUrlValue] = useState(settings?.imagePath || '');
+  const [manualUrlValue, setManualUrlValue] = useState(
+    settings?.imagePath || ''
+  );
   const shouldShowToolbar = isHovered || isActive;
 
   // Padding (separate)
@@ -289,15 +308,20 @@ const BlockRenderer = ({
   const bottomPad = settings?.paddingBottom ?? settings?.padding ?? '0';
 
   const isSpacer = type === 'spacer';
-  const isFooter = type === 'footer' || type === 'footer_general_kz' || type === 'footer_sendpulse';
+  const isFooter =
+    type === 'footer' ||
+    type === 'footer_general_kz' ||
+    type === 'footer_sendpulse';
   const isRound = type === 'roundContainer';
 
   const blockStyle = {
     backgroundColor: settings?.backgroundColor || 'white',
     paddingTop: isSpacer || isFooter || isRound ? '0' : topPad,
     paddingBottom: isSpacer || isFooter || isRound ? '0' : bottomPad,
-    paddingLeft: type === 'image' || isSpacer || isFooter || isRound ? '0' : '12%',
-    paddingRight: type === 'image' || isSpacer || isFooter || isRound ? '0' : '12%',
+    paddingLeft:
+      type === 'image' || isSpacer || isFooter || isRound ? '0' : '12%',
+    paddingRight:
+      type === 'image' || isSpacer || isFooter || isRound ? '0' : '12%',
     position: 'relative',
     cursor: 'pointer',
     border: isActive ? '2px solid #4299e1' : 'none',
@@ -325,7 +349,11 @@ const BlockRenderer = ({
       }
       const arr = next.blocks[parentIndex].children;
 
-      if (Number.isInteger(insertAt) && insertAt >= 0 && insertAt <= arr.length) {
+      if (
+        Number.isInteger(insertAt) &&
+        insertAt >= 0 &&
+        insertAt <= arr.length
+      ) {
         arr.splice(insertAt, 0, child);
       } else {
         arr.push(child);
@@ -335,7 +363,12 @@ const BlockRenderer = ({
     });
   };
 
-  const handleImageUpload = (e, buttonIndex = null, columnIndex = null, isHalfText = false) => {
+  const handleImageUpload = (
+    e,
+    buttonIndex = null,
+    columnIndex = null,
+    isHalfText = false
+  ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -390,8 +423,9 @@ const BlockRenderer = ({
                   style={contentStyle}
                   contentEditable={isActive}
                   suppressContentEditableWarning
-                  onBlur={(e) => handleUpdateBlockContent(index, e.target.innerText)}
-                >
+                  onBlur={(e) =>
+                    handleUpdateBlockContent(index, e.target.innerText)
+                  }>
                   {content}
                 </h1>
               </td>
@@ -411,8 +445,9 @@ const BlockRenderer = ({
                   style={contentStyle}
                   contentEditable={isActive}
                   suppressContentEditableWarning
-                  onBlur={(e) => handleUpdateBlockContent(index, e.target.innerText)}
-                >
+                  onBlur={(e) =>
+                    handleUpdateBlockContent(index, e.target.innerText)
+                  }>
                   {content}
                 </p>
               </td>
@@ -423,7 +458,10 @@ const BlockRenderer = ({
       break;
 
     case 'image': {
-      const srcForEditor = settings?.imagePreviewUrl || settings?.imagePath || 'https://placehold.co/640x300';
+      const srcForEditor =
+        settings?.imagePreviewUrl ||
+        settings?.imagePath ||
+        'https://placehold.co/640x300';
 
       const handleManualUrl = (e) => {
         const url = e.target.value;
@@ -435,11 +473,22 @@ const BlockRenderer = ({
       const ImageEl =
         srcForEditor &&
         (settings?.linkUrl ? (
-          <a href={`${settings.linkUrl}`} target="_blank" rel="noopener noreferrer">
-            <img src={srcForEditor} alt={settings?.altText || ''} style={IMG_BLOCK_STYLE} />
+          <a
+            href={`${settings.linkUrl}`}
+            target='_blank'
+            rel='noopener noreferrer'>
+            <img
+              src={srcForEditor}
+              alt={settings?.altText || ''}
+              style={IMG_BLOCK_STYLE}
+            />
           </a>
         ) : (
-          <img src={srcForEditor} alt={settings?.altText || ''} style={IMG_BLOCK_STYLE} />
+          <img
+            src={srcForEditor}
+            alt={settings?.altText || ''}
+            style={IMG_BLOCK_STYLE}
+          />
         ));
 
       blockContent = (
@@ -454,43 +503,61 @@ const BlockRenderer = ({
                     <tbody>
                       <tr>
                         <td>
-                          <div className="button-settings">
+                          <div className='button-settings'>
                             <input
-                              type="file"
-                              accept="image/*"
-                              className="settings-input"
+                              type='file'
+                              accept='image/*'
+                              className='settings-input'
                               onChange={handleImageUpload}
                               style={{ marginBottom: 8 }}
                             />
 
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Image path or URL (e.g. i/1.png or https://...)"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Image path or URL (e.g. i/1.png or https://...)'
                               value={manualUrlValue}
                               onChange={handleManualUrl}
                             />
 
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Alt text"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Alt text'
                               value={settings?.altText || ''}
-                              onChange={(e) => handleUpdateBlockSettings(index, 'altText', e.target.value)}
+                              onChange={(e) =>
+                                handleUpdateBlockSettings(
+                                  index,
+                                  'altText',
+                                  e.target.value
+                                )
+                              }
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Link URL (optional)"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link URL (optional)'
                               value={settings?.linkUrl || ''}
-                              onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
+                              onChange={(e) =>
+                                handleUpdateBlockSettings(
+                                  index,
+                                  'linkUrl',
+                                  e.target.value
+                                )
+                              }
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Link Label (optional)"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link Label (optional)'
                               value={settings?.linkLabel || ''}
-                              onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
+                              onChange={(e) =>
+                                handleUpdateBlockSettings(
+                                  index,
+                                  'linkLabel',
+                                  e.target.value
+                                )
+                              }
                             />
                           </div>
                         </td>
@@ -507,7 +574,10 @@ const BlockRenderer = ({
     }
 
     case 'button': {
-      const btnSrc = settings?.imagePreviewUrl || settings?.imagePath || 'https://placehold.co/80x40';
+      const btnSrc =
+        settings?.imagePreviewUrl ||
+        settings?.imagePath ||
+        'https://placehold.co/80x40';
 
       const uploadBtn = (e) => {
         const file = e.target.files?.[0];
@@ -517,7 +587,11 @@ const BlockRenderer = ({
         setTemplate((prev) => {
           const newBlocks = [...prev.blocks];
           const blk = newBlocks[index];
-          blk.settings = { ...(blk.settings || {}), imagePath: asset.path, imagePreviewUrl: asset.previewUrl };
+          blk.settings = {
+            ...(blk.settings || {}),
+            imagePath: asset.path,
+            imagePreviewUrl: asset.previewUrl,
+          };
           return { ...prev, blocks: newBlocks };
         });
 
@@ -536,39 +610,79 @@ const BlockRenderer = ({
           <tbody>
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'center' }}>
-                <a href={`${settings?.linkUrl || ''}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                <a
+                  href={`${settings?.linkUrl || ''}`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  style={{ display: 'inline-block' }}>
                   {btnSrc && (
                     <img
                       src={btnSrc}
                       alt={settings?.imageAlt || ''}
-                      style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 'auto', border: 0 }}
+                      style={{
+                        display: 'block',
+                        margin: '0 auto',
+                        maxWidth: '100%',
+                        height: 'auto',
+                        border: 0,
+                      }}
                     />
                   )}
                 </a>
                 {isActive && (
-                  <div className="button-settings">
-                    <input type="file" accept="image/*" className="settings-input" onChange={uploadBtn} style={{ marginBottom: 8 }} />
-                    <input type="text" className="settings-input" placeholder="Image path or URL" value={btnManual} onChange={manualBtn} />
+                  <div className='button-settings'>
                     <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Alt text"
+                      type='file'
+                      accept='image/*'
+                      className='settings-input'
+                      onChange={uploadBtn}
+                      style={{ marginBottom: 8 }}
+                    />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Image path or URL'
+                      value={btnManual}
+                      onChange={manualBtn}
+                    />
+                    <input
+                      type='text'
+                      className='settings-input'
+                      placeholder='Alt text'
                       value={settings?.imageAlt || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'imageAlt', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'imageAlt',
+                          e.target.value
+                        )
+                      }
                     />
                     <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Link URL"
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link URL'
                       value={settings?.linkUrl || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkUrl',
+                          e.target.value
+                        )
+                      }
                     />
                     <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Link Label (optional)"
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link Label (optional)'
                       value={settings?.linkLabel || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkLabel',
+                          e.target.value
+                        )
+                      }
                     />
                   </div>
                 )}
@@ -585,7 +699,7 @@ const BlockRenderer = ({
         textDecoration: 'none',
         letterSpacing: 0,
         display: 'inline',
-        borderRadius: '30px',
+        borderRadius: settings?.borderRadius,
         fontWeight: 'bold',
         fontSize: settings?.fontSize,
         color: settings?.color,
@@ -597,32 +711,58 @@ const BlockRenderer = ({
         <table {...tableProps}>
           <tbody>
             <tr>
-              <td style={{ textAlign: settings?.textAlign || 'center', padding: '16px 0' }}>
-                <a href={`${settings?.linkUrl}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block', textDecoration: 'none' }}>
+              <td
+                style={{
+                  textAlign: settings?.textAlign || 'center',
+                  padding: '16px 0',
+                }}>
+                <a
+                  href={`${settings?.linkUrl}`}
+                  target='_blank'
+                  rel='noopener noreferrer'
+                  style={{ display: 'inline-block', textDecoration: 'none' }}>
                   <p style={buttonStyles}>{settings?.content || 'Click Me'}</p>
                 </a>
                 {isActive && (
-                  <div className="button-settings">
+                  <div className='button-settings'>
                     <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Click Me"
+                      type='text'
+                      className='settings-input'
+                      placeholder='Click Me'
                       value={settings?.content || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'content', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'content',
+                          e.target.value
+                        )
+                      }
                     />
                     <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Link URL"
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link URL'
                       value={settings?.linkUrl || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'linkUrl', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkUrl',
+                          e.target.value
+                        )
+                      }
                     />
                     <input
-                      type="text"
-                      className="settings-input"
-                      placeholder="Link Label (optional)"
+                      type='text'
+                      className='settings-input'
+                      placeholder='Link Label (optional)'
                       value={settings?.linkLabel || ''}
-                      onChange={(e) => handleUpdateBlockSettings(index, 'linkLabel', e.target.value)}
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'linkLabel',
+                          e.target.value
+                        )
+                      }
                     />
                   </div>
                 )}
@@ -649,70 +789,96 @@ const BlockRenderer = ({
                 <div style={container}>
                   {block.buttons?.map((button, buttonIndex) => {
                     const s = button.settings || {};
-                    const btnSrc = s.imagePreviewUrl || s.imagePath || 'https://placehold.co/80x40';
+                    const btnSrc =
+                      s.imagePreviewUrl ||
+                      s.imagePath ||
+                      'https://placehold.co/80x40';
                     return (
                       <div key={buttonIndex}>
-                        <a href={`${s?.linkUrl || ''}`} target="_blank" rel="noopener noreferrer" style={{ display: 'inline-block' }}>
+                        <a
+                          href={`${s?.linkUrl || ''}`}
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          style={{ display: 'inline-block' }}>
                           {btnSrc && (
                             <img
                               src={btnSrc}
                               alt={s?.imageAlt || ''}
-                              style={{ display: 'block', margin: '0 auto', maxWidth: '100%', height: 'auto', border: 0 }}
+                              style={{
+                                display: 'block',
+                                margin: '0 auto',
+                                maxWidth: '100%',
+                                height: 'auto',
+                                border: 0,
+                              }}
                             />
                           )}
                         </a>
                         {isActive && (
                           <>
                             <input
-                              type="file"
-                              accept="image/*"
-                              className="settings-input"
-                              onChange={(e) => handleImageUpload(e, buttonIndex)}
+                              type='file'
+                              accept='image/*'
+                              className='settings-input'
+                              onChange={(e) =>
+                                handleImageUpload(e, buttonIndex)
+                              }
                               style={{ marginBottom: 8 }}
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Image path or URL"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Image path or URL'
                               value={s.imagePath || ''}
                               onChange={(e) => {
                                 const url = e.target.value;
                                 const newBlocks = [...template.blocks];
-                                const btn = newBlocks[index].buttons[buttonIndex];
-                                btn.settings = { ...(btn.settings || {}), imagePath: url, imagePreviewUrl: url };
+                                const btn =
+                                  newBlocks[index].buttons[buttonIndex];
+                                btn.settings = {
+                                  ...(btn.settings || {}),
+                                  imagePath: url,
+                                  imagePreviewUrl: url,
+                                };
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Alt text"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Alt text'
                               value={s?.imageAlt || ''}
                               onChange={(e) => {
                                 const newBlocks = [...template.blocks];
-                                newBlocks[index].buttons[buttonIndex].settings.imageAlt = e.target.value;
+                                newBlocks[index].buttons[
+                                  buttonIndex
+                                ].settings.imageAlt = e.target.value;
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Link URL"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link URL'
                               value={s?.linkUrl || ''}
                               onChange={(e) => {
                                 const newBlocks = [...template.blocks];
-                                newBlocks[index].buttons[buttonIndex].settings.linkUrl = e.target.value;
+                                newBlocks[index].buttons[
+                                  buttonIndex
+                                ].settings.linkUrl = e.target.value;
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Link Label (optional)"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link Label (optional)'
                               value={s?.linkLabel || ''}
                               onChange={(e) => {
                                 const newBlocks = [...template.blocks];
-                                newBlocks[index].buttons[buttonIndex].settings.linkLabel = e.target.value;
+                                newBlocks[index].buttons[
+                                  buttonIndex
+                                ].settings.linkLabel = e.target.value;
                                 setTemplate({ ...template, blocks: newBlocks });
                               }}
                             />
@@ -744,7 +910,7 @@ const BlockRenderer = ({
           textDecoration: 'none',
           letterSpacing: 0,
           display: 'inline',
-          borderRadius: '30px',
+          borderRadius: s.borderRadius ?? '30px',
           fontWeight: 'bold',
           backgroundColor: s.buttonBgColor ?? '#000000',
           fontSize: s.fontSize ?? '16px',
@@ -775,81 +941,163 @@ const BlockRenderer = ({
                       <div key={buttonIndex} style={{ padding: '16px 0' }}>
                         <a
                           href={`${s.linkUrl || '#'}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          style={{ display: 'inline-block', textDecoration: 'none' }}
-                        >
+                          target='_blank'
+                          rel='noopener noreferrer'
+                          style={{
+                            display: 'inline-block',
+                            textDecoration: 'none',
+                          }}>
                           <p style={btnStyles}>{s.content || 'Click Me'}</p>
                         </a>
 
                         {isActive && (
-                          <div className="button-settings" style={{ width: '100%' }}>
+                          <div
+                            className='button-settings'
+                            style={{ width: '100%' }}>
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Button text"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Button text'
                               value={s.content || ''}
-                              onChange={(e) => updateBtn(buttonIndex, 'content', e.target.value)}
+                              onChange={(e) =>
+                                updateBtn(
+                                  buttonIndex,
+                                  'content',
+                                  e.target.value
+                                )
+                              }
                             />
 
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Link URL"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link URL'
                               value={s.linkUrl || ''}
-                              onChange={(e) => updateBtn(buttonIndex, 'linkUrl', e.target.value)}
+                              onChange={(e) =>
+                                updateBtn(
+                                  buttonIndex,
+                                  'linkUrl',
+                                  e.target.value
+                                )
+                              }
                             />
                             <input
-                              type="text"
-                              className="settings-input"
-                              placeholder="Link label"
+                              type='text'
+                              className='settings-input'
+                              placeholder='Link label'
                               value={s.linkLabel || ''}
-                              onChange={(e) => updateBtn(buttonIndex, 'linkLabel', e.target.value)}
+                              onChange={(e) =>
+                                updateBtn(
+                                  buttonIndex,
+                                  'linkLabel',
+                                  e.target.value
+                                )
+                              }
                             />
 
-                            <div className="control-flex" style={{ gap: 8, marginTop: 6, flexWrap: 'wrap' }}>
-                              <div className="control-flex" style={{ alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontSize: 12, color: '#6b7280' }}>Bg</span>
+                            <div
+                              className='control-flex'
+                              style={{
+                                gap: 8,
+                                marginTop: 6,
+                                flexWrap: 'wrap',
+                              }}>
+                              <div
+                                className='control-flex'
+                                style={{ alignItems: 'center', gap: 6 }}>
+                                <span
+                                  style={{ fontSize: 12, color: '#6b7280' }}>
+                                  Bg
+                                </span>
                                 <input
-                                  type="color"
+                                  type='color'
                                   value={s.buttonBgColor ?? '#000000'}
-                                  onChange={(e) => updateBtn(buttonIndex, 'buttonBgColor', e.target.value)}
-                                  className="color-input"
+                                  onChange={(e) =>
+                                    updateBtn(
+                                      buttonIndex,
+                                      'buttonBgColor',
+                                      e.target.value
+                                    )
+                                  }
+                                  className='color-input'
                                 />
                               </div>
 
-                              <div className="control-flex" style={{ alignItems: 'center', gap: 6 }}>
-                                <span style={{ fontSize: 12, color: '#6b7280' }}>Text</span>
+                              <div
+                                className='control-flex'
+                                style={{ alignItems: 'center', gap: 6 }}>
+                                <span
+                                  style={{ fontSize: 12, color: '#6b7280' }}>
+                                  Text
+                                </span>
                                 <input
-                                  type="color"
+                                  type='color'
                                   value={s.color ?? '#ffffff'}
-                                  onChange={(e) => updateBtn(buttonIndex, 'color', e.target.value)}
-                                  className="color-input"
+                                  onChange={(e) =>
+                                    updateBtn(
+                                      buttonIndex,
+                                      'color',
+                                      e.target.value
+                                    )
+                                  }
+                                  className='color-input'
                                 />
                               </div>
 
                               <input
-                                type="text"
-                                className="settings-input"
-                                placeholder="Padding (e.g. 12px 24px)"
+                                type='text'
+                                className='settings-input'
+                                placeholder='Padding (e.g. 12px 24px)'
                                 value={s.padding ?? '12px 24px'}
-                                onChange={(e) => updateBtn(buttonIndex, 'padding', e.target.value)}
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'padding',
+                                    e.target.value
+                                  )
+                                }
                               />
 
                               <input
-                                type="text"
-                                className="settings-input"
-                                placeholder="Font size (e.g. 16px)"
+                                type='text'
+                                className='settings-input'
+                                placeholder='Font size (e.g. 16px)'
                                 value={s.fontSize ?? '16px'}
-                                onChange={(e) => updateBtn(buttonIndex, 'fontSize', e.target.value)}
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'fontSize',
+                                    e.target.value
+                                  )
+                                }
                               />
 
                               <input
-                                type="text"
-                                className="settings-input"
-                                placeholder="Border (e.g. 1px solid #000)"
+                                type='text'
+                                className='settings-input'
+                                placeholder='Border (e.g. 1px solid #000)'
                                 value={s.border ?? '1px solid #000000'}
-                                onChange={(e) => updateBtn(buttonIndex, 'border', e.target.value)}
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'border',
+                                    e.target.value
+                                  )
+                                }
+                              />
+
+                              <input
+                                type='text'
+                                className='settings-input'
+                                placeholder='Border radius (e.g. 30px)'
+                                value={s.borderRadius ?? '30px'}
+                                onChange={(e) =>
+                                  updateBtn(
+                                    buttonIndex,
+                                    'borderRadius',
+                                    e.target.value
+                                  )
+                                }
                               />
                             </div>
                           </div>
@@ -902,7 +1150,8 @@ const BlockRenderer = ({
                     <tr>
                       <td
                         style={{
-                          backgroundColor: settings?.backgroundColor || '#e5e5e5',
+                          backgroundColor:
+                            settings?.backgroundColor || '#e5e5e5',
                           height: settings?.height || '40px',
                         }}
                       />
@@ -922,13 +1171,18 @@ const BlockRenderer = ({
       const gap = settings?.columnGap || '0';
       const widthPercent = `${(100 / count).toFixed(4)}%`;
       const halfGap =
-        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap) ? `calc((${gap}) / 2)` : '0';
+        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
+          ? `calc((${gap}) / 2)`
+          : '0';
 
       const addColumn = () => {
         const newBlocks = [...template.blocks];
         newBlocks[index].columns = [
           ...(newBlocks[index].columns || []),
-          { content: '', settings: { altText: '', linkUrl: '', linkLabel: '' } },
+          {
+            content: '',
+            settings: { altText: '', linkUrl: '', linkLabel: '' },
+          },
         ];
         setTemplate({ ...template, blocks: newBlocks });
       };
@@ -969,78 +1223,141 @@ const BlockRenderer = ({
           <tbody>
             <tr>
               <td>
-                <table {...tableProps} className="columns-container">
+                <table {...tableProps} className='columns-container'>
                   <tbody>
                     <tr>
                       {cols.map((c, colIndex) => {
-                        const colSrc = c?.imagePreviewUrl || c?.imagePath || c?.content || '';
+                        const colSrc =
+                          c?.imagePreviewUrl ||
+                          c?.imagePath ||
+                          c?.content ||
+                          '';
                         return (
                           <td
                             key={colIndex}
                             width={widthPercent}
-                            style={{
-                              paddingLeft: colIndex === 0 ? 0 : halfGap,
-                              paddingRight: colIndex === count - 1 ? 0 : halfGap,
-                            }}
-                          >
+                            style={{ verticalAlign: 'top' }}>
                             {c?.settings?.linkUrl ? (
-                              <a href={`${c.settings.linkUrl}`} target="_blank" rel="noopener noreferrer">
-                                {colSrc && <img src={colSrc} alt={c?.settings?.altText || ''} style={IMG_BLOCK_STYLE} />}
+                              <a
+                                href={`${c.settings.linkUrl}`}
+                                target='_blank'
+                                rel='noopener noreferrer'>
+                                {colSrc && (
+                                  <img
+                                    src={colSrc}
+                                    alt={c?.settings?.altText || ''}
+                                    style={{
+                                      ...IMG_BLOCK_STYLE,
+                                      paddingLeft:
+                                        colIndex === 0
+                                          ? 0
+                                          : colIndex === count - 1
+                                          ? gap
+                                          : halfGap,
+                                    }}
+                                  />
+                                )}
                               </a>
                             ) : (
-                              colSrc && <img src={colSrc} alt={c?.settings?.altText || ''} style={IMG_BLOCK_STYLE} />
+                              colSrc && (
+                                <img
+                                  src={colSrc}
+                                  alt={c?.settings?.altText || ''}
+                                  style={{
+                                    ...IMG_BLOCK_STYLE,
+                                    paddingLeft:
+                                      colIndex === 0
+                                        ? 0
+                                        : colIndex === count - 1
+                                        ? gap
+                                        : halfGap,
+                                  }}
+                                />
+                              )
                             )}
 
                             {isActive && (
-                              <div className="column-settings">
+                              <div className='column-settings'>
                                 <input
-                                  type="file"
-                                  accept="image/*"
-                                  className="settings-input"
+                                  type='file'
+                                  accept='image/*'
+                                  className='settings-input'
                                   onChange={(e) => onUpload(e, colIndex)}
                                   style={{ marginBottom: 8 }}
                                 />
                                 <input
-                                  type="text"
-                                  className="settings-input"
-                                  placeholder="Image path or URL"
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Image path or URL'
                                   value={c?.imagePath || ''}
                                   onChange={(e) => {
                                     const url = e.target.value;
-                                    updateCol(colIndex, 'imagePath', url, false);
-                                    updateCol(colIndex, 'imagePreviewUrl', url, false);
+                                    updateCol(
+                                      colIndex,
+                                      'imagePath',
+                                      url,
+                                      false
+                                    );
+                                    updateCol(
+                                      colIndex,
+                                      'imagePreviewUrl',
+                                      url,
+                                      false
+                                    );
                                   }}
                                 />
                                 <input
-                                  type="text"
-                                  className="settings-input"
-                                  placeholder="Alt text"
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Alt text'
                                   value={c?.settings?.altText || ''}
-                                  onChange={(e) => updateCol(colIndex, 'altText', e.target.value, true)}
+                                  onChange={(e) =>
+                                    updateCol(
+                                      colIndex,
+                                      'altText',
+                                      e.target.value,
+                                      true
+                                    )
+                                  }
                                 />
                                 <input
-                                  type="text"
-                                  className="settings-input"
-                                  placeholder="Link URL (optional)"
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Link URL (optional)'
                                   value={c?.settings?.linkUrl || ''}
-                                  onChange={(e) => updateCol(colIndex, 'linkUrl', e.target.value, true)}
+                                  onChange={(e) =>
+                                    updateCol(
+                                      colIndex,
+                                      'linkUrl',
+                                      e.target.value,
+                                      true
+                                    )
+                                  }
                                 />
                                 <input
-                                  type="text"
-                                  className="settings-input"
-                                  placeholder="Link Label (optional)"
+                                  type='text'
+                                  className='settings-input'
+                                  placeholder='Link Label (optional)'
                                   value={c?.settings?.linkLabel || ''}
-                                  onChange={(e) => updateCol(colIndex, 'linkLabel', e.target.value, true)}
+                                  onChange={(e) =>
+                                    updateCol(
+                                      colIndex,
+                                      'linkLabel',
+                                      e.target.value,
+                                      true
+                                    )
+                                  }
                                 />
-                                <div className="control-flex" style={{ gap: 8, marginTop: 6 }}>
+                                <div
+                                  className='control-flex'
+                                  style={{ gap: 8, marginTop: 6 }}>
                                   <button
-                                    className="action-button"
+                                    className='action-button'
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       removeColumn(colIndex);
                                     }}
-                                    disabled={count <= 1}
-                                  >
+                                    disabled={count <= 1}>
                                     Remove
                                   </button>
                                 </div>
@@ -1054,14 +1371,13 @@ const BlockRenderer = ({
                 </table>
 
                 {isActive && (
-                  <div className="control-flex margin-top-small">
+                  <div className='control-flex margin-top-small'>
                     <button
-                      className="action-button"
+                      className='action-button'
                       onClick={(e) => {
                         e.stopPropagation();
                         addColumn();
-                      }}
-                    >
+                      }}>
                       + Add column
                     </button>
                   </div>
@@ -1118,18 +1434,29 @@ const BlockRenderer = ({
         'https://placehold.co/320x100';
 
       const ImageEl = settings?.imageLinkUrl ? (
-        <a href={settings.imageLinkUrl} target="_blank" rel="noopener noreferrer">
-          <img src={srcForHalfText} alt={settings?.altText || ''} style={IMG_BLOCK_STYLE} />
+        <a
+          href={settings.imageLinkUrl}
+          target='_blank'
+          rel='noopener noreferrer'>
+          <img
+            src={srcForHalfText}
+            alt={settings?.altText || ''}
+            style={IMG_BLOCK_STYLE}
+          />
         </a>
       ) : (
-        <img src={srcForHalfText} alt={settings?.altText || ''} style={IMG_BLOCK_STYLE} />
+        <img
+          src={srcForHalfText}
+          alt={settings?.altText || ''}
+          style={IMG_BLOCK_STYLE}
+        />
       );
 
       const Button = settings?.showButton ? (
         <a
           href={`${settings?.buttonUrl}`}
-          target="_blank"
-          rel="noopener noreferrer"
+          target='_blank'
+          rel='noopener noreferrer'
           style={{
             display: 'inline-block',
             padding: '8px 16px',
@@ -1138,8 +1465,7 @@ const BlockRenderer = ({
             textDecoration: 'none',
             borderRadius: 4,
             marginTop: 16,
-          }}
-        >
+          }}>
           {settings?.buttonText}
         </a>
       ) : null;
@@ -1164,62 +1490,87 @@ const BlockRenderer = ({
           <table {...tableProps}>
             <tbody>
               <tr>
-                <td style={imageLeft ? imageContainerStyle : textContainerStyle}>{imageLeft ? ImageEl : TextBlock}</td>
-                <td style={imageLeft ? textContainerStyle : imageContainerStyle}>{imageLeft ? TextBlock : ImageEl}</td>
+                <td
+                  style={imageLeft ? imageContainerStyle : textContainerStyle}>
+                  {imageLeft ? ImageEl : TextBlock}
+                </td>
+                <td
+                  style={imageLeft ? textContainerStyle : imageContainerStyle}>
+                  {imageLeft ? TextBlock : ImageEl}
+                </td>
               </tr>
             </tbody>
           </table>
 
           {isActive && (
-            <div className="image-settings" style={{ marginTop: 12 }}>
+            <div className='image-settings' style={{ marginTop: 12 }}>
               <input
-                type="file"
-                accept="image/*"
-                className="settings-input"
+                type='file'
+                accept='image/*'
+                className='settings-input'
                 onChange={(e) => handleImageUpload(e, null, null, true)}
                 style={{ marginBottom: 8 }}
               />
 
               <input
-                type="text"
-                className="settings-input"
-                placeholder="Image path or URL (used in export)"
+                type='text'
+                className='settings-input'
+                placeholder='Image path or URL (used in export)'
                 value={manualUrlValue}
                 onChange={handleManualUrlHalf}
               />
 
               <input
-                type="text"
-                className="settings-input"
-                placeholder="Alt text"
+                type='text'
+                className='settings-input'
+                placeholder='Alt text'
                 value={settings?.altText || ''}
-                onChange={(e) => handleUpdateBlockSettings(index, 'altText', e.target.value)}
+                onChange={(e) =>
+                  handleUpdateBlockSettings(index, 'altText', e.target.value)
+                }
               />
 
               <input
-                type="text"
-                className="settings-input"
-                placeholder="Link URL (optional)"
+                type='text'
+                className='settings-input'
+                placeholder='Link URL (optional)'
                 value={settings?.imageLinkUrl || ''}
-                onChange={(e) => handleUpdateBlockSettings(index, 'imageLinkUrl', e.target.value)}
+                onChange={(e) =>
+                  handleUpdateBlockSettings(
+                    index,
+                    'imageLinkUrl',
+                    e.target.value
+                  )
+                }
               />
 
-              <div className="control-flex" style={{ gap: 8 }}>
+              <div className='control-flex' style={{ gap: 8 }}>
                 <select
-                  className="control-select"
+                  className='control-select'
                   value={settings?.imagePosition || 'left'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'imagePosition', e.target.value)}
-                >
-                  <option value="left">Image left</option>
-                  <option value="right">Image right</option>
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'imagePosition',
+                      e.target.value
+                    )
+                  }>
+                  <option value='left'>Image left</option>
+                  <option value='right'>Image right</option>
                 </select>
 
                 <input
-                  type="text"
-                  className="control-select"
-                  placeholder="Image width (e.g., 260px)"
+                  type='text'
+                  className='control-select'
+                  placeholder='Image width (e.g., 260px)'
                   value={settings?.imageWidth || '260px'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'imageWidth', e.target.value)}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'imageWidth',
+                      e.target.value
+                    )
+                  }
                 />
               </div>
             </div>
@@ -1234,7 +1585,10 @@ const BlockRenderer = ({
       const handleUpdateNestedContent = (childIndex, content) => {
         setTemplate((prev) => {
           const next = JSON.parse(JSON.stringify(prev));
-          if (Array.isArray(next.blocks[index].children) && next.blocks[index].children[childIndex]) {
+          if (
+            Array.isArray(next.blocks[index].children) &&
+            next.blocks[index].children[childIndex]
+          ) {
             const tempDiv = document.createElement('div');
             tempDiv.innerHTML = content;
             const removeInlineStyles = (el) => {
@@ -1255,7 +1609,10 @@ const BlockRenderer = ({
       const handleUpdateNestedSettings = (childIndex, setting, value) => {
         setTemplate((prev) => {
           const next = JSON.parse(JSON.stringify(prev));
-          if (Array.isArray(next.blocks[index].children) && next.blocks[index].children[childIndex]) {
+          if (
+            Array.isArray(next.blocks[index].children) &&
+            next.blocks[index].children[childIndex]
+          ) {
             next.blocks[index].children[childIndex] = {
               ...next.blocks[index].children[childIndex],
               settings: {
@@ -1272,7 +1629,9 @@ const BlockRenderer = ({
         setTemplate((prev) => {
           const next = JSON.parse(JSON.stringify(prev));
           if (Array.isArray(next.blocks[index].children)) {
-            next.blocks[index].children = next.blocks[index].children.filter((_, i) => i !== childIndex);
+            next.blocks[index].children = next.blocks[index].children.filter(
+              (_, i) => i !== childIndex
+            );
           }
           return next;
         });
@@ -1282,10 +1641,19 @@ const BlockRenderer = ({
       const handleDuplicateNestedBlock = (childIndex) => {
         setTemplate((prev) => {
           const next = JSON.parse(JSON.stringify(prev));
-          if (Array.isArray(next.blocks[index].children) && next.blocks[index].children[childIndex]) {
-            const childToDuplicate = JSON.parse(JSON.stringify(next.blocks[index].children[childIndex]));
+          if (
+            Array.isArray(next.blocks[index].children) &&
+            next.blocks[index].children[childIndex]
+          ) {
+            const childToDuplicate = JSON.parse(
+              JSON.stringify(next.blocks[index].children[childIndex])
+            );
             childToDuplicate.id = `${childToDuplicate.type}-${Date.now()}`;
-            next.blocks[index].children.splice(childIndex + 1, 0, childToDuplicate);
+            next.blocks[index].children.splice(
+              childIndex + 1,
+              0,
+              childToDuplicate
+            );
           }
           return next;
         });
@@ -1344,7 +1712,9 @@ const BlockRenderer = ({
   return (
     <div
       key={block.id}
-      className={`block-container ${dragOverIndex === index ? 'drag-over' : ''}`}
+      className={`block-container ${
+        dragOverIndex === index ? 'drag-over' : ''
+      }`}
       data-index={index}
       draggable
       onMouseEnter={() => !isNestedBlock && setHoveredBlockId(block.id)}
@@ -1358,7 +1728,10 @@ const BlockRenderer = ({
           let element = e.currentTarget;
           while (element && element.parentElement) {
             element = element.parentElement;
-            if (element.hasAttribute && element.hasAttribute('data-round-container-content')) {
+            if (
+              element.hasAttribute &&
+              element.hasAttribute('data-round-container-content')
+            ) {
               const dragData = e.dataTransfer?.types || [];
               const isNewComponent =
                 dragData.includes('text/block-type') ||
@@ -1372,7 +1745,11 @@ const BlockRenderer = ({
           const target = e.target;
           let element = target;
           while (element && element !== e.currentTarget) {
-            if (element.hasAttribute && element.hasAttribute('data-round-container-content')) return;
+            if (
+              element.hasAttribute &&
+              element.hasAttribute('data-round-container-content')
+            )
+              return;
             element = element.parentElement;
           }
         }
@@ -1385,7 +1762,10 @@ const BlockRenderer = ({
           let element = e.currentTarget;
           while (element && element.parentElement) {
             element = element.parentElement;
-            if (element.hasAttribute && element.hasAttribute('data-round-container-content')) {
+            if (
+              element.hasAttribute &&
+              element.hasAttribute('data-round-container-content')
+            ) {
               const dragData = e.dataTransfer?.types || [];
               const isNewComponent =
                 dragData.includes('text/block-type') ||
@@ -1399,7 +1779,11 @@ const BlockRenderer = ({
           const target = e.target;
           let element = target;
           while (element && element !== e.currentTarget) {
-            if (element.hasAttribute && element.hasAttribute('data-round-container-content')) return;
+            if (
+              element.hasAttribute &&
+              element.hasAttribute('data-round-container-content')
+            )
+              return;
             element = element.parentElement;
           }
         }
@@ -1411,8 +1795,12 @@ const BlockRenderer = ({
           let element = e.currentTarget;
           while (element && element.parentElement) {
             element = element.parentElement;
-            if (element.hasAttribute && element.hasAttribute('data-round-container-content')) {
-              const type = e.dataTransfer.getData('text/block-type') ||
+            if (
+              element.hasAttribute &&
+              element.hasAttribute('data-round-container-content')
+            ) {
+              const type =
+                e.dataTransfer.getData('text/block-type') ||
                 e.dataTransfer.getData('application/x-block-type') ||
                 e.dataTransfer.getData('text/plain');
               if (type) return;
@@ -1423,7 +1811,11 @@ const BlockRenderer = ({
           const target = e.target;
           let element = target;
           while (element && element !== e.currentTarget) {
-            if (element.hasAttribute && element.hasAttribute('data-round-container-content')) return;
+            if (
+              element.hasAttribute &&
+              element.hasAttribute('data-round-container-content')
+            )
+              return;
             element = element.parentElement;
           }
         }
@@ -1434,38 +1826,39 @@ const BlockRenderer = ({
       onClick={(e) => {
         if (isNestedBlock) e.stopPropagation();
         setActiveBlockId(block.id);
-      }}
-    >
+      }}>
       <div style={blockStyle}>
         {!showPreview && (
           <div
-            className="block-type-indicator"
-            style={{ color: type === 'header' || type === 'text' ? settings?.color : undefined }}
-          >
-            <GripVertical size={14} className="drag-handle" />
-            <div className="block-type-text">{type}</div>
+            className='block-type-indicator'
+            style={{
+              color:
+                type === 'header' || type === 'text'
+                  ? settings?.color
+                  : undefined,
+            }}>
+            <GripVertical size={14} className='drag-handle' />
+            <div className='block-type-text'>{type}</div>
           </div>
         )}
 
         {!showPreview && shouldShowToolbar && (
-          <div className="block-actions" style={{ zIndex: 20 }}>
+          <div className='block-actions' style={{ zIndex: 20 }}>
             <button
-              className="action-button"
+              className='action-button'
               onClick={(e) => {
                 e.stopPropagation();
                 handleDuplicateBlock(index);
-              }}
-            >
-              <Copy size={14} className="action-icon" />
+              }}>
+              <Copy size={14} className='action-icon' />
             </button>
             <button
-              className="action-button"
+              className='action-button'
               onClick={(e) => {
                 e.stopPropagation();
                 handleDeleteBlock(index);
-              }}
-            >
-              <Trash2 size={14} className="action-icon" />
+              }}>
+              <Trash2 size={14} className='action-icon' />
             </button>
           </div>
         )}
@@ -1473,22 +1866,99 @@ const BlockRenderer = ({
         {blockContent}
 
         {!showPreview && isActive && (
-          <div className="block-settings">
-            <div className="control-flex margin-bottom-small">
+          <div className='block-settings'>
+            <div className='control-flex margin-bottom-small'>
               <input
-                type="color"
+                type='color'
                 value={settings?.backgroundColor || '#ffffff'}
-                onChange={(e) => handleUpdateBlockSettings(index, 'backgroundColor', e.target.value)}
-                className="color-input"
+                onChange={(e) =>
+                  handleUpdateBlockSettings(
+                    index,
+                    'backgroundColor',
+                    e.target.value
+                  )
+                }
+                className='color-input'
               />
+
+              {type === 'buttonCoded' && (
+                <>
+                  <input
+                    type='color'
+                    value={settings?.buttonBgColor || '#000000'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'buttonBgColor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
+                  />
+                  <input
+                    type='color'
+                    value={settings?.color || '#ffffff'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'color', e.target.value)
+                    }
+                    className='color-input'
+                  />
+                  <input
+                    type='text'
+                    className='control-select'
+                    value={settings?.fontSize || ''}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'fontSize',
+                        e.target.value
+                      )
+                    }
+                  />
+                  <input
+                    type='text'
+                    className='control-select'
+                    value={settings?.border || '1px solid #000000'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'border', e.target.value)
+                    }
+                  />
+                  <input
+                    type='text'
+                    className='control-select'
+                    value={settings?.padding || '12px 24px'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'padding',
+                        e.target.value
+                      )
+                    }
+                  />
+                  <input
+                    type='text'
+                    className='control-select'
+                    value={settings?.borderRadius || '30px'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'borderRadius',
+                        e.target.value
+                      )
+                    }
+                  />
+                </>
+              )}
 
               {type === 'spacer' && (
                 <input
-                  type="text"
-                  className="settings-input"
-                  placeholder="Height (e.g. 40px)"
+                  type='text'
+                  className='settings-input'
+                  placeholder='Height (e.g. 40px)'
                   value={settings?.height || ''}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'height', e.target.value)}
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(index, 'height', e.target.value)
+                  }
                   style={{ width: 80 }}
                 />
               )}
@@ -1496,86 +1966,130 @@ const BlockRenderer = ({
               {type === 'divider' && (
                 <>
                   <input
-                    type="color"
+                    type='color'
                     value={settings?.lineColor || '#dddddd'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'lineColor', e.target.value)}
-                    className="color-input"
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'lineColor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
                   />
                   <input
-                    type="text"
-                    className="settings-input"
-                    placeholder="Height (e.g. 1px)"
+                    type='text'
+                    className='settings-input'
+                    placeholder='Height (e.g. 1px)'
                     value={settings?.lineHeight || ''}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'lineHeight', e.target.value)}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'lineHeight',
+                        e.target.value
+                      )
+                    }
                     style={{ width: 80 }}
                   />
                 </>
               )}
 
-              {(type === 'header' || type === 'text' || type === 'halfText') && (
+              {(type === 'header' ||
+                type === 'text' ||
+                type === 'halfText') && (
                 <>
                   <input
-                    type="color"
+                    type='color'
                     value={settings?.color || '#000000'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'color', e.target.value)}
-                    className="color-input"
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(index, 'color', e.target.value)
+                    }
+                    className='color-input'
                   />
                   <input
-                    type="text"
-                    className="control-select"
+                    type='text'
+                    className='control-select'
                     value={settings?.fontSize || ''}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'fontSize', e.target.value)}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'fontSize',
+                        e.target.value
+                      )
+                    }
                   />
                 </>
               )}
 
               {/* Separate vertical paddings */}
-              {type !== 'spacer' && (
+              {type !== 'spacer' && type !== 'buttonCoded' && (
                 <>
                   <select
-                    className="control-select flex-grow"
+                    className='control-select flex-grow'
                     value={settings?.paddingTop ?? settings?.padding ?? '10px'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'paddingTop', e.target.value)}
-                    title="Padding top"
-                  >
-                    <option value="0px">No padding top</option>
-                    <option value="16px">Small top</option>
-                    <option value="24px">Medium top</option>
-                    <option value="40px">Large top</option>
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'paddingTop',
+                        e.target.value
+                      )
+                    }
+                    title='Padding top'>
+                    <option value='0px'>No padding top</option>
+                    <option value='16px'>Small top</option>
+                    <option value='24px'>Medium top</option>
+                    <option value='40px'>Large top</option>
                   </select>
 
                   <select
-                    className="control-select flex-grow"
-                    value={settings?.paddingBottom ?? settings?.padding ?? '10px'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'paddingBottom', e.target.value)}
-                    title="Padding bottom"
-                  >
-                    <option value="0px">No padding bottom</option>
-                    <option value="16px">Small bottom</option>
-                    <option value="24px">Medium bottom</option>
-                    <option value="40px">Large bottom</option>
+                    className='control-select flex-grow'
+                    value={
+                      settings?.paddingBottom ?? settings?.padding ?? '10px'
+                    }
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'paddingBottom',
+                        e.target.value
+                      )
+                    }
+                    title='Padding bottom'>
+                    <option value='0px'>No padding bottom</option>
+                    <option value='16px'>Small bottom</option>
+                    <option value='24px'>Medium bottom</option>
+                    <option value='40px'>Large bottom</option>
                   </select>
                 </>
               )}
 
               {type === 'columns' && (
-                <div className="control-flex" style={{ flexDirection: 'column', gap: 6 }}>
-                  <div style={{ fontSize: 12, color: '#6b7280' }}>Column gap</div>
+                <div
+                  className='control-flex'
+                  style={{ flexDirection: 'column', gap: 6 }}>
+                  <div style={{ fontSize: 12, color: '#6b7280' }}>
+                    Column gap
+                  </div>
                   <input
-                    type="text"
-                    className="settings-input"
-                    placeholder="e.g. 16px"
+                    type='text'
+                    className='settings-input'
+                    placeholder='e.g. 16px'
                     value={settings?.columnGap || ''}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'columnGap', e.target.value)}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'columnGap',
+                        e.target.value
+                      )
+                    }
                     style={{ width: 160 }}
                   />
                 </div>
               )}
 
               {(type === 'buttonGroup' || type === 'buttonCodedGroup') && (
-                <div className="checkbox-container">
+                <div className='checkbox-container'>
                   <input
-                    type="checkbox"
+                    type='checkbox'
                     id={`inline-${block.id}`}
                     checked={!!settings?.inline}
                     onChange={(e) => {
@@ -1584,111 +2098,184 @@ const BlockRenderer = ({
                       setTemplate({ ...template, blocks: newBlocks });
                     }}
                   />
-                  <label htmlFor={`inline-${block.id}`}>Display buttons inline</label>
+                  <label htmlFor={`inline-${block.id}`}>
+                    Display buttons inline
+                  </label>
                 </div>
               )}
 
-              {(type === 'header' || type === 'text' || type === 'button' || type === 'buttonCoded' || type === 'halfText') && (
+              {(type === 'header' ||
+                type === 'text' ||
+                type === 'button' ||
+                type === 'buttonCoded' ||
+                type === 'halfText') && (
                 <select
-                  className="control-select"
+                  className='control-select'
                   value={settings?.textAlign || 'left'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'textAlign', e.target.value)}
-                >
-                  <option value="left">Left</option>
-                  <option value="center">Center</option>
-                  <option value="right">Right</option>
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(
+                      index,
+                      'textAlign',
+                      e.target.value
+                    )
+                  }>
+                  <option value='left'>Left</option>
+                  <option value='center'>Center</option>
+                  <option value='right'>Right</option>
                 </select>
               )}
 
               {type === 'image' && (
                 <select
-                  className="control-select"
+                  className='control-select'
                   value={settings?.margin || '0 auto'}
-                  onChange={(e) => handleUpdateBlockSettings(index, 'margin', e.target.value)}
-                >
-                  <option value="0">Left</option>
-                  <option value="0 auto">Center</option>
+                  onChange={(e) =>
+                    handleUpdateBlockSettings(index, 'margin', e.target.value)
+                  }>
+                  <option value='0'>Left</option>
+                  <option value='0 auto'>Center</option>
                 </select>
               )}
 
               {type === 'roundContainer' && (
                 <>
-                  <div className="control-flex" style={{ gap: 8, flexWrap: 'wrap' }}>
-                    <div className="control-flex" style={{ gap: 6, alignItems: 'center' }}>
-                      <span style={{ fontSize: 12, color: '#6b7280' }}>Canvas</span>
+                  <div
+                    className='control-flex'
+                    style={{ gap: 8, flexWrap: 'wrap' }}>
+                    <div
+                      className='control-flex'
+                      style={{ gap: 6, alignItems: 'center' }}>
+                      <span style={{ fontSize: 12, color: '#6b7280' }}>
+                        Canvas
+                      </span>
                       <input
-                        type="color"
+                        type='color'
                         value={settings?.canvasColor || '#CFCFCF'}
-                        onChange={(e) => handleUpdateBlockSettings(index, 'canvasColor', e.target.value)}
-                        className="color-input"
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'canvasColor',
+                            e.target.value
+                          )
+                        }
+                        className='color-input'
                       />
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 12, color: '#6b7280' }}>BG width (%)</div>
+                      <div style={{ fontSize: 12, color: '#6b7280' }}>
+                        BG width (%)
+                      </div>
                       <input
-                        type="number"
-                        min="10"
-                        max="100"
-                        step="1"
-                        className="settings-input"
+                        type='number'
+                        min='10'
+                        max='100'
+                        step='1'
+                        className='settings-input'
                         value={settings?.bgWidth ?? 88}
-                        onChange={(e) => handleUpdateBlockSettings(index, 'bgWidth', Number(e.target.value))}
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'bgWidth',
+                            Number(e.target.value)
+                          )
+                        }
                         style={{ width: 90 }}
                       />
                     </div>
 
-                    <div className="control-flex" style={{ gap: 8, flexWrap: 'wrap' }}>
-                      <span style={{ fontSize: 12, color: '#6b7280' }}>Border</span>
+                    <div
+                      className='control-flex'
+                      style={{ gap: 8, flexWrap: 'wrap' }}>
+                      <span style={{ fontSize: 12, color: '#6b7280' }}>
+                        Border
+                      </span>
                       <input
-                        type="color"
+                        type='color'
                         value={settings?.borderColor || '#FFFFFF'}
-                        onChange={(e) => handleUpdateBlockSettings(index, 'borderColor', e.target.value)}
-                        className="color-input"
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'borderColor',
+                            e.target.value
+                          )
+                        }
+                        className='color-input'
                       />
                       <input
-                        type="number"
+                        type='number'
                         value={settings?.borderWidth ?? 3}
-                        onChange={(e) => handleUpdateBlockSettings(index, 'borderWidth', Number(e.target.value))}
-                        placeholder="Width"
-                        className="settings-input"
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'borderWidth',
+                            Number(e.target.value)
+                          )
+                        }
+                        placeholder='Width'
+                        className='settings-input'
                         style={{ width: 60 }}
                       />
                       <select
                         value={settings?.borderType || 'solid'}
-                        onChange={(e) => handleUpdateBlockSettings(index, 'borderType', e.target.value)}
-                        className="control-select"
-                        style={{ width: 90 }}
-                      >
-                        <option value="solid">solid</option>
-                        <option value="dashed">dashed</option>
-                        <option value="dotted">dotted</option>
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'borderType',
+                            e.target.value
+                          )
+                        }
+                        className='control-select'
+                        style={{ width: 90 }}>
+                        <option value='solid'>solid</option>
+                        <option value='dashed'>dashed</option>
+                        <option value='dotted'>dotted</option>
                       </select>
                       <input
-                        type="number"
+                        type='number'
                         value={settings?.borderRadius ?? 24}
-                        onChange={(e) => handleUpdateBlockSettings(index, 'borderRadius', Number(e.target.value))}
-                        placeholder="Radius"
-                        className="settings-input"
+                        onChange={(e) =>
+                          handleUpdateBlockSettings(
+                            index,
+                            'borderRadius',
+                            Number(e.target.value)
+                          )
+                        }
+                        placeholder='Radius'
+                        className='settings-input'
                         style={{ width: 70 }}
                       />
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 12, color: '#6b7280' }}>Inner padding (top/bottom)</div>
-                      <div className="control-flex" style={{ gap: 8 }}>
+                      <div style={{ fontSize: 12, color: '#6b7280' }}>
+                        Inner padding (top/bottom)
+                      </div>
+                      <div className='control-flex' style={{ gap: 8 }}>
                         <input
-                          type="number"
-                          className="settings-input"
+                          type='number'
+                          className='settings-input'
                           value={settings?.paddingInnerTop ?? 64}
-                          onChange={(e) => handleUpdateBlockSettings(index, 'paddingInnerTop', Number(e.target.value))}
+                          onChange={(e) =>
+                            handleUpdateBlockSettings(
+                              index,
+                              'paddingInnerTop',
+                              Number(e.target.value)
+                            )
+                          }
                           style={{ width: 70 }}
                         />
                         <input
-                          type="number"
-                          className="settings-input"
+                          type='number'
+                          className='settings-input'
                           value={settings?.paddingInnerBottom ?? 64}
-                          onChange={(e) => handleUpdateBlockSettings(index, 'paddingInnerBottom', Number(e.target.value))}
+                          onChange={(e) =>
+                            handleUpdateBlockSettings(
+                              index,
+                              'paddingInnerBottom',
+                              Number(e.target.value)
+                            )
+                          }
                           style={{ width: 70 }}
                         />
                       </div>
@@ -1697,25 +2284,45 @@ const BlockRenderer = ({
                 </>
               )}
 
-              {(type === 'footer' || type === 'footer_general_kz' || type === 'footer_sendpulse') && (
-                <div className="control-flex margin-bottom-small">
+              {(type === 'footer' ||
+                type === 'footer_general_kz' ||
+                type === 'footer_sendpulse') && (
+                <div className='control-flex margin-bottom-small'>
                   <input
-                    type="color"
+                    type='color'
                     value={settings?.canvascolor || '#f5f5f5'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'canvascolor', e.target.value)}
-                    className="color-input"
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'canvascolor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
                   />
                   <input
-                    type="color"
+                    type='color'
                     value={settings?.textcolor || '#000000'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'textcolor', e.target.value)}
-                    className="color-input"
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'textcolor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
                   />
                   <input
-                    type="color"
+                    type='color'
                     value={settings?.disclaimercolor || '#555555'}
-                    onChange={(e) => handleUpdateBlockSettings(index, 'disclaimercolor', e.target.value)}
-                    className="color-input"
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'disclaimercolor',
+                        e.target.value
+                      )
+                    }
+                    className='color-input'
                   />
                 </div>
               )}

@@ -174,7 +174,7 @@ const EmailBuilder = () => {
               onClick={() =>
                 handleSaveTemplate(
                   () => generateHtmlOutput(template, renderBlockHtml),
-                  template.title   // pass title for zip name
+                  template.title // pass title for zip name
                 )
               }>
               <Save size={16} />
