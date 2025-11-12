@@ -82,7 +82,7 @@ export const generateHtmlOutput = (template, renderBlockHtml) => {
                     </span>
                   </td>
                   <td style="padding: 20px;" valign="middle" align="right">
-                    <a href="#" onclick="window.open(URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' })), '_blank')" _label="Mirror Page" _type="mirrorPage" style="color:#000000;text-decoration:underline;font-size:12px;">View in Browser →</a>
+                    <a href='<%@ include view="MirrorPageUrl" %>' _label="Mirror Page" _type="mirrorPage" style="color:#000000;text-decoration:underline;font-size:12px;">Посмотреть в&nbsp;браузере&nbsp;&#707;</a>
                   </td>
                   <td style="padding: 20px 20px 20px 0;" valign="right" align="right">
                     <a style="font-size:12px;color:#000000;text-decoration:underline;" href="<%@ include option='NmsServer_URL' %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru" _type="optout" _label="${

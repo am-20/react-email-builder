@@ -2136,6 +2136,9 @@ const BlockRenderer = ({
         {!showPreview && isActive && (
           <div className='block-settings'>
             <div className='control-flex margin-bottom-small'>
+              <div style={{ fontSize: 12, color: '#6b7280' }}>
+                Background color
+              </div>
               <input
                 type='color'
                 value={settings?.backgroundColor || '#ffffff'}
@@ -2151,6 +2154,14 @@ const BlockRenderer = ({
 
               {type === 'buttonCoded' && (
                 <>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Button's background color
+                  </div>
                   <input
                     type='color'
                     value={settings?.buttonBgColor || '#000000'}
@@ -2163,6 +2174,14 @@ const BlockRenderer = ({
                     }
                     className='color-input'
                   />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Button's text color
+                  </div>
                   <input
                     type='color'
                     value={settings?.color || '#ffffff'}
@@ -2171,6 +2190,14 @@ const BlockRenderer = ({
                     }
                     className='color-input'
                   />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Button's text font size
+                  </div>
                   <input
                     type='text'
                     className='control-select'
@@ -2183,6 +2210,14 @@ const BlockRenderer = ({
                       )
                     }
                   />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Border
+                  </div>
                   <input
                     type='text'
                     className='control-select'
@@ -2191,6 +2226,14 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(index, 'border', e.target.value)
                     }
                   />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Button's inner paddings
+                  </div>
                   <input
                     type='text'
                     className='control-select'
@@ -2203,6 +2246,14 @@ const BlockRenderer = ({
                       )
                     }
                   />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Button's border radius
+                  </div>
                   <input
                     type='text'
                     className='control-select'
@@ -2266,6 +2317,14 @@ const BlockRenderer = ({
                 type === 'text' ||
                 type === 'halfText') && (
                 <>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Text color
+                  </div>
                   <input
                     type='color'
                     value={settings?.color || '#000000'}
@@ -2274,6 +2333,14 @@ const BlockRenderer = ({
                     }
                     className='color-input'
                   />
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Font size
+                  </div>
                   <input
                     type='text'
                     className='control-select'
@@ -2290,45 +2357,49 @@ const BlockRenderer = ({
               )}
 
               {/* Separate vertical paddings */}
-              {type !== 'spacer' && type !== 'buttonCoded' && (
-                <>
-                  <select
-                    className='control-select flex-grow'
-                    value={settings?.paddingTop ?? settings?.padding ?? '10px'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'paddingTop',
-                        e.target.value
-                      )
-                    }
-                    title='Padding top'>
-                    <option value='0px'>No padding top</option>
-                    <option value='16px'>Small top</option>
-                    <option value='24px'>Medium top</option>
-                    <option value='40px'>Large top</option>
-                  </select>
+              {type !== 'spacer' &&
+                type !== 'buttonCoded' &&
+                type !== 'roundContainer' && (
+                  <>
+                    <select
+                      className='control-select flex-grow'
+                      value={
+                        settings?.paddingTop ?? settings?.padding ?? '10px'
+                      }
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'paddingTop',
+                          e.target.value
+                        )
+                      }
+                      title='Padding top'>
+                      <option value='0px'>No padding top</option>
+                      <option value='16px'>Small top</option>
+                      <option value='24px'>Medium top</option>
+                      <option value='40px'>Large top</option>
+                    </select>
 
-                  <select
-                    className='control-select flex-grow'
-                    value={
-                      settings?.paddingBottom ?? settings?.padding ?? '10px'
-                    }
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'paddingBottom',
-                        e.target.value
-                      )
-                    }
-                    title='Padding bottom'>
-                    <option value='0px'>No padding bottom</option>
-                    <option value='16px'>Small bottom</option>
-                    <option value='24px'>Medium bottom</option>
-                    <option value='40px'>Large bottom</option>
-                  </select>
-                </>
-              )}
+                    <select
+                      className='control-select flex-grow'
+                      value={
+                        settings?.paddingBottom ?? settings?.padding ?? '10px'
+                      }
+                      onChange={(e) =>
+                        handleUpdateBlockSettings(
+                          index,
+                          'paddingBottom',
+                          e.target.value
+                        )
+                      }
+                      title='Padding bottom'>
+                      <option value='0px'>No padding bottom</option>
+                      <option value='16px'>Small bottom</option>
+                      <option value='24px'>Medium bottom</option>
+                      <option value='40px'>Large bottom</option>
+                    </select>
+                  </>
+                )}
 
               {(type === 'columns' || type === 'columnsContent') && (
                 <div
@@ -2356,6 +2427,14 @@ const BlockRenderer = ({
 
               {type === 'columnsContent' && (
                 <>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Text color
+                  </div>
                   <input
                     type='color'
                     value={settings?.color || '#000000'}
@@ -2364,7 +2443,9 @@ const BlockRenderer = ({
                     }
                     className='color-input'
                   />
-                  <div className='checkbox-container'>
+                  <div
+                    className='checkbox-container'
+                    style={{ marginTop: '8px' }}>
                     <input
                       type='checkbox'
                       id={`inline-${block.id}`}
@@ -2416,20 +2497,30 @@ const BlockRenderer = ({
                 type === 'button' ||
                 type === 'buttonCoded' ||
                 type === 'halfText') && (
-                <select
-                  className='control-select'
-                  value={settings?.textAlign || 'left'}
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(
-                      index,
-                      'textAlign',
-                      e.target.value
-                    )
-                  }>
-                  <option value='left'>Left</option>
-                  <option value='center'>Center</option>
-                  <option value='right'>Right</option>
-                </select>
+                <>
+                  <div
+                    style={{
+                      fontSize: 12,
+                      color: '#6b7280',
+                      marginTop: '8px',
+                    }}>
+                    Text align
+                  </div>
+                  <select
+                    className='control-select'
+                    value={settings?.textAlign || 'left'}
+                    onChange={(e) =>
+                      handleUpdateBlockSettings(
+                        index,
+                        'textAlign',
+                        e.target.value
+                      )
+                    }>
+                    <option value='left'>Left</option>
+                    <option value='center'>Center</option>
+                    <option value='right'>Right</option>
+                  </select>
+                </>
               )}
 
               {type === 'image' && (
@@ -2446,12 +2537,8 @@ const BlockRenderer = ({
 
               {type === 'roundContainer' && (
                 <>
-                  <div
-                    className='control-flex'
-                    style={{ gap: 8, flexWrap: 'wrap' }}>
-                    <div
-                      className='control-flex'
-                      style={{ gap: 6, alignItems: 'center' }}>
+                  <div>
+                    <div className='control-flex'>
                       <span style={{ fontSize: 12, color: '#6b7280' }}>
                         Canvas
                       </span>
@@ -2469,7 +2556,9 @@ const BlockRenderer = ({
                       />
                     </div>
 
-                    <div>
+                    <div
+                      className='control-flex'
+                      style={{ gap: 8, flexWrap: 'wrap', marginTop: '16px' }}>
                       <div style={{ fontSize: 12, color: '#6b7280' }}>
                         BG width (%)
                       </div>
@@ -2493,7 +2582,7 @@ const BlockRenderer = ({
 
                     <div
                       className='control-flex'
-                      style={{ gap: 8, flexWrap: 'wrap' }}>
+                      style={{ gap: 8, flexWrap: 'wrap', marginTop: '16px' }}>
                       <span style={{ fontSize: 12, color: '#6b7280' }}>
                         Border
                       </span>
@@ -2555,8 +2644,13 @@ const BlockRenderer = ({
                     </div>
 
                     <div>
-                      <div style={{ fontSize: 12, color: '#6b7280' }}>
-                        Inner padding (top/bottom)
+                      <div
+                        style={{
+                          fontSize: 12,
+                          color: '#6b7280',
+                          marginTop: '16px',
+                        }}>
+                        Paddings (top/bottom)
                       </div>
                       <div className='control-flex' style={{ gap: 8 }}>
                         <input

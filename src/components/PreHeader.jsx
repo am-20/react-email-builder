@@ -1,6 +1,6 @@
 import React from 'react';
 
-const PreHeader = ({ template = {}, onViewInBrowser }) => {
+const PreHeader = ({ template = {} }) => {
   const title = template?.title || 'Untitled Email Template';
   const titleLabel = template?.titleLinkLabel;
   const unsubLabel = template?.titleLinkLabelUnsub || '';
@@ -43,19 +43,15 @@ const PreHeader = ({ template = {}, onViewInBrowser }) => {
             {/* Middle/Right: View in Browser */}
             <td align='right' valign='middle' style={{ padding: 20 }}>
               <a
-                href='#'
+                href='<%@ include view="MirrorPageUrl" %\>'
                 _label='Mirror Page'
                 _type='mirrorPage'
                 style={{
                   color: '#000',
                   textDecoration: 'underline',
                   fontSize: 12,
-                }}
-                onClick={(e) => {
-                  if (onViewInBrowser) onViewInBrowser(e);
-                  else e.preventDefault();
                 }}>
-                View in Browser →
+                Посмотреть в&nbsp;браузере&nbsp;&#707;
               </a>
             </td>
 

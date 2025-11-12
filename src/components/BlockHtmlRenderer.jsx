@@ -114,7 +114,7 @@ const renderBlockHtml = (block, template = null) => {
         <tr>
           <td style="text-align:${
             settings.textAlign || 'left'
-          };margin:0;padding:0;">
+          };margin:0;padding:0;background-color:${settings.backgroundColor};">
             <h1 style="margin:0;white-space:pre-wrap;${buildStyle(
               'header',
               settings
@@ -130,7 +130,7 @@ const renderBlockHtml = (block, template = null) => {
         <tr>
           <td style="text-align:${
             settings.textAlign || 'left'
-          };margin:0;padding:0;">
+          };margin:0;padding:0;background-color:${settings.backgroundColor};">
             <div style="white-space:pre-wrap;">${content}</div>
           </td>
         </tr>
@@ -155,7 +155,9 @@ const renderBlockHtml = (block, template = null) => {
         settings
       )}">
         <tr>
-          <td style="text-align:${settings.textAlign || 'left'};">
+          <td style="text-align:${
+            settings.textAlign || 'left'
+          };background-color:${settings.backgroundColor};">
             ${
               settings.linkUrl
                 ? `<a href="${settings.linkUrl}" _label="${
@@ -176,7 +178,9 @@ const renderBlockHtml = (block, template = null) => {
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr>
-          <td style="text-align:${settings.textAlign || 'center'};">
+          <td style="text-align:${
+            settings.textAlign || 'center'
+          };background-color:${settings.backgroundColor};">
             <a href="${
               settings.linkUrl || '#'
             }" target="_blank" rel="noopener noreferrer" _label="${
@@ -199,6 +203,7 @@ const renderBlockHtml = (block, template = null) => {
       const paddingX = settings.paddingX ?? '24px';
       const color = settings.color ?? '#ffffff';
       const bg = settings.buttonBgColor ?? '#000000';
+      const bgCanvas = settings.backgroundColor ?? '#000000';
       const border = settings.border ?? 'none';
       const radius = settings.borderRadius ?? '30px';
       const fontSize = settings.fontSize ?? '16px';
@@ -211,7 +216,7 @@ const renderBlockHtml = (block, template = null) => {
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
-          <td align="${align}" style="padding:16px 0;">
+          <td align="${align}" style="padding:16px 0;background-color:${bgCanvas};">
             <a href="${href}" target="_blank" _label="${linkLabel}" rel="noopener noreferrer" style="
               display:inline-block;text-decoration:none;color:${color};background-color:${bg};
               border:${border};border-radius:${radius};font-weight:${fontWeight};font-size:${fontSize};
@@ -254,7 +259,7 @@ const renderBlockHtml = (block, template = null) => {
 
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
-        <tr><td style="text-align:center;">${buttons}</td></tr>
+        <tr><td style="text-align:center;background-color:${settings.backgroundColor};">${buttons}</td></tr>
       </table>`;
       break;
     }
@@ -296,7 +301,7 @@ const renderBlockHtml = (block, template = null) => {
 
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
-        <tr><td style="text-align:center;">${buttons}</td></tr>
+        <tr><td style="text-align:center;background-color:${settings.backgroundColor};">${buttons}</td></tr>
       </table>`;
       break;
     }
@@ -314,7 +319,9 @@ const renderBlockHtml = (block, template = null) => {
     case 'spacer':
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-        <tr><td style="height:${settings.height || '40px'};"></td></tr>
+        <tr><td style="height:${settings.height || '40px'};background-color:${
+        settings.backgroundColor
+      };"></td></tr>
       </table>`;
       break;
 
@@ -324,7 +331,7 @@ const renderBlockHtml = (block, template = null) => {
       const count = Math.max(cols.length, 1);
       const gap = settings.columnGap || '0';
       const halfGap = /^-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-        ? `calc((${gap}) / 2)`
+        ? `${parseInt(gap) / 2}px`
         : '0';
       const widthPercent = (100 / count).toFixed(4);
 
@@ -346,7 +353,7 @@ const renderBlockHtml = (block, template = null) => {
             : img;
 
           return `
-            <td width="${widthPercent}%" style=" vertical-align:top;font-size:0;line-height:0;">
+            <td width="${widthPercent}%" style="background-color:${settings.backgroundColor};vertical-align:top;font-size:0;line-height:0;">
               ${inner}
             </td>`;
         })
@@ -367,7 +374,7 @@ const renderBlockHtml = (block, template = null) => {
       const gap = settings?.columnGap || '0';
       const halfGap =
         typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-          ? `calc((${gap}) / 2)`
+          ? `${parseInt(gap) / 2}px`
           : '0';
 
       const widthPercent = `${(100 / count).toFixed(4)}%`;
@@ -405,7 +412,7 @@ const renderBlockHtml = (block, template = null) => {
               }</h1>`;
 
           const textPad = settings?.hidetitle ? '16px 0' : '0';
-          const textHtml = `<p style="font-family:${fontFamily};font-size:${textSize};line-height:1.4;color:${color};padding:${textPad};text-align:${textAlign};font-weight:${
+          const textHtml = `<p style="font-family:${fontFamily};font-size:${textSize};line-height:1.4;color:${color};padding:${textPad};margin:0;text-align:${textAlign};font-weight:${
             isBold ? 'bold' : 'normal'
           }">${c?.text || ''}</p>`;
 
@@ -486,7 +493,7 @@ const renderBlockHtml = (block, template = null) => {
           ? false
           : false;
       const imgW = settings.imageWidth || '260px';
-      const textW = `calc(100% - ${imgW})`;
+      const textW = `${100 - parseInt(imgW)}%`;
       const imgTdStyle = `width:${imgW};vertical-align:top;`;
       const textTdStyle = `width:${textW};vertical-align:top;padding:0 20px;`;
 
@@ -494,7 +501,9 @@ const renderBlockHtml = (block, template = null) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0 12%;">
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0 12%;background-color:${
+              settings.backgroundColor
+            };">
               <tr>
                 <td style="${imageLeft ? imgTdStyle : textTdStyle}">
                   ${imageLeft ? imageHtml : textHtml}
