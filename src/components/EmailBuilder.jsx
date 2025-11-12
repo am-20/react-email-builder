@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   GripVertical,
   Trash2,
@@ -19,6 +19,8 @@ import renderBlockHtml from './BlockHtmlRenderer';
 import BlockRenderer from './BlockRenderer';
 import PreHeader from './PreHeader';
 import { generateHtmlOutput } from '../utils/htmlGenerator';
+// eslint-disable-next-line no-unused-vars
+import { getAssetDataUrl, listAssets } from '../utils/assets';
 import {
   createNewBlock,
   handleDeleteBlock,
@@ -33,9 +35,116 @@ import {
 } from '../handlers/EmailBuilderHandlers';
 import './EmailBuilder.css';
 
+function clone(obj) {
+  return JSON.parse(JSON.stringify(obj || {}));
+}
+
+function rehydrateTemplateImages(tpl) {
+  const t = clone(tpl);
+
+  const rehydrateBlock = (b) => {
+    const type = b?.type;
+    const s = b?.settings || (b.settings = {});
+
+    const ensurePreview = (path) => {
+      if (!path) return;
+      const data = getAssetDataUrl(path);
+      if (data) return data;
+      return null;
+    };
+
+    if (type === 'image' || type === 'button') {
+      if (!s.imagePreviewUrl && s.imagePath) {
+        const d = ensurePreview(s.imagePath);
+        if (d) s.imagePreviewUrl = d;
+      }
+    }
+
+    if (type === 'halfText') {
+      // halfText keeps imagePath/imagePreviewUrl on block itself in your renderer
+      if (!b.imagePreviewUrl && b.imagePath) {
+        const d = ensurePreview(b.imagePath);
+        if (d) b.imagePreviewUrl = d;
+      }
+      if (!s.imagePreviewUrl && s.imagePath) {
+        const d = ensurePreview(s.imagePath);
+        if (d) s.imagePreviewUrl = d;
+      }
+    }
+
+    if (type === 'buttonGroup' && Array.isArray(b.buttons)) {
+      b.buttons.forEach((btn) => {
+        const bs = (btn.settings ||= {});
+        if (!bs.imagePreviewUrl && bs.imagePath) {
+          const d = ensurePreview(bs.imagePath);
+          if (d) bs.imagePreviewUrl = d;
+        }
+      });
+    }
+
+    if (type === 'columns' && Array.isArray(b.columns)) {
+      b.columns.forEach((col) => {
+        if (!col.imagePreviewUrl && col.imagePath) {
+          const d = ensurePreview(col.imagePath);
+          if (d) col.imagePreviewUrl = d;
+        }
+      });
+    }
+
+    if (type === 'columnsContent' && Array.isArray(b.columns)) {
+      b.columns.forEach((col) => {
+        if (!col.imagePreviewUrl && col.imagePath) {
+          const d = ensurePreview(col.imagePath);
+          if (d) col.imagePreviewUrl = d;
+        }
+      });
+    }
+
+    // Round container recursion (children can contain any block types)
+    if (type === 'roundContainer' && Array.isArray(b.children)) {
+      b.children = b.children.map((child) => rehydrateBlock(child));
+    }
+
+    return b;
+  };
+
+  t.blocks = (t.blocks || []).map(rehydrateBlock);
+  return t;
+}
+
 const EmailBuilder = () => {
   // Email template structure
   const [template, setTemplate] = useState(initialTemplate);
+
+  // Load saved data from localStorage on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('emailBuilderData');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        if (parsed && parsed.blocks) {
+          setTemplate(rehydrateTemplateImages(parsed));
+        }
+      } catch (err) {
+        console.error('Failed to parse saved template:', err);
+      }
+    }
+  }, []);
+
+  // Auto-save to localStorage whenever template changes
+  useEffect(() => {
+    // simple debounce to avoid excessive writes
+    const timeout = setTimeout(() => {
+      localStorage.setItem('emailBuilderData', JSON.stringify(template));
+    }, 400);
+    return () => clearTimeout(timeout);
+  }, [template]);
+
+  // clear saved data manually
+  const handleClearLocalData = () => {
+    localStorage.removeItem('emailBuilderData');
+    alert('Local saved data cleared.');
+  };
 
   // State for drag and drop
   const [draggedItem, setDraggedItem] = useState(null);
@@ -160,6 +269,10 @@ const EmailBuilder = () => {
         <div className='toolbar'>
           <div className='toolbar-title'>Email Editor</div>
           <div className='toolbar-actions'>
+            <button className='toolbar-button' onClick={handleClearLocalData}>
+              <Trash2 size={16} />
+              <span>Clear Local</span>
+            </button>
             <button
               className={`toolbar-button ${showPreview ? 'active' : ''}`}
               onClick={() => {

@@ -1,7 +1,7 @@
 // Handler functions for EmailBuilder component
 import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { getAllAssets } from '../utils/assets';
+import { listAssets } from '../utils/assets';
 
 // Create a new block based on type
 export const createNewBlock = (type, template = null) => {
@@ -484,37 +484,37 @@ export const handleUpdateTemplateSetting = (
 };
 
 // Save template handler
-export const handleSaveTemplate = async (generateHtmlOutput, templateTitle) => {
-  const htmlOutput = generateHtmlOutput();
-
-  const safeTitle = (templateTitle || 'Template')
-    .trim()
-    .replace(/[\\/:*?"<>|]/g, '_');
-
+export async function handleSaveTemplate(getHtml, title = 'Template') {
   const zip = new JSZip();
-  zip.file('index.html', htmlOutput);
+  const html = getHtml();
 
-  const assetsFolder = zip.folder('i');
+  // add main HTML
+  zip.file('index.html', html);
 
-  // Add uploaded assets
-  const assets = getAllAssets();
-  const existingPaths = new Set(
-    assets.map((a) => a.path?.toLowerCase()).filter(Boolean)
-  );
-  const hasPath = (p) => existingPaths.has(p.toLowerCase());
+  // assets already collected from localStorage
+  const assets = listAssets();
+  let assetsFolder = null;
 
-  for (const a of assets) {
-    // a.filename like "1.svg"
-    assetsFolder.file(a.filename, a.file);
+  if (assets.length) {
+    assetsFolder = zip.folder('i');
+    assets.forEach((a) => {
+      const filename = a.path.split('/').pop();
+      const base64 = a.dataUrl.split(',')[1] || '';
+      assetsFolder.file(filename, base64, { base64: true });
+    });
   }
 
-  // Auto-include default footer icons from public/i if missing
-  await addDefaultFooterIcons(assetsFolder, hasPath);
+  // so addDefaultFooterIcons can skip duplicates
+  const hasPath = (p) => assets.some((a) => a.path === p);
 
-  // Download zip
+  // also add default footer icons from /public/i if missing
+  await addDefaultFooterIcons(assetsFolder ?? zip.folder('i'), hasPath);
+
+  // download zip
   const blob = await zip.generateAsync({ type: 'blob' });
-  saveAs(blob, `${safeTitle}.zip`);
-};
+  const safe = (title || 'Template').replace(/[^\w-]+/g, '_');
+  saveAs(blob, `${safe}.zip`);
+}
 
 const DEFAULT_ICON_KEYS = [
   'facebook',
@@ -527,25 +527,27 @@ const DEFAULT_ICON_KEYS = [
   'call',
 ];
 
-// Fetch /i/<name>.png from the app and add to zip if not already present via uploads
+// Fetch /i/<name>.png from the app and add to zip if not already present
 async function addDefaultFooterIcons(assetsFolder, hasPath) {
   const origin = window.location.origin;
 
   for (const key of DEFAULT_ICON_KEYS) {
     const path = `i/${key}.png`; // must match what HTML uses
-    if (hasPath(path)) continue; // don’t duplicate or override user-uploaded assets
+    if (hasPath(path)) continue; // don't duplicate or override uploaded assets
 
     try {
       const url = new URL(`/${path}`, origin); // absolute fetch from public/i
       const res = await fetch(url);
       if (!res.ok) {
-        console.warn('[export] footer icon not found:', url.toString());
+        console.warn('[Export] footer icon not found:', url.toString());
         continue;
       }
       const blob = await res.blob();
-      assetsFolder.file(`${key}.png`, blob); // saved as /i/<key>.png in the zip
-    } catch (err) {
-      console.warn('[export] footer icon fetch failed:', path, err);
+      const arrayBuff = await blob.arrayBuffer();
+      const filename = path.split('/').pop();
+      assetsFolder.file(filename, arrayBuff);
+    } catch (e) {
+      console.warn('[Export] failed to include default icon', key, e);
     }
   }
 }
