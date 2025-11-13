@@ -1059,15 +1059,17 @@ const BlockRenderer = ({
                               />
 
                               <input
-                                type='text'
+                                type='number'
                                 className='settings-input'
-                                placeholder='Font size (e.g. 16px)'
-                                value={s.fontSize ?? '16px'}
+                                placeholder='Font size (px)'
+                                value={
+                                  s.fontSize ? parseInt(s.fontSize, 10) : ''
+                                }
                                 onChange={(e) =>
                                   updateBtn(
                                     buttonIndex,
                                     'fontSize',
-                                    e.target.value
+                                    e.target.value ? `${e.target.value}px` : ''
                                   )
                                 }
                               />
@@ -1087,15 +1089,19 @@ const BlockRenderer = ({
                               />
 
                               <input
-                                type='text'
+                                type='number'
                                 className='settings-input'
-                                placeholder='Border radius (e.g. 30px)'
-                                value={s.borderRadius ?? '30px'}
+                                placeholder='Border radius (px)'
+                                value={
+                                  s.borderRadius
+                                    ? parseInt(s.borderRadius, 10)
+                                    : ''
+                                }
                                 onChange={(e) =>
                                   updateBtn(
                                     buttonIndex,
                                     'borderRadius',
-                                    e.target.value
+                                    e.target.value ? `${e.target.value}px` : ''
                                   )
                                 }
                               />
@@ -1589,33 +1595,47 @@ const BlockRenderer = ({
                                   }
                                 />
                                 <input
-                                  type='text'
+                                  type='number'
                                   className='settings-input'
-                                  placeholder='Title font size'
-                                  value={c?.settings?.titleFontSize || '24px'}
+                                  placeholder='Title font size (px)'
+                                  value={
+                                    c?.settings?.titleFontSize
+                                      ? parseInt(c.settings.titleFontSize, 10)
+                                      : ''
+                                  }
                                   onChange={(e) =>
                                     updateCol(
                                       colIndex,
                                       'titleFontSize',
-                                      e.target.value,
+                                      e.target.value
+                                        ? `${e.target.value}px`
+                                        : '',
                                       true
                                     )
                                   }
                                 />
+
                                 <input
-                                  type='text'
+                                  type='number'
                                   className='settings-input'
-                                  placeholder='Text font size'
-                                  value={c?.settings?.textFontSize || '12px'}
+                                  placeholder='Text font size (px)'
+                                  value={
+                                    c?.settings?.textFontSize
+                                      ? parseInt(c.settings.textFontSize, 10)
+                                      : ''
+                                  }
                                   onChange={(e) =>
                                     updateCol(
                                       colIndex,
                                       'textFontSize',
-                                      e.target.value,
+                                      e.target.value
+                                        ? `${e.target.value}px`
+                                        : '',
                                       true
                                     )
                                   }
                                 />
+
                                 <div
                                   className='control-flex'
                                   style={{ gap: 8, marginTop: 6 }}>
@@ -1828,15 +1848,19 @@ const BlockRenderer = ({
                 </select>
 
                 <input
-                  type='text'
+                  type='number'
                   className='control-select'
-                  placeholder='Image width (e.g., 260px)'
-                  value={settings?.imageWidth || '260px'}
+                  placeholder='Image width (%)'
+                  value={
+                    settings?.imageWidth
+                      ? parseInt(settings.imageWidth, 10)
+                      : ''
+                  }
                   onChange={(e) =>
                     handleUpdateBlockSettings(
                       index,
                       'imageWidth',
-                      e.target.value
+                      e.target.value ? `${e.target.value}%` : ''
                     )
                   }
                 />
@@ -2199,14 +2223,16 @@ const BlockRenderer = ({
                     Button's text font size
                   </div>
                   <input
-                    type='text'
+                    type='number'
                     className='control-select'
-                    value={settings?.fontSize || ''}
+                    value={
+                      settings?.fontSize ? parseInt(settings.fontSize, 10) : ''
+                    }
                     onChange={(e) =>
                       handleUpdateBlockSettings(
                         index,
                         'fontSize',
-                        e.target.value
+                        e.target.value ? `${e.target.value}px` : ''
                       )
                     }
                   />
@@ -2255,14 +2281,18 @@ const BlockRenderer = ({
                     Button's border radius
                   </div>
                   <input
-                    type='text'
+                    type='number'
                     className='control-select'
-                    value={settings?.borderRadius || '30px'}
+                    value={
+                      settings?.borderRadius
+                        ? parseInt(settings.borderRadius, 10)
+                        : ''
+                    }
                     onChange={(e) =>
                       handleUpdateBlockSettings(
                         index,
                         'borderRadius',
-                        e.target.value
+                        e.target.value ? `${e.target.value}px` : ''
                       )
                     }
                   />
@@ -2271,12 +2301,16 @@ const BlockRenderer = ({
 
               {type === 'spacer' && (
                 <input
-                  type='text'
+                  type='number'
                   className='settings-input'
-                  placeholder='Height (e.g. 40px)'
-                  value={settings?.height || ''}
+                  placeholder='Height (px)'
+                  value={settings?.height ? parseInt(settings.height, 10) : ''}
                   onChange={(e) =>
-                    handleUpdateBlockSettings(index, 'height', e.target.value)
+                    handleUpdateBlockSettings(
+                      index,
+                      'height',
+                      e.target.value ? `${e.target.value}px` : ''
+                    )
                   }
                   style={{ width: 80 }}
                 />
@@ -2297,15 +2331,19 @@ const BlockRenderer = ({
                     className='color-input'
                   />
                   <input
-                    type='text'
+                    type='number'
                     className='settings-input'
-                    placeholder='Height (e.g. 1px)'
-                    value={settings?.lineHeight || ''}
+                    placeholder='Height (px)'
+                    value={
+                      settings?.lineHeight
+                        ? parseInt(settings.lineHeight, 10)
+                        : ''
+                    }
                     onChange={(e) =>
                       handleUpdateBlockSettings(
                         index,
                         'lineHeight',
-                        e.target.value
+                        e.target.value ? `${e.target.value}px` : ''
                       )
                     }
                     style={{ width: 80 }}
@@ -2342,14 +2380,16 @@ const BlockRenderer = ({
                     Font size
                   </div>
                   <input
-                    type='text'
+                    type='number'
                     className='control-select'
-                    value={settings?.fontSize || ''}
+                    value={
+                      settings?.fontSize ? parseInt(settings.fontSize, 10) : ''
+                    }
                     onChange={(e) =>
                       handleUpdateBlockSettings(
                         index,
                         'fontSize',
-                        e.target.value
+                        e.target.value ? `${e.target.value}px` : ''
                       )
                     }
                   />
@@ -2409,18 +2449,22 @@ const BlockRenderer = ({
                     Column gap
                   </div>
                   <input
-                    type='text'
+                    type='number'
                     className='settings-input'
-                    placeholder='e.g. 16px'
-                    value={settings?.columnGap || ''}
+                    placeholder='Column gap (px)'
+                    value={
+                      settings?.columnGap
+                        ? parseInt(settings.columnGap, 10)
+                        : ''
+                    }
                     onChange={(e) =>
                       handleUpdateBlockSettings(
                         index,
                         'columnGap',
-                        e.target.value
+                        e.target.value ? `${e.target.value}px` : ''
                       )
                     }
-                    style={{ width: 160 }}
+                    style={{ width: 80 }}
                   />
                 </div>
               )}
@@ -2598,49 +2642,51 @@ const BlockRenderer = ({
                         }
                         className='color-input'
                       />
-                      <input
-                        type='number'
-                        value={settings?.borderWidth ?? 3}
-                        onChange={(e) =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'borderWidth',
-                            Number(e.target.value)
-                          )
-                        }
-                        placeholder='Width'
-                        className='settings-input'
-                        style={{ width: 60 }}
-                      />
-                      <select
-                        value={settings?.borderType || 'solid'}
-                        onChange={(e) =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'borderType',
-                            e.target.value
-                          )
-                        }
-                        className='control-select'
-                        style={{ width: 90 }}>
-                        <option value='solid'>solid</option>
-                        <option value='dashed'>dashed</option>
-                        <option value='dotted'>dotted</option>
-                      </select>
-                      <input
-                        type='number'
-                        value={settings?.borderRadius ?? 24}
-                        onChange={(e) =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'borderRadius',
-                            Number(e.target.value)
-                          )
-                        }
-                        placeholder='Radius'
-                        className='settings-input'
-                        style={{ width: 70 }}
-                      />
+                      <div style={{ display: 'flex', gap: 8 }}>
+                        <input
+                          type='number'
+                          value={settings?.borderWidth ?? 3}
+                          onChange={(e) =>
+                            handleUpdateBlockSettings(
+                              index,
+                              'borderWidth',
+                              Number(e.target.value)
+                            )
+                          }
+                          placeholder='Width'
+                          className='settings-input'
+                          style={{ width: 60 }}
+                        />
+                        <select
+                          value={settings?.borderType || 'solid'}
+                          onChange={(e) =>
+                            handleUpdateBlockSettings(
+                              index,
+                              'borderType',
+                              e.target.value
+                            )
+                          }
+                          className='control-select'
+                          style={{ width: 90 }}>
+                          <option value='solid'>solid</option>
+                          <option value='dashed'>dashed</option>
+                          <option value='dotted'>dotted</option>
+                        </select>
+                        <input
+                          type='number'
+                          value={settings?.borderRadius ?? 24}
+                          onChange={(e) =>
+                            handleUpdateBlockSettings(
+                              index,
+                              'borderRadius',
+                              Number(e.target.value)
+                            )
+                          }
+                          placeholder='Radius'
+                          className='settings-input'
+                          style={{ width: 70 }}
+                        />
+                      </div>
                     </div>
 
                     <div>
@@ -2652,7 +2698,7 @@ const BlockRenderer = ({
                         }}>
                         Paddings (top/bottom)
                       </div>
-                      <div className='control-flex' style={{ gap: 8 }}>
+                      <div style={{ display: 'flex', gap: 8 }}>
                         <input
                           type='number'
                           className='settings-input'

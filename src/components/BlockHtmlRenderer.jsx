@@ -14,13 +14,19 @@ const getImageSrc = (s = {}) => {
     : src;
 };
 
+const sanitizePadding = (val) => {
+  if (typeof val !== 'string') return val;
+  const parts = val.trim().split(/\s+/);
+  return parts[0]; // top or bottom only
+};
+
 /** Build inline style string from settings (filter out non-style keys) */
 const buildStyle = (type, raw = {}) => {
   // prefer new vertical padding fields; legacy 'padding' only as fallback
   const settings = {
     ...raw,
-    paddingTop: raw.paddingTop ?? raw.padding ?? undefined,
-    paddingBottom: raw.paddingBottom ?? raw.padding ?? undefined,
+    paddingTop: sanitizePadding(raw.paddingTop ?? raw.padding),
+    paddingBottom: sanitizePadding(raw.paddingBottom ?? raw.padding),
   };
 
   const NON_STYLE_KEYS = new Set([
