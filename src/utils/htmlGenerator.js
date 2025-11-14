@@ -114,9 +114,7 @@ export function generateRoundContainerHTML(block, ctx) {
   const canvasColor = s.canvasColor || '#CFCFCF';
   const backgroundColor = s.backgroundColor || '#FFFFFF';
   const bgWidth = Number(s.bgWidth ?? 88);
-  const borderColor = s.borderColor || '#FFFFFF';
-  const borderWidth = Number(s.borderWidth ?? 3);
-  const borderType = s.borderType || 'solid';
+  const border = s.border || '3px solid #FFFFFF';
   const borderRadius = Number(s.borderRadius ?? 24);
   const paddingTop = Number(s.paddingTop ?? 8);
   const paddingBottom = Number(s.paddingBottom ?? 8);
@@ -143,7 +141,7 @@ ${topPadRow}
 <tr>
   <td style="border:0;margin:0 auto;mso-line-height-rule:exactly;background-color:${canvasColor};padding-top:${paddingInnerTop}px;padding-bottom:${paddingInnerBottom}px;">
     <table align="center" cellpadding="0" cellspacing="0" border="0"
-      style="border-collapse:separate;border:${borderWidth}px ${borderType} ${borderColor};
+      style="border-collapse:separate;border:${border};
              border-radius:${borderRadius}px;margin:0 auto;width:${bgWidth}%;
              padding:0;text-align:center;background-color:${backgroundColor};">
       <tbody>
