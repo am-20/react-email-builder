@@ -367,45 +367,76 @@ const BlockRenderer = ({
     e,
     buttonIndex = null,
     columnIndex = null,
-    isHalfText = false
+    isHalfText = false,
+    isHeader = false
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    const asset = addFileAsset(file); // { path: "i/1.png", previewUrl: "blob:..." }
+    // { path: "i/1.png", previewUrl: "blob:..." }
+    const asset = addFileAsset(file);
 
     setTemplate((prev) => {
       const newBlocks = [...prev.blocks];
+      const blk = newBlocks[index];
 
       if (buttonIndex !== null) {
-        const btn = newBlocks[index].buttons[buttonIndex];
+        // BUTTON IMAGE
+        const btn = blk.buttons[buttonIndex];
         btn.settings = {
           ...(btn.settings || {}),
           imagePath: asset.path,
           imagePreviewUrl: asset.previewUrl,
         };
       } else if (columnIndex !== null) {
-        const col = newBlocks[index].columns[columnIndex] || {};
+        // COLUMNS / COLUMN CONTENT IMAGE
+        const col = blk.columns[columnIndex] || {};
         col.imagePath = asset.path;
         col.imagePreviewUrl = asset.previewUrl;
-        // legacy fallback
-        col.content = asset.previewUrl;
-        newBlocks[index].columns[columnIndex] = col;
+
+        // legacy fallback if some old column types still read content
+        if (typeof col.content !== 'undefined') {
+          col.content = asset.previewUrl;
+        }
+
+        blk.columns[columnIndex] = col;
       } else if (isHalfText) {
-        const blk = newBlocks[index];
-        blk.imagePath = asset.path;
-        blk.imagePreviewUrl = asset.previewUrl;
-        if ('imageUrl' in blk) delete blk.imageUrl;
-      } else {
-        const blk = newBlocks[index];
+        // HALF TEXT IMAGE – stored in settings
         blk.settings = {
           ...(blk.settings || {}),
           imagePath: asset.path,
           imagePreviewUrl: asset.previewUrl,
         };
-        if (typeof blk.content !== 'undefined') blk.content = asset.previewUrl;
+
+        if (blk.settings && 'imageUrl' in blk.settings) {
+          delete blk.settings.imageUrl;
+        }
+      } else if (isHeader) {
+        // HEADER IMAGE
+        blk.settings = {
+          ...(blk.settings || {}),
+          imagePath: asset.path,
+          imagePreviewUrl: asset.previewUrl,
+        };
+
+        if (blk.settings && 'imageUrl' in blk.settings) {
+          delete blk.settings.imageUrl;
+        }
+      } else {
+        // GENERIC IMAGE BLOCKS
+        blk.settings = {
+          ...(blk.settings || {}),
+          imagePath: asset.path,
+          imagePreviewUrl: asset.previewUrl,
+        };
+
+        // Only image-type blocks should have their content replaced by the blob
+        if (blk.type === 'image') {
+          blk.content = asset.previewUrl;
+        }
       }
 
+      newBlocks[index] = blk;
       return { ...prev, blocks: newBlocks };
     });
 
@@ -414,25 +445,75 @@ const BlockRenderer = ({
 
   switch (type) {
     case 'header':
-      blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: settings?.textAlign || 'left' }}>
-                <h1
-                  style={contentStyle}
-                  contentEditable={isActive}
-                  suppressContentEditableWarning
-                  onBlur={(e) =>
-                    handleUpdateBlockContent(index, e.target.innerText)
-                  }>
-                  {content}
-                </h1>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      );
+      {
+        const srcForEditor =
+          settings?.imagePreviewUrl ||
+          settings?.imageUrl ||
+          settings?.imagePath ||
+          'https://placehold.co/80x80';
+
+        blockContent = (
+          <table {...tableProps}>
+            <tbody>
+              <tr>
+                {settings?.isImage ? (
+                  <td style={{ textAlign: settings?.textAlign || 'left' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 16,
+                        flexWrap: 'wrap',
+                      }}>
+                      <img
+                        src={srcForEditor}
+                        alt='voucher'
+                        style={{ ...IMG_BLOCK_STYLE, margin: 0 }}
+                      />
+                      <h1
+                        style={contentStyle}
+                        contentEditable={isActive}
+                        suppressContentEditableWarning
+                        onBlur={(e) =>
+                          handleUpdateBlockContent(index, e.target.innerText)
+                        }>
+                        {content}
+                      </h1>
+                    </div>
+
+                    {isActive && (
+                      <div style={{ marginTop: 8 }}>
+                        <div className='button-settings'>
+                          <input
+                            type='file'
+                            accept='image/*'
+                            className='settings-input'
+                            onChange={handleImageUpload}
+                            style={{ marginBottom: 8 }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </td>
+                ) : (
+                  <td style={{ textAlign: settings?.textAlign || 'left' }}>
+                    <h1
+                      style={contentStyle}
+                      contentEditable={isActive}
+                      suppressContentEditableWarning
+                      onBlur={(e) =>
+                        handleUpdateBlockContent(index, e.target.innerText)
+                      }>
+                      {content}
+                    </h1>
+                  </td>
+                )}
+              </tr>
+            </tbody>
+          </table>
+        );
+      }
       break;
 
     case 'text':
@@ -2533,6 +2614,29 @@ const BlockRenderer = ({
                   <label htmlFor={`inline-${block.id}`}>
                     Display buttons inline
                   </label>
+                </div>
+              )}
+
+              {type === 'header' && (
+                <div className='checkbox-container'>
+                  <input
+                    type='checkbox'
+                    id={`inline-${block.id}`}
+                    checked={!!settings?.isImage}
+                    onChange={(e) => {
+                      const newBlocks = [...template.blocks];
+                      const blockToUpdate = { ...newBlocks[index] };
+
+                      blockToUpdate.settings = {
+                        ...(blockToUpdate.settings || {}),
+                        isImage: e.target.checked,
+                      };
+
+                      newBlocks[index] = blockToUpdate;
+                      setTemplate({ ...template, blocks: newBlocks });
+                    }}
+                  />
+                  <label htmlFor={`inline-${block.id}`}>Display image</label>
                 </div>
               )}
 

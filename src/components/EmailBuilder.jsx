@@ -20,7 +20,7 @@ import BlockRenderer from './BlockRenderer';
 import PreHeader from './PreHeader';
 import { generateHtmlOutput } from '../utils/htmlGenerator';
 // eslint-disable-next-line no-unused-vars
-import { getAssetDataUrl, listAssets } from '../utils/assets';
+import { clearAllAssets, getAssetDataUrl, listAssets } from '../utils/assets';
 import {
   createNewBlock,
   handleDeleteBlock,
@@ -143,6 +143,7 @@ const EmailBuilder = () => {
   // clear saved data manually
   const handleClearLocalData = () => {
     localStorage.removeItem('emailBuilderData');
+    clearAllAssets();
     alert('Local saved data cleared.');
   };
 

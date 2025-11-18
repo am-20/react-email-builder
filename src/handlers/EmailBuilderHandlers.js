@@ -20,6 +20,9 @@ export const createNewBlock = (type, template = null) => {
           padding: '0',
           textAlign: 'center',
           fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
+          isImage: false,
+          imageUrl: 'https://placehold.co/80x80',
+          imagePreviewUrl: '',
         },
       };
     case 'text':

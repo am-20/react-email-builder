@@ -115,19 +115,55 @@ const renderBlockHtml = (block, template = null) => {
   switch (type) {
     /** HEADERS & TEXT */
     case 'header':
-      blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}; padding: 0 ${paddingLeftRight}">
-        <tr>
-          <td style="text-align:${
-            settings.textAlign || 'left'
-          };margin:0;padding:0;background-color:${settings.backgroundColor};">
-            <h1 style="margin:0;white-space:pre-wrap;${buildStyle(
-              'header',
-              settings
-            )}">${content}</h1>
-          </td>
-        </tr>
-      </table>`;
+      {
+        const src =
+          settings?.imagePath ||
+          settings?.imageUrl ||
+          'https://placehold.co/80x80';
+
+        const img = `<img src="${src}" alt="voucher" style="max-width:100%;border:0;display:block;margin:0 auto;">`;
+
+        if (settings?.isImage) {
+          blockHtml = `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}; padding: 0 ${paddingLeftRight}">
+      <tr>
+        <td style="margin:0;padding:0;background-color:${
+          settings.backgroundColor
+        };">
+          <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin:0 auto;">
+            <tr>
+              <td style="vertical-align:middle;padding-right:16px;text-align:center;">
+                ${img}
+              </td>
+              <td style="vertical-align:middle;text-align:${
+                settings.textAlign || 'left'
+              };">
+                <h1 style="margin:0;white-space:pre-wrap;${buildStyle(
+                  'header',
+                  settings
+                )}">${content}</h1>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>`;
+        } else {
+          blockHtml = `
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}; padding: 0 ${paddingLeftRight}">
+      <tr>
+        <td style="text-align:${
+          settings.textAlign || 'left'
+        };margin:0;padding:0;background-color:${settings.backgroundColor};">
+          <h1 style="margin:0;white-space:pre-wrap;${buildStyle(
+            'header',
+            settings
+          )}">${content}</h1>
+        </td>
+      </tr>
+    </table>`;
+        }
+      }
       break;
 
     case 'text':
@@ -137,7 +173,7 @@ const renderBlockHtml = (block, template = null) => {
           <td style="text-align:${
             settings.textAlign || 'left'
           };margin:0;padding:0;background-color:${settings.backgroundColor};">
-            <div style="white-space:pre-wrap;">${content}</div>
+            <p style="white-space:pre-wrap;">${content}</p>
           </td>
         </tr>
       </table>`;
@@ -472,11 +508,11 @@ const renderBlockHtml = (block, template = null) => {
           }" style="max-width:100%;border:0;display:block;">`;
 
       const textHtml = `
-        <div style="color:${settings.color};font-size:${
+        <p style="color:${settings.color};font-size:${
         settings.fontSize
       };text-align:${settings.textAlign};font-family:${settings.fontFamily};">
           ${content}
-        </div>
+        </p>
         ${
           settings.showButton
             ? `<a href="${
@@ -665,7 +701,7 @@ const renderBlockHtml = (block, template = null) => {
               settings.textcolor
             };">
               <tr>
-                <td align="center">
+                <td align="center" style="padding-left:16px;">
                   <a href="${
                     settings.urls?.livechat || '#'
                   }" style="font:11px ${
@@ -738,7 +774,7 @@ const renderBlockHtml = (block, template = null) => {
     }
 
     default:
-      blockHtml = '<div>Unknown block type</div>';
+      blockHtml = '<p>Unknown block type</p>';
   }
 
   // outer wrapper: keep only background color here
