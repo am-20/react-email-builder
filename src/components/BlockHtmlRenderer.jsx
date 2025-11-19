@@ -6,12 +6,22 @@ const kebabCase = (str) =>
 
 /** Resolve a safe image src (ignore blob:/data: for final HTML) */
 const getImageSrc = (s = {}) => {
-  const src = s.settings?.imagePath || s.settings?.imageUrl || '';
+  // support both shapes: s.imagePath / s.imageUrl and legacy s.settings.*
+  const rawSrc =
+    s.imagePath ||
+    s.imageUrl ||
+    s.settings?.imagePath ||
+    s.settings?.imageUrl ||
+    '';
 
-  return typeof src === 'string' &&
-    (src.startsWith('blob:') || src.startsWith('data:'))
-    ? ''
-    : src;
+  if (typeof rawSrc !== 'string') return '';
+
+  // strip out blob:/data: if asset pipeline didn't replace them
+  if (rawSrc.startsWith('blob:') || rawSrc.startsWith('data:')) {
+    return '';
+  }
+
+  return rawSrc;
 };
 
 const sanitizePadding = (val) => {
@@ -492,9 +502,10 @@ const renderBlockHtml = (block, template = null) => {
     /** HALF TEXT */
     case 'halfText': {
       const imageSrc =
+        settings.imagePath ||
+        settings.imageUrl ||
         block.imagePath ||
         block.imageUrl ||
-        getImageSrc(settings) ||
         'https://placehold.co/640x300';
 
       const imageHtml = settings.imageLinkUrl
