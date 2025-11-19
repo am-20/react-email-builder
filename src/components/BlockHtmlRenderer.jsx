@@ -285,34 +285,76 @@ const renderBlockHtml = (block, template = null) => {
     case 'buttonGroup': {
       const inline = !!settings.inline;
       const gap = settings.gap || '0';
-      const wrapStyle = inline ? 'display:inline-block;' : 'display:block;';
-      const sepStyle = inline
-        ? `margin-right:${gap};`
-        : `margin-bottom:${gap};`;
+      const bg = settings.backgroundColor || '#ffffff';
 
-      const buttons = (block.buttons || [])
-        .map((btn, i, arr) => {
-          const s = btn?.settings || {};
-          const imgSrc = getImageSrc(s) || 'https://placehold.co/80x40';
-          return `
-            <div style="${wrapStyle}${i < arr.length - 1 ? sepStyle : ''}">
-              <a href="${
-                s.linkUrl || '#'
-              }" target="_blank" rel="noopener noreferrer" _label="${
-            s.linkLabel || ''
-          }">
-                <img src="${imgSrc}" alt="${
-            s.imageAlt || ''
-          }" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
-              </a>
-            </div>`;
-        })
-        .join('');
+      const buttons = (block.buttons || []).map((btn) => {
+        const s = btn?.settings || {};
+        const imgSrc = getImageSrc(s) || 'https://placehold.co/80x40';
+        const href = s.linkUrl || '#';
+        const linkLabel = s.linkLabel || '';
+        const alt = s.imageAlt || '';
+
+        // inner button html – same in both modes
+        const inner = `
+          <a href="${href}" target="_blank" rel="noopener noreferrer" _label="${linkLabel}">
+            <img src="${imgSrc}" alt="${alt}" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
+          </a>
+        `;
+
+        return { inner };
+      });
+
+      let tableRows = '';
+
+      if (inline) {
+        // ONE ROW, many TDs → buttons inline
+        const cells = buttons
+          .map((btn, i) => {
+            const isLast = i === buttons.length - 1;
+            const paddingRight = !isLast ? `padding-right:${gap};` : '';
+            return `
+              <td align="center" style="${paddingRight}">
+                ${btn.inner}
+              </td>
+            `;
+          })
+          .join('');
+
+        tableRows = `<tr>${cells}</tr>`;
+      } else {
+        // MANY ROWS, one TD per row → buttons stacked
+        tableRows = buttons
+          .map((btn, i) => {
+            const isLast = i === buttons.length - 1;
+            const paddingBottom = !isLast ? `padding-bottom:${gap};` : '';
+            return `
+              <tr>
+                <td align="center" style="${paddingBottom}">
+                  ${btn.inner}
+                </td>
+              </tr>
+            `;
+          })
+          .join('');
+      }
 
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
-        <tr><td style="text-align:center;background-color:${settings.backgroundColor};">${buttons}</td></tr>
-      </table>`;
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
+          <tbody>
+            <tr>
+              <td align="${
+                settings.textAlign || 'center'
+              }" style="background-color:${bg};">
+                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                  <tbody>
+                    ${tableRows}
+                  </tbody>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      `;
       break;
     }
 
@@ -320,40 +362,74 @@ const renderBlockHtml = (block, template = null) => {
     case 'buttonCodedGroup': {
       const inline = !!settings.inline;
       const gap = settings.gap || '0';
-      const wrapStyle = inline ? 'display:inline-block;' : 'display:block;';
-      const sepStyle = inline
-        ? `margin-right:${gap};`
-        : `margin-bottom:${gap};`;
+      const bg = settings.backgroundColor || '#ffffff';
+      const fontFamily = settings.fontFamily || 'Arial, sans-serif';
 
       const buttons = (block.buttons || [])
         .map((btn, i, arr) => {
           const s = btn?.settings || {};
+
           const label = s.content || 'Click Me';
           const href = s.linkUrl || '#';
           const linkLabel = s.linkLabel || '';
+
           const color = s.color ?? '#ffffff';
-          const bg = s.buttonBgColor ?? '#000000';
+          const btnBg = s.buttonBgColor ?? '#000000';
           const padding = s.padding ?? '12px 24px';
           const fontSize = s.fontSize ?? '16px';
           const border = s.border ?? '1px solid #000000';
 
+          const isLast = i === arr.length - 1;
+          const spacer = isLast ? '0' : gap;
+
+          // spacing: right margin for inline, bottom margin for stacked
+          const tableSpacing = inline
+            ? `margin-right:${spacer};`
+            : `margin-bottom:${spacer};`;
+
           return `
-            <div style="${wrapStyle}${i < arr.length - 1 ? sepStyle : ''}">
-              <a href="${href}" target="_blank" rel="noopener noreferrer" _label="${linkLabel}" style="display:inline-block;text-decoration:none;">
-                <span style="
-                  display:inline-block;text-decoration:none;letter-spacing:0;border-radius:30px;
-                  font-weight:bold;font-size:${fontSize};color:${color};background-color:${bg};
-                  border:${border};padding:${padding};line-height:120%;
-                  font-family:${settings.fontFamily || 'Arial, sans-serif'};
-                ">${label}</span>
-              </a>
-            </div>`;
+            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
+                   style="display:${
+                     inline ? 'inline-block' : 'block'
+                   };${tableSpacing}">
+              <tr>
+                <td align="center">
+                  <a href="${href}"
+                     target="_blank" rel="noopener noreferrer"
+                     _label="${linkLabel}"
+                     style="text-decoration:none;">
+                    <span style="
+                      display:inline-block;
+                      border-radius:30px;
+                      text-decoration:none;
+                      font-weight:bold;
+                      letter-spacing:0;
+                      font-size:${fontSize};
+                      color:${color};
+                      background-color:${btnBg};
+                      border:${border};
+                      padding:${padding};
+                      line-height:120%;
+                      font-family:${fontFamily};
+                    ">
+                      ${label}
+                    </span>
+                  </a>
+                </td>
+              </tr>
+            </table>`;
         })
         .join('');
 
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
-        <tr><td style="text-align:center;background-color:${settings.backgroundColor};">${buttons}</td></tr>
+        <tr>
+          <td align="${
+            settings.textAlign || 'center'
+          }" style="background-color:${bg};">
+            ${buttons}
+          </td>
+        </tr>
       </table>`;
       break;
     }
@@ -788,13 +864,18 @@ const renderBlockHtml = (block, template = null) => {
       blockHtml = '<p>Unknown block type</p>';
   }
 
-  // outer wrapper: keep only background color here
+  // outer wrapper: keep only background color here and center inner table
   const bg = settings.backgroundColor
     ? `background-color:${settings.backgroundColor};`
     : '';
+
   return `
   <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${bg}">
-    <tr><td>${blockHtml}</td></tr>
+    <tr>
+      <td align="center" style="margin:0;padding:0;">
+        ${blockHtml}
+      </td>
+    </tr>
   </table>`;
 };
 
