@@ -319,9 +319,9 @@ const BlockRenderer = ({
     paddingTop: isSpacer || isFooter || isRound ? '0' : topPad,
     paddingBottom: isSpacer || isFooter || isRound ? '0' : bottomPad,
     paddingLeft:
-      type === 'image' || isSpacer || isFooter || isRound ? '0' : '12%',
+      type === 'image' || isSpacer || isFooter || isRound ? '0' : '8%',
     paddingRight:
-      type === 'image' || isSpacer || isFooter || isRound ? '0' : '12%',
+      type === 'image' || isSpacer || isFooter || isRound ? '0' : '8%',
     position: 'relative',
     cursor: 'pointer',
     border: isActive ? '2px solid #4299e1' : 'none',
@@ -375,6 +375,14 @@ const BlockRenderer = ({
 
     // { path: "i/1.png", previewUrl: "blob:..." }
     const asset = addFileAsset(file);
+
+    // For nested blocks with header images, use handleUpdateBlockSettings
+    if (isNestedBlock && isHeader && buttonIndex === null && columnIndex === null && !isHalfText) {
+      handleUpdateBlockSettings(index, 'imagePath', asset.path);
+      handleUpdateBlockSettings(index, 'imagePreviewUrl', asset.previewUrl);
+      setManualUrlValue(asset.path);
+      return;
+    }
 
     setTemplate((prev) => {
       const newBlocks = [...prev.blocks];
@@ -489,7 +497,7 @@ const BlockRenderer = ({
                             type='file'
                             accept='image/*'
                             className='settings-input'
-                            onChange={handleImageUpload}
+                            onChange={(e) => handleImageUpload(e, null, null, false, true)}
                             style={{ marginBottom: 8 }}
                           />
                         </div>
@@ -499,7 +507,7 @@ const BlockRenderer = ({
                 ) : (
                   <td style={{ textAlign: settings?.textAlign || 'left' }}>
                     <h1
-                      style={contentStyle}
+                      style={{...contentStyle, paddingBottom:'8px'}}
                       contentEditable={isActive}
                       suppressContentEditableWarning
                       onBlur={(e) =>
@@ -523,7 +531,7 @@ const BlockRenderer = ({
             <tr>
               <td style={{ textAlign: settings?.textAlign || 'left' }}>
                 <p
-                  style={contentStyle}
+                  style={{...contentStyle, padding: '8px 0'}}
                   contentEditable={isActive}
                   suppressContentEditableWarning
                   onBlur={(e) =>
@@ -1821,24 +1829,6 @@ const BlockRenderer = ({
         />
       );
 
-      const Button = settings?.showButton ? (
-        <a
-          href={`${settings?.buttonUrl}`}
-          target='_blank'
-          rel='noopener noreferrer'
-          style={{
-            display: 'inline-block',
-            padding: '8px 16px',
-            backgroundColor: settings?.buttonColor,
-            color: settings?.buttonTextColor,
-            textDecoration: 'none',
-            borderRadius: 4,
-            marginTop: 16,
-          }}>
-          {settings?.buttonText}
-        </a>
-      ) : null;
-
       const TextBlock = (
         <div>
           <div
@@ -1846,9 +1836,8 @@ const BlockRenderer = ({
             contentEditable={isActive}
             suppressContentEditableWarning
             onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
-            dangerouslySetInnerHTML={{ __html: content }}
+            dangerouslySetInnerHTML={{ __html: block.content }}
           />
-          {Button}
         </div>
       );
 
@@ -2606,9 +2595,7 @@ const BlockRenderer = ({
                     id={`inline-${block.id}`}
                     checked={!!settings?.inline}
                     onChange={(e) => {
-                      const newBlocks = [...template.blocks];
-                      newBlocks[index].settings.inline = e.target.checked;
-                      setTemplate({ ...template, blocks: newBlocks });
+                      handleUpdateBlockSettings(index, 'inline', e.target.checked);
                     }}
                   />
                   <label htmlFor={`inline-${block.id}`}>
@@ -2624,16 +2611,7 @@ const BlockRenderer = ({
                     id={`inline-${block.id}`}
                     checked={!!settings?.isImage}
                     onChange={(e) => {
-                      const newBlocks = [...template.blocks];
-                      const blockToUpdate = { ...newBlocks[index] };
-
-                      blockToUpdate.settings = {
-                        ...(blockToUpdate.settings || {}),
-                        isImage: e.target.checked,
-                      };
-
-                      newBlocks[index] = blockToUpdate;
-                      setTemplate({ ...template, blocks: newBlocks });
+                      handleUpdateBlockSettings(index, 'isImage', e.target.checked);
                     }}
                   />
                   <label htmlFor={`inline-${block.id}`}>Display image</label>

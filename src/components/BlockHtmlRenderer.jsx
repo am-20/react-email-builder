@@ -74,7 +74,7 @@ const buildStyle = (type, raw = {}) => {
     type === 'header'
   );
   if (needsSidePad)
-    stylePairs.push('padding-left: 12%;', 'padding-right: 12%;');
+    stylePairs.push('padding-left: 8%;', 'padding-right: 8%;');
 
   return stylePairs.join(' ');
 };
@@ -110,7 +110,7 @@ const renderBlockHtml = (block, template = null) => {
   const { type, content = '', settings = {} } = block;
   const styleString = buildStyle(type, settings);
   let blockHtml = '';
-  const paddingLeftRight = settings?.paddingX ?? '12%';
+  const paddingLeftRight = settings?.paddingX ?? '8%';
 
   switch (type) {
     /** HEADERS & TEXT */
@@ -138,10 +138,10 @@ const renderBlockHtml = (block, template = null) => {
               <td style="vertical-align:middle;text-align:${
                 settings.textAlign || 'left'
               };">
-                <h1 style="margin:0;white-space:pre-wrap;${buildStyle(
+                <h2 style="margin:0;white-space:pre-wrap;${buildStyle(
                   'header',
                   settings
-                )}">${content}</h1>
+                )}">${content}</h2>
               </td>
             </tr>
           </table>
@@ -155,13 +155,14 @@ const renderBlockHtml = (block, template = null) => {
         <td style="text-align:${
           settings.textAlign || 'left'
         };margin:0;padding:0;background-color:${settings.backgroundColor};">
-          <h1 style="margin:0;white-space:pre-wrap;${buildStyle(
+          <h2 style="margin:0;white-space:pre-wrap;${buildStyle(
             'header',
             settings
-          )}">${content}</h1>
+          )}">${content}</h2>
         </td>
       </tr>
-    </table>`;
+    </table>
+    `;
         }
       }
       break;
@@ -170,10 +171,10 @@ const renderBlockHtml = (block, template = null) => {
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr>
-          <td style="text-align:${
+          <td align="${settings.textAlign || 'left'}" style="text-align:${
             settings.textAlign || 'left'
           };margin:0;padding:0;background-color:${settings.backgroundColor};">
-            <p style="white-space:pre-wrap;">${content}</p>
+            <p style="white-space:pre-wrap;padding:16px 0;margin: 0;text-align:${settings.textAlign || 'left'};">${content}</p>
           </td>
         </tr>
       </table>`;
@@ -351,7 +352,7 @@ const renderBlockHtml = (block, template = null) => {
     /** DIVIDER & SPACER */
     case 'divider':
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-top:10px;padding-bottom:10px;padding-left:12%;padding-right:12%;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-top:10px;padding-bottom:10px;padding-left:8%;padding-right:8%;">
         <tr><td style="height:${
           settings.lineHeight || '1px'
         };background-color:${settings.lineColor || '#ddd'};"></td></tr>
@@ -386,7 +387,7 @@ const renderBlockHtml = (block, template = null) => {
                 c?.settings?.altText || ''
               }" style="padding-left: ${
                 idx === 0 ? '0' : idx === count - 1 ? gap : halfGap
-              };border:0;display:block;width:100%!important;">`
+              };border:0;display:block;">`
             : '';
           const inner = c?.settings?.linkUrl
             ? `<a href="${c.settings.linkUrl}" _label="${
@@ -402,8 +403,10 @@ const renderBlockHtml = (block, template = null) => {
         .join('');
 
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:12%;padding-right:12%;">
-        <tr>${cells}</tr>
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:8%;padding-right:8%;">
+        <tbody>
+          <tr>${cells}</tr>
+        </tbody>
       </table>`;
       break;
     }
@@ -429,7 +432,7 @@ const renderBlockHtml = (block, template = null) => {
 
       const paddingTop = settings?.paddingTop ?? settings?.padding ?? '0';
       const paddingBottom = settings?.paddingBottom ?? settings?.padding ?? '0';
-      const paddingLeftRight = settings?.paddingX ?? '12%';
+      const paddingLeftRight = settings?.paddingX ?? '8%';
 
       const cellsHtml = (cols.length ? cols : [{}, {}, ...[]].slice(0, 1))
         .map((c, idx) => {
@@ -449,9 +452,9 @@ const renderBlockHtml = (block, template = null) => {
 
           const titleHtml = settings?.hidetitle
             ? ``
-            : `<h1 style="font-family:${fontFamily};font-size:${titleSize};line-height:1.2;color:${color};padding:16px 0 8px;text-align:${textAlign};">${
+            : `<h2 style="font-family:${fontFamily};font-size:${titleSize};line-height:1.2;color:${color};padding:16px 0 8px;text-align:${textAlign};">${
                 c?.title || ''
-              }</h1>`;
+              }</h2>`;
 
           const textPad = settings?.hidetitle ? '16px 0' : '0';
           const textHtml = `<p style="font-family:${fontFamily};font-size:${textSize};line-height:1.4;color:${color};padding:${textPad};margin:0;text-align:${textAlign};font-weight:${
@@ -543,7 +546,7 @@ const renderBlockHtml = (block, template = null) => {
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
         <tr>
           <td>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0 12%;background-color:${
+            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0 8%;background-color:${
               settings.backgroundColor
             };">
               <tr>
@@ -580,14 +583,14 @@ const renderBlockHtml = (block, template = null) => {
 
       // Wrap each child in a 1x1 table that can carry corner radii.
       const childrenHTML = kids
-        .map((child, i) => {
-          const isFirst = i === 0;
-          const isLast = i === kids.length - 1;
+        .map((child) => {
+          // const isFirst = i === 0;
+          // const isLast = i === kids.length - 1;
 
-          const topLeft = isFirst ? borderRadius : 0;
-          const topRight = isFirst ? borderRadius : 0;
-          const bottomLeft = isLast ? borderRadius : 0;
-          const bottomRight = isLast ? borderRadius : 0;
+          // const topLeft = isFirst ? borderRadius : 0;
+          // const topRight = isFirst ? borderRadius : 0;
+          // const bottomLeft = isLast ? borderRadius : 0;
+          // const bottomRight = isLast ? borderRadius : 0;
 
           const childHtml = renderBlockHtml(child, template);
 
@@ -595,8 +598,7 @@ const renderBlockHtml = (block, template = null) => {
           return `
             <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0"
                    style="border-collapse:separate;border-spacing:0;
-                          border-top-left-radius:${topLeft}px;border-top-right-radius:${topRight}px;
-                          border-bottom-left-radius:${bottomLeft}px;border-bottom-right-radius:${bottomRight}px;
+                          
                           overflow:hidden;">
               <tr>
                 <td style="padding:0;">
@@ -618,21 +620,44 @@ const renderBlockHtml = (block, template = null) => {
           ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingBottom}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingBottom}">&nbsp;</td></tr>`
           : '';
 
+      // Calculate spacer width: (100 - bgWidth) / 2
+      const spacerWidth = ((100 - bgWidth) / 2).toFixed(2);
+      
       blockHtml = `
         ${topPadRow}
         <tr>
-          <td style="border:0;margin:0 auto;mso-line-height-rule:exactly;background-color:${canvasColor};padding-top:${paddingInnerTop}px;padding-bottom:${paddingInnerBottom}px;">
-            <table align="center" cellpadding="0" cellspacing="0" border="0"
-              style="border-collapse:separate;border:${borderWidth}px ${borderType} ${borderColor};
-                     border-radius:${borderRadius}px;margin:0 auto;width:${bgWidth}%;
-                     padding:0;text-align:center;background-color:${backgroundColor};">
-              <tbody>
-                <tr>
-                  <td style="padding:0;">
-                    ${childrenHTML}
-                  </td>
-                </tr>
-              </tbody>
+          <td
+            align="center"
+            style="padding-top:${paddingInnerTop}px;padding-bottom:${paddingInnerBottom}px;background-color:${canvasColor};text-align:center;mso-line-height-rule:exactly;"
+            bgcolor="${canvasColor}"
+          >
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td width="${spacerWidth}%" style="padding:0;font-size:0;line-height:0;">&nbsp;</td>
+                <td width="${bgWidth}%" style="padding:0;max-width:600px;">
+                  <table
+                    role="presentation"
+                    width="100%"
+                    cellpadding="0"
+                    cellspacing="0"
+                    border="0"
+                    style="border-collapse:separate;border-spacing:0;"
+                  >
+                    <tr>
+                      <td
+                        align="center"
+                        style="padding:0;text-align:center;background-color:${backgroundColor};
+                              border:${borderWidth}px ${borderType} ${borderColor};
+                              border-radius:${borderRadius}px;overflow:hidden;"
+                        bgcolor="${backgroundColor}"
+                      >
+                        ${childrenHTML}
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+                <td width="${spacerWidth}%" style="padding:0;font-size:0;line-height:0;">&nbsp;</td>
+              </tr>
             </table>
           </td>
         </tr>
@@ -689,13 +714,13 @@ const renderBlockHtml = (block, template = null) => {
         <!-- Contact -->
         <tr>
           <td align="center" style="padding-top:16px;padding-bottom:16px;padding-left:10%;padding-right:10%;text-align:center;">
-            <h1 style="margin:0 0 13px;font:${
+            <h2 style="margin:0 0 13px;font:${
               settings.fontWeight || 'bold'
             } 24px ${settings.fontFamily || 'Arial, sans-serif'};color:${
         settings.textcolor
       };line-height:1;">
               ${dict.questions}
-            </h1>
+            </h2>
 
             <table role="presentation" cellspacing="0" cellpadding="7" border="0" style="margin:0 auto;color:${
               settings.textcolor
