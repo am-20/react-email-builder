@@ -299,8 +299,9 @@ const BlockRenderer = ({
 }) => {
   const { type, content } = block;
   const [manualUrlValue, setManualUrlValue] = useState(
-    settings?.imagePath || ''
+    settings?.imagePath || block.imagePath || ''
   );
+
   const shouldShowToolbar = isHovered || isActive;
 
   // Padding (separate)
@@ -1794,19 +1795,27 @@ const BlockRenderer = ({
         setTemplate((prev) => {
           const newBlocks = [...prev.blocks];
           const blk = { ...(newBlocks[index] || {}) };
-          blk.imagePath = url;
-          blk.imagePreviewUrl = url;
-          if ('imageUrl' in blk) delete blk.imageUrl;
+
+          blk.settings = {
+            ...(blk.settings || {}),
+            imagePath: url,
+            imagePreviewUrl: url,
+          };
+
+          if (blk.settings && 'imageUrl' in blk.settings) {
+            delete blk.settings.imageUrl;
+          }
+
           newBlocks[index] = blk;
           return { ...prev, blocks: newBlocks };
         });
       };
 
       const srcForHalfText =
+        settings?.imagePreviewUrl ||
+        settings?.imagePath ||
         block.imagePreviewUrl ||
         block.imagePath ||
-        settings?.imagePath ||
-        settings?.imagePreviewUrl ||
         settings?.imageUrl ||
         'https://placehold.co/320x100';
 
