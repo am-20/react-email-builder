@@ -201,27 +201,23 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                       color: disclaimer,
                       fontFamily: settings?.fontFamily || 'Arial, sans-serif',
                     }}>
-                    {type !== 'footer_sendpulse' ? (
-                      <>
-                        <p>
-                          {dict.disclaimer}
-                          {urls?.optout ? (
-                            <a
-                              href={urls.optout}
-                              style={{
-                                textDecoration: 'underline',
-                                color: disclaimer,
-                              }}>
-                              {dict.link}
-                            </a>
-                          ) : (
-                            dict.link
-                          )}
-                          {dict.disclaimer_end}.
-                        </p>
-                        <br />
-                      </>
-                    ) : null}
+                    <p>
+                      {dict.disclaimer}
+                      {urls?.optout ? (
+                        <a
+                          href={urls.optout}
+                          style={{
+                            textDecoration: 'underline',
+                            color: disclaimer,
+                          }}>
+                          {dict.link}
+                        </a>
+                      ) : (
+                        dict.link
+                      )}
+                      {dict.disclaimer_end}.
+                    </p>
+                    <br />
                     ©{new Date().getFullYear()} Samsung Electronics Co., Ltd.{' '}
                     {dict.all_rights}
                     <br />
@@ -311,8 +307,7 @@ const BlockRenderer = ({
   const isSpacer = type === 'spacer';
   const isFooter =
     type === 'footer' ||
-    type === 'footer_general_kz' ||
-    type === 'footer_sendpulse';
+    type === 'footer_general_kz' 
   const isRound = type === 'roundContainer';
 
   const blockStyle = {
@@ -368,7 +363,6 @@ const BlockRenderer = ({
     e,
     buttonIndex = null,
     columnIndex = null,
-    isHalfText = false,
     isHeader = false
   ) => {
     const file = e.target.files?.[0];
@@ -378,7 +372,7 @@ const BlockRenderer = ({
     const asset = addFileAsset(file);
 
     // For nested blocks with header images, use handleUpdateBlockSettings
-    if (isNestedBlock && isHeader && buttonIndex === null && columnIndex === null && !isHalfText) {
+    if (isNestedBlock && isHeader && buttonIndex === null && columnIndex === null) {
       handleUpdateBlockSettings(index, 'imagePath', asset.path);
       handleUpdateBlockSettings(index, 'imagePreviewUrl', asset.previewUrl);
       setManualUrlValue(asset.path);
@@ -409,17 +403,6 @@ const BlockRenderer = ({
         }
 
         blk.columns[columnIndex] = col;
-      } else if (isHalfText) {
-        // HALF TEXT IMAGE – stored in settings
-        blk.settings = {
-          ...(blk.settings || {}),
-          imagePath: asset.path,
-          imagePreviewUrl: asset.previewUrl,
-        };
-
-        if (blk.settings && 'imageUrl' in blk.settings) {
-          delete blk.settings.imageUrl;
-        }
       } else if (isHeader) {
         // HEADER IMAGE
         blk.settings = {
@@ -1768,190 +1751,6 @@ const BlockRenderer = ({
       break;
     }
 
-    case 'halfText': {
-      const imageContainerStyle = {
-        width: settings?.imageWidth,
-        display: 'inline-block',
-        verticalAlign: 'top',
-      };
-
-      const textContainerStyle = {
-        width: `calc(100% - ${settings?.imageWidth})`,
-        display: 'inline-block',
-        verticalAlign: 'top',
-        padding: '0 20px',
-      };
-
-      const halfTextContentStyle = {
-        color: settings?.color,
-        fontSize: settings?.fontSize,
-        textAlign: settings?.textAlign,
-        fontFamily: settings?.fontFamily,
-      };
-
-      const handleManualUrlHalf = (e) => {
-        const url = e.target.value;
-        setManualUrlValue(url);
-        setTemplate((prev) => {
-          const newBlocks = [...prev.blocks];
-          const blk = { ...(newBlocks[index] || {}) };
-
-          blk.settings = {
-            ...(blk.settings || {}),
-            imagePath: url,
-            imagePreviewUrl: url,
-          };
-
-          if (blk.settings && 'imageUrl' in blk.settings) {
-            delete blk.settings.imageUrl;
-          }
-
-          newBlocks[index] = blk;
-          return { ...prev, blocks: newBlocks };
-        });
-      };
-
-      const srcForHalfText =
-        settings?.imagePreviewUrl ||
-        settings?.imagePath ||
-        block.imagePreviewUrl ||
-        block.imagePath ||
-        settings?.imageUrl ||
-        'https://placehold.co/320x100';
-
-      const ImageEl = settings?.imageLinkUrl ? (
-        <a
-          href={settings.imageLinkUrl}
-          target='_blank'
-          rel='noopener noreferrer'>
-          <img
-            src={srcForHalfText}
-            alt={settings?.altText || ''}
-            style={IMG_BLOCK_STYLE}
-          />
-        </a>
-      ) : (
-        <img
-          src={srcForHalfText}
-          alt={settings?.altText || ''}
-          style={IMG_BLOCK_STYLE}
-        />
-      );
-
-      const TextBlock = (
-        <div>
-          <div
-            style={halfTextContentStyle}
-            contentEditable={isActive}
-            suppressContentEditableWarning
-            onBlur={(e) => handleUpdateBlockContent(index, e.target.innerHTML)}
-            dangerouslySetInnerHTML={{ __html: block.content }}
-          />
-        </div>
-      );
-
-      const imageLeft = settings?.imagePosition === 'left';
-
-      blockContent = (
-        <>
-          <table {...tableProps}>
-            <tbody>
-              <tr>
-                <td
-                  style={imageLeft ? imageContainerStyle : textContainerStyle}>
-                  {imageLeft ? ImageEl : TextBlock}
-                </td>
-                <td
-                  style={imageLeft ? textContainerStyle : imageContainerStyle}>
-                  {imageLeft ? TextBlock : ImageEl}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-
-          {isActive && (
-            <div className='image-settings' style={{ marginTop: 12 }}>
-              <input
-                type='file'
-                accept='image/*'
-                className='settings-input'
-                onChange={(e) => handleImageUpload(e, null, null, true)}
-                style={{ marginBottom: 8 }}
-              />
-
-              <input
-                type='text'
-                className='settings-input'
-                placeholder='Image path or URL (used in export)'
-                value={manualUrlValue}
-                onChange={handleManualUrlHalf}
-              />
-
-              <input
-                type='text'
-                className='settings-input'
-                placeholder='Alt text'
-                value={settings?.altText || ''}
-                onChange={(e) =>
-                  handleUpdateBlockSettings(index, 'altText', e.target.value)
-                }
-              />
-
-              <input
-                type='text'
-                className='settings-input'
-                placeholder='Link URL (optional)'
-                value={settings?.imageLinkUrl || ''}
-                onChange={(e) =>
-                  handleUpdateBlockSettings(
-                    index,
-                    'imageLinkUrl',
-                    e.target.value
-                  )
-                }
-              />
-
-              <div className='control-flex' style={{ gap: 8 }}>
-                <select
-                  className='control-select'
-                  value={settings?.imagePosition || 'left'}
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(
-                      index,
-                      'imagePosition',
-                      e.target.value
-                    )
-                  }>
-                  <option value='left'>Image left</option>
-                  <option value='right'>Image right</option>
-                </select>
-
-                <input
-                  type='number'
-                  className='control-select'
-                  placeholder='Image width (%)'
-                  value={
-                    settings?.imageWidth
-                      ? parseInt(settings.imageWidth, 10)
-                      : ''
-                  }
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(
-                      index,
-                      'imageWidth',
-                      e.target.value ? `${e.target.value}%` : ''
-                    )
-                  }
-                />
-              </div>
-            </div>
-          )}
-        </>
-      );
-
-      break;
-    }
-
     case 'roundContainer': {
       const handleUpdateNestedContent = (childIndex, content) => {
         setTemplate((prev) => {
@@ -2072,7 +1871,6 @@ const BlockRenderer = ({
 
     case 'footer':
     case 'footer_general_kz':
-    case 'footer_sendpulse':
       blockContent = <FooterPreview type={type} settings={settings} />;
       break;
 
@@ -2431,8 +2229,7 @@ const BlockRenderer = ({
               )}
 
               {(type === 'header' ||
-                type === 'text' ||
-                type === 'halfText') && (
+                type === 'text') && (
                 <>
                   <div
                     style={{
@@ -2630,8 +2427,7 @@ const BlockRenderer = ({
               {(type === 'header' ||
                 type === 'text' ||
                 type === 'button' ||
-                type === 'buttonCoded' ||
-                type === 'halfText') && (
+                type === 'buttonCoded') && (
                 <>
                   <div
                     style={{
@@ -2823,8 +2619,7 @@ const BlockRenderer = ({
               )}
 
               {(type === 'footer' ||
-                type === 'footer_general_kz' ||
-                type === 'footer_sendpulse') && (
+                type === 'footer_general_kz' ) && (
                 <div className='control-flex margin-bottom-small'>
                   <input
                     type='color'

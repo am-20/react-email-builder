@@ -111,7 +111,6 @@ export const components = [
     label: 'Content Columns',
     icon: <Grid size={16} />,
   },
-  { type: 'halfText', label: 'Half Text', icon: <FileText size={16} /> },
   {
     type: 'roundContainer',
     label: 'Round Container',
@@ -121,11 +120,6 @@ export const components = [
   {
     type: 'footer_general_kz',
     label: 'Footer General KZ',
-    icon: <Layout size={16} />,
-  },
-  {
-    type: 'footer_sendpulse',
-    label: 'Footer Sendpulse',
     icon: <Layout size={16} />,
   },
 ];

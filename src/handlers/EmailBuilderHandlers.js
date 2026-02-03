@@ -264,34 +264,7 @@ export const createNewBlock = (type, template = null) => {
           },
         },
       };
-    case 'footer_sendpulse':
-      return {
-        id,
-        type,
-        settings: {
-          canvascolor: '#f5f5f5',
-          textcolor: '#000000',
-          theme: 'day',
-          disclaimercolor: '#555555',
-          linklabel: template?.footerLinkLabel || '',
-          urls: {
-            facebook: 'https://www.facebook.com/SamsungKazakhstan',
-            instagram: 'https://www.instagram.com/samsungkz/',
-            vkontakte: 'https://vk.com/samsungkazakhstan',
-            youtube: 'https://www.youtube.com/user/SamsungKZ',
-            twitter: 'https://twitter.com/SamsungKZ',
-            linkedin:
-              'https://www.linkedin.com/company/samsungelectronicscentraleurasia/',
-            livechat: 'https://www.samsung.com/kz_ru/support/',
-            call: 'https://www.samsung.com/kz_ru/support/contact/#onlinesupport',
-            optout:
-              '<%@ include option="NmsServer_URL" %>/webApp/smgUnsub?id=<%= escapeUrl(recipient.cryptedId)%>&lang=sece_ru',
-            privacy: 'https://www.samsung.com/kz_ru/info/privacy/',
-            legal: 'https://www.samsung.com/kz_ru/info/legal/',
-          },
-        },
-      };
-    case 'columns':
+      case 'columns':
       return {
         id,
         type,
@@ -363,30 +336,7 @@ export const createNewBlock = (type, template = null) => {
           isBold: false,
         },
       };
-    case 'halfText':
-      return {
-        id,
-        type,
-        content: 'Enter your text here...',
-        imageUrl: 'https://placehold.co/300x200',
-        settings: {
-          backgroundColor: '#ffffff',
-          color: '#000000',
-          fontSize: '16px',
-          padding: '24px 0',
-          textAlign: 'left',
-          fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
-          imagePosition: 'right',
-          imageWidth: '40%',
-          showButton: false,
-          buttonText: 'Learn More',
-          buttonUrl: '#',
-          buttonColor: '#2563eb',
-          buttonTextColor: '#ffffff',
-          imageLinkUrl: '',
-          imageLinkLabel: '',
-        },
-      };
+  
     default:
       return {
         id,

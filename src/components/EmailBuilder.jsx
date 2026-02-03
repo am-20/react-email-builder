@@ -60,18 +60,6 @@ function rehydrateTemplateImages(tpl) {
       }
     }
 
-    if (type === 'halfText') {
-      // halfText keeps imagePath/imagePreviewUrl on block itself in your renderer
-      if (!b.imagePreviewUrl && b.imagePath) {
-        const d = ensurePreview(b.imagePath);
-        if (d) b.imagePreviewUrl = d;
-      }
-      if (!s.imagePreviewUrl && s.imagePath) {
-        const d = ensurePreview(s.imagePath);
-        if (d) s.imagePreviewUrl = d;
-      }
-    }
-
     if (type === 'buttonGroup' && Array.isArray(b.buttons)) {
       b.buttons.forEach((btn) => {
         const bs = (btn.settings ||= {});

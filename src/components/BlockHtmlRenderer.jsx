@@ -578,78 +578,6 @@ const renderBlockHtml = (block, template = null) => {
       break;
     }
 
-    /** HALF TEXT */
-    case 'halfText': {
-      const imageSrc =
-        settings.imagePath ||
-        settings.imageUrl ||
-        block.imagePath ||
-        block.imageUrl ||
-        'https://placehold.co/640x300';
-
-      const imageHtml = settings.imageLinkUrl
-        ? `<a href="${
-            settings.imageLinkUrl
-          }" target="_blank" rel="noopener noreferrer"><img src="${imageSrc}" alt="${
-            settings.altText || ''
-          }" style="max-width:100%;border:0;display:block;"></a>`
-        : `<img src="${imageSrc}" alt="${
-            settings.altText || ''
-          }" style="max-width:100%;border:0;display:block;">`;
-
-      const textHtml = `
-        <p style="color:${settings.color};font-size:${
-        settings.fontSize
-      };text-align:${settings.textAlign};font-family:${settings.fontFamily};">
-          ${content}
-        </p>
-        ${
-          settings.showButton
-            ? `<a href="${
-                settings.buttonUrl || '#'
-              }" target="_blank" rel="noopener noreferrer" style="display:inline-block;padding:8px 16px;background-color:${
-                settings.buttonColor
-              };color:${
-                settings.buttonTextColor
-              };text-decoration:none;border-radius:4px;margin-top:16px;">${
-                settings.buttonText
-              }</a>`
-            : ''
-        }`;
-
-      // default to image on the RIGHT (second cell), per editor request
-      const imageLeft =
-        settings.imagePosition === 'left'
-          ? true
-          : settings.imagePosition === 'right'
-          ? false
-          : false;
-      const imgW = settings.imageWidth || '260px';
-      const textW = `${100 - parseInt(imgW)}%`;
-      const imgTdStyle = `width:${imgW};vertical-align:top;`;
-      const textTdStyle = `width:${textW};vertical-align:top;padding:0 20px;`;
-
-      blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0">
-        <tr>
-          <td>
-            <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding:0 8%;background-color:${
-              settings.backgroundColor
-            };">
-              <tr>
-                <td style="${imageLeft ? imgTdStyle : textTdStyle}">
-                  ${imageLeft ? imageHtml : textHtml}
-                </td>
-                <td style="${imageLeft ? textTdStyle : imgTdStyle}">
-                  ${imageLeft ? textHtml : imageHtml}
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-      </table>`;
-      break;
-    }
 
     // ROUND CONTAINER
     case 'roundContainer': {
@@ -755,10 +683,8 @@ const renderBlockHtml = (block, template = null) => {
 
     /** FOOTERS */
     case 'footer':
-    case 'footer_general_kz':
-    case 'footer_sendpulse': {
+    case 'footer_general_kz': {
       const isKZ = type === 'footer_general_kz';
-      const isSendpulse = type === 'footer_sendpulse';
       const dict = isKZ ? tKZ : tRU;
 
       blockHtml = `
@@ -844,18 +770,6 @@ const renderBlockHtml = (block, template = null) => {
 
               <tr>
                 <td>
-                  ${
-                    !isSendpulse
-                      ? `${dict.disclaimer}
-                        <a href='${
-                          settings.urls?.optout || '#'
-                        }' _type="optout" _label="${
-                          settings.linklabel || template?.footerLinkLabel || ''
-                        }" style="text-decoration:underline;color:${
-                          settings.disclaimercolor
-                        };">${dict.link}</a> ${dict.disclaimer_end}<br><br>`
-                      : ''
-                  }
                   ©${new Date().getFullYear()} Samsung Electronics Co., Ltd. ${
         dict.all_rights
       }<br>
