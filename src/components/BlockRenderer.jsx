@@ -5,6 +5,19 @@ import { getImagePath, socialIcons } from '../utils/imageUtils';
 import { addFileAsset } from '../utils/assets';
 import RoundContainer from './RoundContainer';
 import { createNewBlock } from '../handlers/EmailBuilderHandlers';
+import {
+  SpacerBlock,
+  DividerBlock,
+  TextBlock,
+  ImageBlock,
+  HeaderBlock,
+  ButtonBlock,
+  ButtonCodedBlock,
+  ButtonGroupBlock,
+  ButtonCodedGroupBlock,
+  ColumnsBlock,
+  ColumnsContentBlock,
+} from './BlockTypes';
 
 const tableProps = {
   role: 'presentation',
@@ -269,9 +282,8 @@ const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
                       )}
                       {dict.disclaimer_end}.
                     </p>
-                    <br />
-                    ©{new Date().getFullYear()} Samsung Electronics Co., Ltd.{' '}
-                    {dict.all_rights}
+                    <br />©{new Date().getFullYear()} Samsung Electronics Co.,
+                    Ltd. {dict.all_rights}
                     <br />
                     {dict.address}
                   </td>
@@ -347,7 +359,7 @@ const BlockRenderer = ({
 }) => {
   const { type, content } = block;
   const [manualUrlValue, setManualUrlValue] = useState(
-    settings?.imagePath || block.imagePath || ''
+    settings?.imagePath || block.imagePath || '',
   );
 
   const shouldShowToolbar = isHovered || isActive;
@@ -357,9 +369,7 @@ const BlockRenderer = ({
   const bottomPad = settings?.paddingBottom ?? settings?.padding ?? '0';
 
   const isSpacer = type === 'spacer';
-  const isFooter =
-    type === 'footer' ||
-    type === 'footer_general_kz' 
+  const isFooter = type === 'footer' || type === 'footer_general_kz';
   const isRound = type === 'roundContainer';
 
   const blockStyle = {
@@ -414,7 +424,7 @@ const BlockRenderer = ({
     e,
     buttonIndex = null,
     columnIndex = null,
-    isHeader = false
+    isHeader = false,
   ) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -423,7 +433,12 @@ const BlockRenderer = ({
     const asset = addFileAsset(file);
 
     // For nested blocks with header images, use handleUpdateBlockSettings
-    if (isNestedBlock && isHeader && buttonIndex === null && columnIndex === null) {
+    if (
+      isNestedBlock &&
+      isHeader &&
+      buttonIndex === null &&
+      columnIndex === null
+    ) {
       handleUpdateBlockSettings(index, 'imagePath', asset.path);
       handleUpdateBlockSettings(index, 'imagePreviewUrl', asset.previewUrl);
       setManualUrlValue(asset.path);
@@ -488,1316 +503,130 @@ const BlockRenderer = ({
 
   switch (type) {
     case 'header':
-      {
-        const srcForEditor =
-          settings?.imagePreviewUrl ||
-          settings?.imageUrl ||
-          settings?.imagePath ||
-          'https://placehold.co/80x80';
-
-        blockContent = (
-          <table {...tableProps}>
-            <tbody>
-              <tr>
-                {settings?.isImage ? (
-                  <td style={{ textAlign: settings?.textAlign || 'left' }}>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        gap: 16,
-                        flexWrap: 'wrap',
-                      }}>
-                      <img
-                        src={srcForEditor}
-                        alt='voucher'
-                        style={{ ...IMG_BLOCK_STYLE, margin: 0 }}
-                      />
-                      <h1
-                        style={contentStyle}
-                        contentEditable={isActive}
-                        suppressContentEditableWarning
-                        onBlur={(e) =>
-                          handleUpdateBlockContent(index, e.target.innerText)
-                        }>
-                        {content}
-                      </h1>
-                    </div>
-
-                    {isActive && (
-                      <div style={{ marginTop: 8 }}>
-                        <div className='button-settings'>
-                          <input
-                            type='file'
-                            accept='image/*'
-                            className='settings-input'
-                            onChange={(e) => handleImageUpload(e, null, null, false, true)}
-                            style={{ marginBottom: 8 }}
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </td>
-                ) : (
-                  <td style={{ textAlign: settings?.textAlign || 'left' }}>
-                    <h1
-                      style={{...contentStyle, paddingBottom:'8px'}}
-                      contentEditable={isActive}
-                      suppressContentEditableWarning
-                      onBlur={(e) =>
-                        handleUpdateBlockContent(index, e.target.innerText)
-                      }>
-                      {content}
-                    </h1>
-                  </td>
-                )}
-              </tr>
-            </tbody>
-          </table>
-        );
-      }
+      blockContent = (
+        <HeaderBlock
+          content={content}
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          contentStyle={contentStyle}
+          handleUpdateBlockContent={handleUpdateBlockContent}
+          handleImageUpload={handleImageUpload}
+        />
+      );
       break;
 
     case 'text':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: settings?.textAlign || 'left' }}>
-                <p
-                  style={{...contentStyle, padding: '8px 0'}}
-                  contentEditable={isActive}
-                  suppressContentEditableWarning
-                  onBlur={(e) =>
-                    handleUpdateBlockContent(index, e.target.innerText)
-                  }>
-                  {content}
-                </p>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <TextBlock
+          content={content}
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          contentStyle={contentStyle}
+          handleUpdateBlockContent={handleUpdateBlockContent}
+        />
       );
       break;
 
-    case 'image': {
-      const srcForEditor =
-        settings?.imagePreviewUrl ||
-        settings?.imagePath ||
-        'https://placehold.co/640x300';
-
-      const handleManualUrl = (e) => {
-        const url = e.target.value;
-        setManualUrlValue(url);
-        handleUpdateBlockSettings(index, 'imagePath', url);
-        handleUpdateBlockSettings(index, 'imagePreviewUrl', url);
-      };
-
-      const ImageEl =
-        srcForEditor &&
-        (settings?.linkUrl ? (
-          <a
-            href={`${settings.linkUrl}`}
-            target='_blank'
-            rel='noopener noreferrer'>
-            <img
-              src={srcForEditor}
-              alt={settings?.altText || ''}
-              style={IMG_BLOCK_STYLE}
-            />
-          </a>
-        ) : (
-          <img
-            src={srcForEditor}
-            alt={settings?.altText || ''}
-            style={IMG_BLOCK_STYLE}
-          />
-        ));
-
+    case 'image':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: settings?.textAlign || 'left' }}>
-                {ImageEl}
-
-                {isActive && (
-                  <table {...tableProps} style={{ marginTop: 8 }}>
-                    <tbody>
-                      <tr>
-                        <td>
-                          <div className='button-settings'>
-                            <input
-                              type='file'
-                              accept='image/*'
-                              className='settings-input'
-                              onChange={handleImageUpload}
-                              style={{ marginBottom: 8 }}
-                            />
-
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Image path or URL (e.g. i/1.png or https://...)'
-                              value={manualUrlValue}
-                              onChange={handleManualUrl}
-                            />
-
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Alt text'
-                              value={settings?.altText || ''}
-                              onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'altText',
-                                  e.target.value
-                                )
-                              }
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link URL (optional)'
-                              value={settings?.linkUrl || ''}
-                              onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'linkUrl',
-                                  e.target.value
-                                )
-                              }
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link Label (optional)'
-                              value={settings?.linkLabel || ''}
-                              onChange={(e) =>
-                                handleUpdateBlockSettings(
-                                  index,
-                                  'linkLabel',
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ImageBlock
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          manualUrlValue={manualUrlValue}
+          setManualUrlValue={setManualUrlValue}
+          handleImageUpload={handleImageUpload}
+          handleUpdateBlockSettings={handleUpdateBlockSettings}
+        />
       );
       break;
-    }
 
-    case 'button': {
-      const btnSrc =
-        settings?.imagePreviewUrl ||
-        settings?.imagePath ||
-        'https://placehold.co/80x40';
-
-      const uploadBtn = (e) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const asset = addFileAsset(file);
-
-        setTemplate((prev) => {
-          const newBlocks = [...prev.blocks];
-          const blk = newBlocks[index];
-          blk.settings = {
-            ...(blk.settings || {}),
-            imagePath: asset.path,
-            imagePreviewUrl: asset.previewUrl,
-          };
-          return { ...prev, blocks: newBlocks };
-        });
-
-      };
-
-      const manualBtn = (e) => {
-        const url = e.target.value;
-        handleUpdateBlockSettings(index, 'imagePath', url);
-        handleUpdateBlockSettings(index, 'imagePreviewUrl', url);
-      };
-
+    case 'button':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: settings?.textAlign || 'center' }}>
-                <a
-                  href={`${settings?.linkUrl || ''}`}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  style={{ display: 'inline-block' }}>
-                  {btnSrc && (
-                    <img
-                      src={btnSrc}
-                      alt={settings?.imageAlt || ''}
-                      style={{
-                        display: 'block',
-                        margin: '0 auto',
-                        maxWidth: '100%',
-                        height: 'auto',
-                        border: 0,
-                      }}
-                    />
-                  )}
-                </a>
-                {isActive && (
-                  <div className='button-settings'>
-                    <input
-                      type='file'
-                      accept='image/*'
-                      className='settings-input'
-                      onChange={uploadBtn}
-                      style={{ marginBottom: 8 }}
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Image path or URL'
-                      onChange={manualBtn}
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Alt text'
-                      value={settings?.imageAlt || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'imageAlt',
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Link URL'
-                      value={settings?.linkUrl || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'linkUrl',
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Link Label (optional)'
-                      value={settings?.linkLabel || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'linkLabel',
-                          e.target.value
-                        )
-                      }
-                    />
-                  </div>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ButtonBlock
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          setTemplate={setTemplate}
+          handleUpdateBlockSettings={handleUpdateBlockSettings}
+        />
       );
       break;
-    }
 
-    case 'buttonCoded': {
-      const buttonStyles = {
-        textDecoration: 'none',
-        letterSpacing: 0,
-        display: 'inline',
-        borderRadius: settings?.borderRadius,
-        fontWeight: 'bold',
-        fontSize: settings?.fontSize,
-        color: settings?.color,
-        padding: settings?.padding,
-        backgroundColor: settings?.buttonBgColor,
-        border: settings?.border,
-      };
+    case 'buttonCoded':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td
-                style={{
-                  textAlign: settings?.textAlign || 'center',
-                  padding: '16px 0',
-                }}>
-                <a
-                  href={`${settings?.linkUrl}`}
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  style={{ display: 'inline-block', textDecoration: 'none' }}>
-                  <p style={buttonStyles}>{settings?.content || 'Click Me'}</p>
-                </a>
-                {isActive && (
-                  <div className='button-settings'>
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Click Me'
-                      value={settings?.content || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'content',
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Link URL'
-                      value={settings?.linkUrl || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'linkUrl',
-                          e.target.value
-                        )
-                      }
-                    />
-                    <input
-                      type='text'
-                      className='settings-input'
-                      placeholder='Link Label (optional)'
-                      value={settings?.linkLabel || ''}
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'linkLabel',
-                          e.target.value
-                        )
-                      }
-                    />
-                  </div>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ButtonCodedBlock
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          handleUpdateBlockSettings={handleUpdateBlockSettings}
+        />
       );
       break;
-    }
 
-    case 'buttonGroup': {
-      const container = {
-        display: 'flex',
-        flexDirection: settings?.inline ? 'row' : 'column',
-        gap: settings?.gap,
-        justifyContent: 'center',
-      };
+    case 'buttonGroup':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: 'center' }}>
-                <div style={container}>
-                  {block.buttons?.map((button, buttonIndex) => {
-                    const s = button.settings || {};
-                    const btnSrc =
-                      s.imagePreviewUrl ||
-                      s.imagePath ||
-                      'https://placehold.co/80x40';
-                    return (
-                      <div key={buttonIndex}>
-                        <a
-                          href={`${s?.linkUrl || ''}`}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          style={{ display: 'inline-block' }}>
-                          {btnSrc && (
-                            <img
-                              src={btnSrc}
-                              alt={s?.imageAlt || ''}
-                              style={{
-                                display: 'block',
-                                margin: '0 auto',
-                                maxWidth: '100%',
-                                height: 'auto',
-                                border: 0,
-                              }}
-                            />
-                          )}
-                        </a>
-                        {isActive && (
-                          <>
-                            <input
-                              type='file'
-                              accept='image/*'
-                              className='settings-input'
-                              onChange={(e) =>
-                                handleImageUpload(e, buttonIndex)
-                              }
-                              style={{ marginBottom: 8 }}
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Image path or URL'
-                              value={s.imagePath || ''}
-                              onChange={(e) => {
-                                const url = e.target.value;
-                                const newBlocks = [...template.blocks];
-                                const btn =
-                                  newBlocks[index].buttons[buttonIndex];
-                                btn.settings = {
-                                  ...(btn.settings || {}),
-                                  imagePath: url,
-                                  imagePreviewUrl: url,
-                                };
-                                setTemplate({ ...template, blocks: newBlocks });
-                              }}
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Alt text'
-                              value={s?.imageAlt || ''}
-                              onChange={(e) => {
-                                const newBlocks = [...template.blocks];
-                                newBlocks[index].buttons[
-                                  buttonIndex
-                                ].settings.imageAlt = e.target.value;
-                                setTemplate({ ...template, blocks: newBlocks });
-                              }}
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link URL'
-                              value={s?.linkUrl || ''}
-                              onChange={(e) => {
-                                const newBlocks = [...template.blocks];
-                                newBlocks[index].buttons[
-                                  buttonIndex
-                                ].settings.linkUrl = e.target.value;
-                                setTemplate({ ...template, blocks: newBlocks });
-                              }}
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link Label (optional)'
-                              value={s?.linkLabel || ''}
-                              onChange={(e) => {
-                                const newBlocks = [...template.blocks];
-                                newBlocks[index].buttons[
-                                  buttonIndex
-                                ].settings.linkLabel = e.target.value;
-                                setTemplate({ ...template, blocks: newBlocks });
-                              }}
-                            />
-                          </>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ButtonGroupBlock
+          block={block}
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          template={template}
+          setTemplate={setTemplate}
+          handleImageUpload={handleImageUpload}
+        />
       );
       break;
-    }
 
-    case 'buttonCodedGroup': {
-      const container = {
-        display: 'flex',
-        flexDirection: settings?.inline ? 'row' : 'column',
-        gap: settings?.gap || '0px',
-        justifyContent: 'center',
-      };
-
-      const getBtnStyles = (btn) => {
-        const s = btn?.settings || {};
-        return {
-          textDecoration: 'none',
-          letterSpacing: 0,
-          display: 'inline',
-          borderRadius: s.borderRadius ?? '30px',
-          fontWeight: 'bold',
-          backgroundColor: s.buttonBgColor ?? '#000000',
-          fontSize: s.fontSize ?? '16px',
-          color: s.color ?? '#ffffff',
-          padding: s.padding ?? '12px 24px',
-          border: s.border ?? '1px solid #000000',
-        };
-      };
-
-      const updateBtn = (buttonIndex, key, value) => {
-        const newBlocks = [...template.blocks];
-        const btn = newBlocks[index].buttons?.[buttonIndex] || { settings: {} };
-        btn.settings = { ...(btn.settings || {}), [key]: value };
-        newBlocks[index].buttons[buttonIndex] = btn;
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
+    case 'buttonCodedGroup':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td style={{ textAlign: 'center' }}>
-                <div style={container}>
-                  {block.buttons?.map((button, buttonIndex) => {
-                    const btnStyles = getBtnStyles(button);
-                    const s = button?.settings || {};
-                    return (
-                      <div key={buttonIndex} style={{ padding: '16px 0' }}>
-                        <a
-                          href={`${s.linkUrl || '#'}`}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                          style={{
-                            display: 'inline-block',
-                            textDecoration: 'none',
-                          }}>
-                          <p style={btnStyles}>{s.content || 'Click Me'}</p>
-                        </a>
-
-                        {isActive && (
-                          <div
-                            className='button-settings'
-                            style={{ width: '100%' }}>
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Button text'
-                              value={s.content || ''}
-                              onChange={(e) =>
-                                updateBtn(
-                                  buttonIndex,
-                                  'content',
-                                  e.target.value
-                                )
-                              }
-                            />
-
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link URL'
-                              value={s.linkUrl || ''}
-                              onChange={(e) =>
-                                updateBtn(
-                                  buttonIndex,
-                                  'linkUrl',
-                                  e.target.value
-                                )
-                              }
-                            />
-                            <input
-                              type='text'
-                              className='settings-input'
-                              placeholder='Link label'
-                              value={s.linkLabel || ''}
-                              onChange={(e) =>
-                                updateBtn(
-                                  buttonIndex,
-                                  'linkLabel',
-                                  e.target.value
-                                )
-                              }
-                            />
-
-                            <div
-                              className='control-flex'
-                              style={{
-                                gap: 8,
-                                marginTop: 6,
-                                flexWrap: 'wrap',
-                              }}>
-                              <div
-                                className='control-flex'
-                                style={{ alignItems: 'center', gap: 6 }}>
-                                <span
-                                  style={{ fontSize: 12, color: '#6b7280' }}>
-                                  Bg
-                                </span>
-                                <input
-                                  type='color'
-                                  value={s.buttonBgColor ?? '#000000'}
-                                  onChange={(e) =>
-                                    updateBtn(
-                                      buttonIndex,
-                                      'buttonBgColor',
-                                      e.target.value
-                                    )
-                                  }
-                                  className='color-input'
-                                />
-                              </div>
-
-                              <div
-                                className='control-flex'
-                                style={{ alignItems: 'center', gap: 6 }}>
-                                <span
-                                  style={{ fontSize: 12, color: '#6b7280' }}>
-                                  Text
-                                </span>
-                                <input
-                                  type='color'
-                                  value={s.color ?? '#ffffff'}
-                                  onChange={(e) =>
-                                    updateBtn(
-                                      buttonIndex,
-                                      'color',
-                                      e.target.value
-                                    )
-                                  }
-                                  className='color-input'
-                                />
-                              </div>
-
-                              <input
-                                type='text'
-                                className='settings-input'
-                                placeholder='Padding (e.g. 12px 24px)'
-                                value={s.padding ?? '12px 24px'}
-                                onChange={(e) =>
-                                  updateBtn(
-                                    buttonIndex,
-                                    'padding',
-                                    e.target.value
-                                  )
-                                }
-                              />
-
-                              <input
-                                type='number'
-                                className='settings-input'
-                                placeholder='Font size (px)'
-                                value={
-                                  s.fontSize ? parseInt(s.fontSize, 10) : ''
-                                }
-                                onChange={(e) =>
-                                  updateBtn(
-                                    buttonIndex,
-                                    'fontSize',
-                                    e.target.value ? `${e.target.value}px` : ''
-                                  )
-                                }
-                              />
-
-                              <input
-                                type='text'
-                                className='settings-input'
-                                placeholder='Border (e.g. 1px solid #000)'
-                                value={s.border ?? '1px solid #000000'}
-                                onChange={(e) =>
-                                  updateBtn(
-                                    buttonIndex,
-                                    'border',
-                                    e.target.value
-                                  )
-                                }
-                              />
-
-                              <input
-                                type='number'
-                                className='settings-input'
-                                placeholder='Border radius (px)'
-                                value={
-                                  s.borderRadius
-                                    ? parseInt(s.borderRadius, 10)
-                                    : ''
-                                }
-                                onChange={(e) =>
-                                  updateBtn(
-                                    buttonIndex,
-                                    'borderRadius',
-                                    e.target.value ? `${e.target.value}px` : ''
-                                  )
-                                }
-                              />
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ButtonCodedGroupBlock
+          block={block}
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          template={template}
+          setTemplate={setTemplate}
+        />
       );
       break;
-    }
 
     case 'divider':
-      blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td>
-                <table {...tableProps}>
-                  <tbody>
-                    <tr>
-                      <td
-                        style={{
-                          height: settings?.lineHeight || '1px',
-                          backgroundColor: settings?.lineColor || '#ddd',
-                        }}
-                      />
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      );
+      blockContent = <DividerBlock settings={settings} />;
       break;
 
     case 'spacer':
+      blockContent = <SpacerBlock settings={settings} />;
+      break;
+
+    case 'columns':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td>
-                <table {...tableProps}>
-                  <tbody>
-                    <tr>
-                      <td
-                        style={{
-                          backgroundColor:
-                            settings?.backgroundColor || '#e5e5e5',
-                          height: settings?.height || '40px',
-                        }}
-                      />
-                    </tr>
-                  </tbody>
-                </table>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ColumnsBlock
+          block={block}
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          template={template}
+          setTemplate={setTemplate}
+        />
       );
       break;
 
-    case 'columns': {
-      const cols = Array.isArray(block.columns) ? block.columns : [];
-      const count = Math.max(cols.length, 1);
-      const gap = settings?.columnGap || '0';
-      const widthPercent = `${(100 / count).toFixed(4)}%`;
-      const halfGap =
-        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-          ? `calc((${gap}) / 2)`
-          : '0';
-
-      const addColumn = () => {
-        const newBlocks = [...template.blocks];
-        newBlocks[index].columns = [
-          ...(newBlocks[index].columns || []),
-          {
-            content: 'https://placehold.co/300x200',
-            settings: { altText: '', linkUrl: '', linkLabel: '' },
-          },
-        ];
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
-      const removeColumn = (colIndex) => {
-        const newBlocks = [...template.blocks];
-        const current = newBlocks[index].columns || [];
-        if (current.length <= 1) return;
-        newBlocks[index].columns = current.filter((_, i) => i !== colIndex);
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
-      const updateCol = (colIndex, key, value, isSetting = false) => {
-        const newBlocks = [...template.blocks];
-        const col = { ...(newBlocks[index].columns?.[colIndex] || {}) };
-        if (isSetting) {
-          col.settings = { ...(col.settings || {}), [key]: value };
-        } else {
-          col[key] = value;
-        }
-        const arr = [...(newBlocks[index].columns || [])];
-        arr[colIndex] = col;
-        newBlocks[index].columns = arr;
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
-      const onUpload = (e, colIndex) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const asset = addFileAsset(file);
-        updateCol(colIndex, 'imagePath', asset.path, false);
-        updateCol(colIndex, 'imagePreviewUrl', asset.previewUrl, false);
-        updateCol(colIndex, 'content', asset.previewUrl, false);
-      };
-
+    case 'columnsContent':
       blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td>
-                <table {...tableProps} className='columns-container'>
-                  <tbody>
-                    <tr>
-                      {cols.map((c, colIndex) => {
-                        const colSrc =
-                          c?.imagePreviewUrl ||
-                          c?.imagePath ||
-                          c?.content ||
-                          '';
-                        return (
-                          <td
-                            key={colIndex}
-                            width={widthPercent}
-                            style={{
-                              verticalAlign: 'top',
-                              paddingLeft: colIndex === 0 ? 0 : halfGap,
-                              paddingRight: colIndex === 0 ? halfGap : 0,
-                            }}>
-                            {c?.settings?.linkUrl ? (
-                              <a
-                                href={`${c.settings.linkUrl}`}
-                                target='_blank'
-                                rel='noopener noreferrer'>
-                                {colSrc && (
-                                  <img
-                                    src={colSrc}
-                                    alt={c?.settings?.altText || ''}
-                                    style={{
-                                      ...IMG_BLOCK_STYLE,
-                                    }}
-                                  />
-                                )}
-                              </a>
-                            ) : (
-                              colSrc && (
-                                <img
-                                  src={colSrc}
-                                  alt={c?.settings?.altText || ''}
-                                  style={{
-                                    ...IMG_BLOCK_STYLE,
-                                  }}
-                                />
-                              )
-                            )}
-
-                            {isActive && (
-                              <div className='column-settings'>
-                                <input
-                                  type='file'
-                                  accept='image/*'
-                                  className='settings-input'
-                                  onChange={(e) => onUpload(e, colIndex)}
-                                  style={{ marginBottom: 8 }}
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Image path or URL'
-                                  value={c?.imagePath || ''}
-                                  onChange={(e) => {
-                                    const url = e.target.value;
-                                    updateCol(
-                                      colIndex,
-                                      'imagePath',
-                                      url,
-                                      false
-                                    );
-                                    updateCol(
-                                      colIndex,
-                                      'imagePreviewUrl',
-                                      url,
-                                      false
-                                    );
-                                  }}
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Alt text'
-                                  value={c?.settings?.altText || ''}
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'altText',
-                                      e.target.value,
-                                      true
-                                    )
-                                  }
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Link URL (optional)'
-                                  value={c?.settings?.linkUrl || ''}
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'linkUrl',
-                                      e.target.value,
-                                      true
-                                    )
-                                  }
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Link Label (optional)'
-                                  value={c?.settings?.linkLabel || ''}
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'linkLabel',
-                                      e.target.value,
-                                      true
-                                    )
-                                  }
-                                />
-                                <div
-                                  className='control-flex'
-                                  style={{ gap: 8, marginTop: 6 }}>
-                                  <button
-                                    className='action-button'
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      removeColumn(colIndex);
-                                    }}
-                                    disabled={count <= 1}>
-                                    Remove
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
-
-                {isActive && (
-                  <div className='control-flex margin-top-small'>
-                    <button
-                      className='action-button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addColumn();
-                      }}>
-                      + Add column
-                    </button>
-                  </div>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <ColumnsContentBlock
+          block={block}
+          settings={settings}
+          index={index}
+          isActive={isActive}
+          contentStyle={contentStyle}
+          template={template}
+          setTemplate={setTemplate}
+        />
       );
       break;
-    }
-
-    case 'columnsContent': {
-      const cols = Array.isArray(block.columns) ? block.columns : [];
-      const count = Math.max(cols.length, 1);
-      const gap = settings?.columnGap || '0';
-      const widthPercent = `${(100 / count).toFixed(4)}%`;
-      const halfGap =
-        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-          ? `calc((${gap}) / 2)`
-          : '0';
-
-      const addColumn = () => {
-        const newBlocks = [...template.blocks];
-        newBlocks[index].columns = [
-          ...(newBlocks[index].columns || []),
-          {
-            imgUrl: 'https://placehold.co/300x200',
-            title: 'New title',
-            text: 'New text',
-            settings: { altText: '', linkUrl: '', linkLabel: '' },
-          },
-        ];
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
-      const removeColumn = (colIndex) => {
-        const newBlocks = [...template.blocks];
-        const current = newBlocks[index].columns || [];
-        if (current.length <= 1) return;
-        newBlocks[index].columns = current.filter((_, i) => i !== colIndex);
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
-      const updateCol = (colIndex, key, value, isSetting = false) => {
-        const newBlocks = [...template.blocks];
-        const col = { ...(newBlocks[index].columns?.[colIndex] || {}) };
-        if (isSetting) {
-          col.settings = { ...(col.settings || {}), [key]: value };
-        } else {
-          col[key] = value;
-        }
-        const arr = [...(newBlocks[index].columns || [])];
-        arr[colIndex] = col;
-        newBlocks[index].columns = arr;
-        setTemplate({ ...template, blocks: newBlocks });
-      };
-
-      const onUpload = (e, colIndex) => {
-        const file = e.target.files?.[0];
-        if (!file) return;
-        const asset = addFileAsset(file);
-        updateCol(colIndex, 'imagePath', asset.path, false);
-        updateCol(colIndex, 'imagePreviewUrl', asset.previewUrl, false);
-        updateCol(colIndex, 'imgUrl', asset.previewUrl, false);
-      };
-
-      blockContent = (
-        <table {...tableProps}>
-          <tbody>
-            <tr>
-              <td>
-                <table {...tableProps} className='columns-container'>
-                  <tbody>
-                    <tr>
-                      {cols.map((c, colIndex) => {
-                        const colSrc =
-                          c?.imagePreviewUrl || c?.imagePath || c?.imgUrl || '';
-                        return (
-                          <td
-                            key={colIndex}
-                            width={widthPercent}
-                            style={{
-                              verticalAlign: 'top',
-                              textAlign: c?.textAlign || 'center',
-                              paddingLeft: colIndex === 0 ? 0 : halfGap,
-                              paddingRight: colIndex === 0 ? halfGap : 0,
-                            }}>
-                            {c?.settings?.linkUrl ? (
-                              <a
-                                href={`${c.settings.linkUrl}`}
-                                target='_blank'
-                                rel='noopener noreferrer'>
-                                {colSrc && (
-                                  <img
-                                    src={colSrc}
-                                    alt={c?.settings?.altText || ''}
-                                    style={{
-                                      ...IMG_BLOCK_STYLE,
-                                    }}
-                                  />
-                                )}
-                              </a>
-                            ) : (
-                              colSrc && (
-                                <img
-                                  src={colSrc}
-                                  alt={c?.settings?.altText || ''}
-                                  style={{
-                                    ...IMG_BLOCK_STYLE,
-                                  }}
-                                />
-                              )
-                            )}
-                            <h1
-                              style={{
-                                ...contentStyle,
-                                padding: '16px 0 8px',
-                                color: settings?.color || '#000',
-                                fontSize: c?.settings?.titleFontSize || '24px',
-                                display: settings?.hidetitle ? 'none' : null,
-                              }}
-                              contentEditable={isActive}
-                              suppressContentEditableWarning
-                              onBlur={(e) =>
-                                updateCol(colIndex, 'title', e.target.innerText)
-                              }>
-                              {c?.title}
-                            </h1>
-                            <p
-                              style={{
-                                ...contentStyle,
-                                color: settings?.color || '#000',
-                                fontSize: c?.settings?.textFontSize || '12px',
-                                padding: settings?.hidetitle ? '16px 0' : 0,
-                                fontWeight: settings?.isBold
-                                  ? 'bold'
-                                  : 'normal',
-                              }}
-                              contentEditable={isActive}
-                              suppressContentEditableWarning
-                              onBlur={(e) =>
-                                updateCol(colIndex, 'text', e.target.innerText)
-                              }>
-                              {c?.text}
-                            </p>
-                            {isActive && (
-                              <div className='column-settings'>
-                                <input
-                                  type='file'
-                                  accept='image/*'
-                                  className='settings-input'
-                                  onChange={(e) => onUpload(e, colIndex)}
-                                  style={{ marginBottom: 8 }}
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Image path or URL'
-                                  value={c?.imagePath || ''}
-                                  onChange={(e) => {
-                                    const url = e.target.value;
-                                    updateCol(
-                                      colIndex,
-                                      'imagePath',
-                                      url,
-                                      false
-                                    );
-                                    updateCol(
-                                      colIndex,
-                                      'imagePreviewUrl',
-                                      url,
-                                      false
-                                    );
-                                  }}
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Alt text'
-                                  value={c?.settings?.altText || ''}
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'altText',
-                                      e.target.value,
-                                      true
-                                    )
-                                  }
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Link URL (optional)'
-                                  value={c?.settings?.linkUrl || ''}
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'linkUrl',
-                                      e.target.value,
-                                      true
-                                    )
-                                  }
-                                />
-                                <input
-                                  type='text'
-                                  className='settings-input'
-                                  placeholder='Link Label (optional)'
-                                  value={c?.settings?.linkLabel || ''}
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'linkLabel',
-                                      e.target.value,
-                                      true
-                                    )
-                                  }
-                                />
-                                <input
-                                  type='number'
-                                  className='settings-input'
-                                  placeholder='Title font size (px)'
-                                  value={
-                                    c?.settings?.titleFontSize
-                                      ? parseInt(c.settings.titleFontSize, 10)
-                                      : ''
-                                  }
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'titleFontSize',
-                                      e.target.value
-                                        ? `${e.target.value}px`
-                                        : '',
-                                      true
-                                    )
-                                  }
-                                />
-
-                                <input
-                                  type='number'
-                                  className='settings-input'
-                                  placeholder='Text font size (px)'
-                                  value={
-                                    c?.settings?.textFontSize
-                                      ? parseInt(c.settings.textFontSize, 10)
-                                      : ''
-                                  }
-                                  onChange={(e) =>
-                                    updateCol(
-                                      colIndex,
-                                      'textFontSize',
-                                      e.target.value
-                                        ? `${e.target.value}px`
-                                        : '',
-                                      true
-                                    )
-                                  }
-                                />
-
-                                <div
-                                  className='control-flex'
-                                  style={{ gap: 8, marginTop: 6 }}>
-                                  <button
-                                    className='action-button'
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      removeColumn(colIndex);
-                                    }}
-                                    disabled={count <= 1}>
-                                    Remove
-                                  </button>
-                                </div>
-                              </div>
-                            )}
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  </tbody>
-                </table>
-
-                {isActive && (
-                  <div className='control-flex margin-top-small'>
-                    <button
-                      className='action-button'
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        addColumn();
-                      }}>
-                      + Add column
-                    </button>
-                  </div>
-                )}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      );
-      break;
-    }
 
     case 'roundContainer': {
       const handleUpdateNestedContent = (childIndex, content) => {
@@ -1848,7 +677,7 @@ const BlockRenderer = ({
           const next = JSON.parse(JSON.stringify(prev));
           if (Array.isArray(next.blocks[index].children)) {
             next.blocks[index].children = next.blocks[index].children.filter(
-              (_, i) => i !== childIndex
+              (_, i) => i !== childIndex,
             );
           }
           return next;
@@ -1864,13 +693,13 @@ const BlockRenderer = ({
             next.blocks[index].children[childIndex]
           ) {
             const childToDuplicate = JSON.parse(
-              JSON.stringify(next.blocks[index].children[childIndex])
+              JSON.stringify(next.blocks[index].children[childIndex]),
             );
             childToDuplicate.id = `${childToDuplicate.type}-${Date.now()}`;
             next.blocks[index].children.splice(
               childIndex + 1,
               0,
-              childToDuplicate
+              childToDuplicate,
             );
           }
           return next;
@@ -2012,7 +841,7 @@ const BlockRenderer = ({
                   handleUpdateBlockSettings(
                     index,
                     'backgroundColor',
-                    e.target.value
+                    e.target.value,
                   )
                 }
                 className='color-input'
@@ -2035,7 +864,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'buttonBgColor',
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className='color-input'
@@ -2074,7 +903,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'fontSize',
-                        e.target.value ? `${e.target.value}px` : ''
+                        e.target.value ? `${e.target.value}px` : '',
                       )
                     }
                   />
@@ -2110,7 +939,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'padding',
-                        e.target.value
+                        e.target.value,
                       )
                     }
                   />
@@ -2134,7 +963,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'borderRadius',
-                        e.target.value ? `${e.target.value}px` : ''
+                        e.target.value ? `${e.target.value}px` : '',
                       )
                     }
                   />
@@ -2151,7 +980,7 @@ const BlockRenderer = ({
                     handleUpdateBlockSettings(
                       index,
                       'height',
-                      e.target.value ? `${e.target.value}px` : ''
+                      e.target.value ? `${e.target.value}px` : '',
                     )
                   }
                   style={{ width: 80 }}
@@ -2167,7 +996,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'lineColor',
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className='color-input'
@@ -2185,7 +1014,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'lineHeight',
-                        e.target.value ? `${e.target.value}px` : ''
+                        e.target.value ? `${e.target.value}px` : '',
                       )
                     }
                     style={{ width: 80 }}
@@ -2193,8 +1022,7 @@ const BlockRenderer = ({
                 </>
               )}
 
-              {(type === 'header' ||
-                type === 'text') && (
+              {(type === 'header' || type === 'text') && (
                 <>
                   <div
                     style={{
@@ -2230,7 +1058,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'fontSize',
-                        e.target.value ? `${e.target.value}px` : ''
+                        e.target.value ? `${e.target.value}px` : '',
                       )
                     }
                   />
@@ -2251,7 +1079,7 @@ const BlockRenderer = ({
                         handleUpdateBlockSettings(
                           index,
                           'paddingTop',
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       title='Padding top'>
@@ -2270,7 +1098,7 @@ const BlockRenderer = ({
                         handleUpdateBlockSettings(
                           index,
                           'paddingBottom',
-                          e.target.value
+                          e.target.value,
                         )
                       }
                       title='Padding bottom'>
@@ -2302,7 +1130,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'columnGap',
-                        e.target.value ? `${e.target.value}px` : ''
+                        e.target.value ? `${e.target.value}px` : '',
                       )
                     }
                     style={{ width: 80 }}
@@ -2366,7 +1194,11 @@ const BlockRenderer = ({
                     id={`inline-${block.id}`}
                     checked={!!settings?.inline}
                     onChange={(e) => {
-                      handleUpdateBlockSettings(index, 'inline', e.target.checked);
+                      handleUpdateBlockSettings(
+                        index,
+                        'inline',
+                        e.target.checked,
+                      );
                     }}
                   />
                   <label htmlFor={`inline-${block.id}`}>
@@ -2382,7 +1214,11 @@ const BlockRenderer = ({
                     id={`inline-${block.id}`}
                     checked={!!settings?.isImage}
                     onChange={(e) => {
-                      handleUpdateBlockSettings(index, 'isImage', e.target.checked);
+                      handleUpdateBlockSettings(
+                        index,
+                        'isImage',
+                        e.target.checked,
+                      );
                     }}
                   />
                   <label htmlFor={`inline-${block.id}`}>Display image</label>
@@ -2409,7 +1245,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'textAlign',
-                        e.target.value
+                        e.target.value,
                       )
                     }>
                     <option value='left'>Left</option>
@@ -2428,6 +1264,7 @@ const BlockRenderer = ({
                   }>
                   <option value='0'>Left</option>
                   <option value='0 auto'>Center</option>
+                  <option value='0 0 0 auto'>Right</option>
                 </select>
               )}
 
@@ -2445,7 +1282,7 @@ const BlockRenderer = ({
                           handleUpdateBlockSettings(
                             index,
                             'canvasColor',
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className='color-input'
@@ -2469,7 +1306,7 @@ const BlockRenderer = ({
                           handleUpdateBlockSettings(
                             index,
                             'bgWidth',
-                            Number(e.target.value)
+                            Number(e.target.value),
                           )
                         }
                         style={{ width: 90 }}
@@ -2489,7 +1326,7 @@ const BlockRenderer = ({
                           handleUpdateBlockSettings(
                             index,
                             'borderColor',
-                            e.target.value
+                            e.target.value,
                           )
                         }
                         className='color-input'
@@ -2502,7 +1339,7 @@ const BlockRenderer = ({
                             handleUpdateBlockSettings(
                               index,
                               'borderWidth',
-                              Number(e.target.value)
+                              Number(e.target.value),
                             )
                           }
                           placeholder='Width'
@@ -2515,7 +1352,7 @@ const BlockRenderer = ({
                             handleUpdateBlockSettings(
                               index,
                               'borderType',
-                              e.target.value
+                              e.target.value,
                             )
                           }
                           className='control-select'
@@ -2531,7 +1368,7 @@ const BlockRenderer = ({
                             handleUpdateBlockSettings(
                               index,
                               'borderRadius',
-                              Number(e.target.value)
+                              Number(e.target.value),
                             )
                           }
                           placeholder='Radius'
@@ -2559,7 +1396,7 @@ const BlockRenderer = ({
                             handleUpdateBlockSettings(
                               index,
                               'paddingInnerTop',
-                              Number(e.target.value)
+                              Number(e.target.value),
                             )
                           }
                           style={{ width: 70 }}
@@ -2572,7 +1409,7 @@ const BlockRenderer = ({
                             handleUpdateBlockSettings(
                               index,
                               'paddingInnerBottom',
-                              Number(e.target.value)
+                              Number(e.target.value),
                             )
                           }
                           style={{ width: 70 }}
@@ -2583,8 +1420,7 @@ const BlockRenderer = ({
                 </>
               )}
 
-              {(type === 'footer' ||
-                type === 'footer_general_kz' ) && (
+              {(type === 'footer' || type === 'footer_general_kz') && (
                 <div className='control-flex margin-bottom-small'>
                   <input
                     type='color'
@@ -2593,7 +1429,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'canvascolor',
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className='color-input'
@@ -2605,7 +1441,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'textcolor',
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className='color-input'
@@ -2617,7 +1453,7 @@ const BlockRenderer = ({
                       handleUpdateBlockSettings(
                         index,
                         'disclaimercolor',
-                        e.target.value
+                        e.target.value,
                       )
                     }
                     className='color-input'

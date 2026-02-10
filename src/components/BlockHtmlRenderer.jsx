@@ -77,7 +77,7 @@ const buildStyle = (type, raw = {}) => {
   const stylePairs = Object.entries(settings)
     .filter(
       ([k, v]) =>
-        !NON_STYLE_KEYS.has(k) && v !== undefined && v !== null && v !== ''
+        !NON_STYLE_KEYS.has(k) && v !== undefined && v !== null && v !== '',
     )
     .map(([k, v]) => `${kebabCase(k)}: ${v};`);
 
@@ -87,8 +87,7 @@ const buildStyle = (type, raw = {}) => {
     type === 'spacer' ||
     type === 'header'
   );
-  if (needsSidePad)
-    stylePairs.push('padding-left: 8%;', 'padding-right: 8%;');
+  if (needsSidePad) stylePairs.push('padding-left: 8%;', 'padding-right: 8%;');
 
   return stylePairs.join(' ');
 };
@@ -152,7 +151,7 @@ const renderBlockHtml = (block, template = null) => {
               };">
                 <h2 style="margin:0;white-space:pre-wrap;${buildStyle(
                   'header',
-                  settings
+                  settings,
                 )}">${content}</h2>
               </td>
             </tr>
@@ -169,7 +168,7 @@ const renderBlockHtml = (block, template = null) => {
         };margin:0;padding:0;">
           <h2 style="margin:0;white-space:pre-wrap;${buildStyle(
             'header',
-            settings
+            settings,
           )}">${content}</h2>
         </td>
       </tr>
@@ -207,7 +206,7 @@ const renderBlockHtml = (block, template = null) => {
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${buildStyle(
         'image',
-        settings
+        settings,
       )}">
         <tr>
           <td style="text-align:${settings.textAlign || 'left'};">
@@ -235,11 +234,11 @@ const renderBlockHtml = (block, template = null) => {
             <a href="${
               settings.linkUrl || '#'
             }" target="_blank" rel="noopener noreferrer" _label="${
-        settings.linkLabel || ''
-      }">
+              settings.linkLabel || ''
+            }">
               <img src="${buttonImgSrc}" alt="${
-        settings.imageAlt || ''
-      }" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
+                settings.imageAlt || ''
+              }" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
             </a>
           </td>
         </tr>
@@ -458,17 +457,18 @@ const renderBlockHtml = (block, template = null) => {
         ? `${parseInt(gap) / 2}px`
         : '0';
       const widthPercent = (100 / count).toFixed(4);
+      const backgroundColor = settings.backgroundColor || '#ffffff';
 
       const cells = cols
         .map((c, idx) => {
           const src = c?.imagePath || c?.imageUrl || c?.content || '';
+          const padLeft = idx === 0 ? '0' : halfGap;
+          const padRight = idx === count - 1 ? '0' : halfGap;
 
           const img = src
             ? `<img src="${src}" alt="${
                 c?.settings?.altText || ''
-              }" style="padding-left: ${
-                idx === 0 ? '0' : idx === count - 1 ? gap : halfGap
-              };border:0;display:block;">`
+              }" style="max-width:100%;display:block;height:auto;border:0;">`
             : '';
           const inner = c?.settings?.linkUrl
             ? `<a href="${c.settings.linkUrl}" _label="${
@@ -477,14 +477,14 @@ const renderBlockHtml = (block, template = null) => {
             : img;
 
           return `
-            <td width="${widthPercent}%" style="background-color:${settings.backgroundColor};vertical-align:top;font-size:0;line-height:0;">
+            <td width="${widthPercent}%" style="vertical-align:top;padding-left:${padLeft};padding-right:${padRight};">
               ${inner}
             </td>`;
         })
         .join('');
 
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="padding-left:8%;padding-right:8%;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${backgroundColor};padding-left:8%;padding-right:8%;">
         <tbody>
           <tr>${cells}</tr>
         </tbody>
@@ -573,7 +573,6 @@ const renderBlockHtml = (block, template = null) => {
       break;
     }
 
-
     // ROUND CONTAINER
     case 'roundContainer': {
       const s = settings || {};
@@ -608,7 +607,7 @@ const renderBlockHtml = (block, template = null) => {
 
       // Calculate spacer width: (100 - bgWidth) / 2
       const spacerWidth = ((100 - bgWidth) / 2).toFixed(2);
-      
+
       blockHtml = `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${canvasColor};">
         <tbody>
@@ -660,9 +659,9 @@ const renderBlockHtml = (block, template = null) => {
     case 'footer_general_kz': {
       const isKZ = type === 'footer_general_kz';
       const dict = isKZ ? tKZ : tRU;
-      const disclaimerLink = settings.urls?.optout 
-      ? `<a href='${settings.urls.optout}' style='text-decoration:underline;color:${settings.disclaimercolor};'>${dict.link}</a>`
-      : dict.link;
+      const disclaimerLink = settings.urls?.optout
+        ? `<a href='${settings.urls.optout}' style='text-decoration:underline;color:${settings.disclaimercolor};'>${dict.link}</a>`
+        : dict.link;
 
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${
@@ -693,7 +692,7 @@ const renderBlockHtml = (block, template = null) => {
                         }">
                           <img width="57" src="i/${key}.png" alt="${key}" style="display:block;border:0;">
                         </a>
-                      </td>`
+                      </td>`,
                   )
                   .join('')}                
                 <td style="width:120px;">&nbsp;</td>
@@ -708,8 +707,8 @@ const renderBlockHtml = (block, template = null) => {
             <h2 style="margin:0 0 13px;font:${
               settings.fontWeight || 'bold'
             } 24px ${settings.fontFamily || 'Arial, sans-serif'};color:${
-        settings.textcolor
-      };line-height:1;">
+              settings.textcolor
+            };line-height:1;">
               ${dict.questions}
             </h2>
 
@@ -721,15 +720,15 @@ const renderBlockHtml = (block, template = null) => {
                   <a href="${
                     settings.urls?.livechat || '#'
                   }" style="font:11px ${
-        settings.fontFamily || 'Arial, sans-serif'
-      };color:${settings.textcolor};text-decoration:none;">
+                    settings.fontFamily || 'Arial, sans-serif'
+                  };color:${settings.textcolor};text-decoration:none;">
                     <img width="13" src="i/chat.png" alt="chat" style="vertical-align:middle;">&nbsp;&nbsp;Онлайн чат
                   </a>
                 </td>
                 <td align="center">
                   <a href="${settings.urls?.call || '#'}" style="font:11px ${
-        settings.fontFamily || 'Arial, sans-serif'
-      };color:${settings.textcolor};text-decoration:none;">
+                    settings.fontFamily || 'Arial, sans-serif'
+                  };color:${settings.textcolor};text-decoration:none;">
                     <img width="13" src="i/call.png" alt="call" style="vertical-align:middle;">&nbsp;&nbsp;Call Center 7700
                   </a>
                 </td>
@@ -754,8 +753,8 @@ const renderBlockHtml = (block, template = null) => {
               <tr>
                 <td>
                   ©${new Date().getFullYear()} Samsung Electronics Co., Ltd. ${
-        dict.all_rights
-      }<br>
+                    dict.all_rights
+                  }<br>
                   ${dict.address}
                 </td>
               </tr>
@@ -765,12 +764,12 @@ const renderBlockHtml = (block, template = null) => {
               <tr>
                 <td>
                   <a href="${settings.urls?.legal || '#'}" style="color:${
-        settings.textcolor
-      };text-decoration:underline;">${dict.legal}</a>
+                    settings.textcolor
+                  };text-decoration:underline;">${dict.legal}</a>
                   &nbsp;|&nbsp;
                   <a href="${settings.urls?.privacy || '#'}" style="color:${
-        settings.textcolor
-      };text-decoration:underline;">${dict.privacy}</a>
+                    settings.textcolor
+                  };text-decoration:underline;">${dict.privacy}</a>
                 </td>
               </tr>
 
