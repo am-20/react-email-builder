@@ -57,6 +57,58 @@ const IMG_BLOCK_STYLE = {
   margin: '0 auto',
 };
 
+// Common style constants
+const DEFAULT_FONT_FAMILY = 'SamsungOne, Arial, Helvetica, sans-serif';
+const FALLBACK_FONT = 'Arial, sans-serif';
+
+const COMMON_INPUT_STYLE = {
+  width: 90,
+};
+
+const CONTROL_LABEL_STYLE = {
+  fontSize: 12,
+  color: '#6b7280',
+};
+
+// Utility: Check if drag event should stop propagation for nested/round container blocks
+const shouldStopDragPropagation = (e, isNestedBlock, type) => {
+  // Check for nested block within round container
+  if (isNestedBlock) {
+    let element = e.currentTarget;
+    while (element && element.parentElement) {
+      element = element.parentElement;
+      if (
+        element.hasAttribute &&
+        element.hasAttribute('data-round-container-content')
+      ) {
+        const dragData = e.dataTransfer?.types || [];
+        const isNewComponent =
+          dragData.includes('text/block-type') ||
+          dragData.includes('application/x-block-type') ||
+          dragData.includes('text/plain');
+        if (isNewComponent) return true;
+      }
+    }
+  }
+
+  // Check for round container
+  if (type === 'roundContainer') {
+    const target = e.target;
+    let element = target;
+    while (element && element !== e.currentTarget) {
+      if (
+        element.hasAttribute &&
+        element.hasAttribute('data-round-container-content')
+      ) {
+        return true;
+      }
+      element = element.parentElement;
+    }
+  }
+
+  return false;
+};
+
 const FooterPreview = React.memo(function FooterPreview({ type, settings }) {
   const canvas = settings?.canvascolor || '#f5f5f5';
   const text = settings?.textcolor || '#000000';
@@ -333,7 +385,6 @@ const BlockRenderer = ({
   };
 
   let blockContent;
-  const [btnManual, setBtnManual] = useState(settings?.imagePath || '');
 
   const handleAddChild = (parentIndex, type, insertAt) => {
     setTemplate((prev) => {
@@ -668,12 +719,10 @@ const BlockRenderer = ({
           return { ...prev, blocks: newBlocks };
         });
 
-        setBtnManual(asset.path);
       };
 
       const manualBtn = (e) => {
         const url = e.target.value;
-        setBtnManual(url);
         handleUpdateBlockSettings(index, 'imagePath', url);
         handleUpdateBlockSettings(index, 'imagePreviewUrl', url);
       };
@@ -715,7 +764,6 @@ const BlockRenderer = ({
                       type='text'
                       className='settings-input'
                       placeholder='Image path or URL'
-                      value={btnManual}
                       onChange={manualBtn}
                     />
                     <input
@@ -1893,101 +1941,18 @@ const BlockRenderer = ({
         handleDragStart(e, block);
       }}
       onDragOver={(e) => {
-        if (isNestedBlock) {
-          let element = e.currentTarget;
-          while (element && element.parentElement) {
-            element = element.parentElement;
-            if (
-              element.hasAttribute &&
-              element.hasAttribute('data-round-container-content')
-            ) {
-              const dragData = e.dataTransfer?.types || [];
-              const isNewComponent =
-                dragData.includes('text/block-type') ||
-                dragData.includes('application/x-block-type') ||
-                dragData.includes('text/plain');
-              if (isNewComponent) return;
-            }
-          }
-        }
-        if (type === 'roundContainer') {
-          const target = e.target;
-          let element = target;
-          while (element && element !== e.currentTarget) {
-            if (
-              element.hasAttribute &&
-              element.hasAttribute('data-round-container-content')
-            )
-              return;
-            element = element.parentElement;
-          }
-        }
+        if (shouldStopDragPropagation(e, isNestedBlock, type)) return;
         e.preventDefault();
         e.stopPropagation();
         handleDragOver(e, index);
       }}
       onDragLeave={(e) => {
-        if (isNestedBlock) {
-          let element = e.currentTarget;
-          while (element && element.parentElement) {
-            element = element.parentElement;
-            if (
-              element.hasAttribute &&
-              element.hasAttribute('data-round-container-content')
-            ) {
-              const dragData = e.dataTransfer?.types || [];
-              const isNewComponent =
-                dragData.includes('text/block-type') ||
-                dragData.includes('application/x-block-type') ||
-                dragData.includes('text/plain');
-              if (isNewComponent) return;
-            }
-          }
-        }
-        if (type === 'roundContainer') {
-          const target = e.target;
-          let element = target;
-          while (element && element !== e.currentTarget) {
-            if (
-              element.hasAttribute &&
-              element.hasAttribute('data-round-container-content')
-            )
-              return;
-            element = element.parentElement;
-          }
-        }
+        if (shouldStopDragPropagation(e, isNestedBlock, type)) return;
         e.stopPropagation();
         setDragOverIndex(null);
       }}
       onDrop={(e) => {
-        if (isNestedBlock) {
-          let element = e.currentTarget;
-          while (element && element.parentElement) {
-            element = element.parentElement;
-            if (
-              element.hasAttribute &&
-              element.hasAttribute('data-round-container-content')
-            ) {
-              const type =
-                e.dataTransfer.getData('text/block-type') ||
-                e.dataTransfer.getData('application/x-block-type') ||
-                e.dataTransfer.getData('text/plain');
-              if (type) return;
-            }
-          }
-        }
-        if (type === 'roundContainer') {
-          const target = e.target;
-          let element = target;
-          while (element && element !== e.currentTarget) {
-            if (
-              element.hasAttribute &&
-              element.hasAttribute('data-round-container-content')
-            )
-              return;
-            element = element.parentElement;
-          }
-        }
+        if (shouldStopDragPropagation(e, isNestedBlock, type)) return;
         e.preventDefault();
         e.stopPropagation();
         handleDrop(e, index);

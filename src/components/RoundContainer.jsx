@@ -21,164 +21,84 @@ export default function RoundContainer({
     paddingInnerBottom = 64, // px
   } = settings || {};
 
-  // Basic inline styles to keep the preview email-safe
-  const outerTDStyle = {
-    backgroundColor: canvasColor,
-    paddingTop: `${paddingInnerTop}px`,
-    paddingBottom: `${paddingInnerBottom}px`,
-    msoLineHeightRule: 'exactly',
-  };
-
-  const innerTableStyle = {
-    borderCollapse: 'separate',
-    border: `${borderWidth}px ${borderType} ${borderColor}`,
-    borderRadius: `${borderRadius}px`,
-    margin: '0 auto',
-    width: `${bgWidth}%`,
-    padding: 0,
-    textAlign: 'center',
-    backgroundColor,
-  };
+  // Calculate spacer width to match HTML export
+  const spacerWidth = ((100 - bgWidth) / 2).toFixed(2);
 
   return (
-    <>
-      {paddingTop > 0 && (
-        <table
-          role='presentation'
-          width='100%'
-          cellPadding='0'
-          cellSpacing='0'
-          border='0'>
-          <tbody>
-            <tr>
-              <td
-                style={{
-                  height: paddingTop,
-                  fontSize: 0,
-                  backgroundColor: canvasColor,
-                  border: 0,
-                }}>
-                &nbsp;
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      )}
-
-      <table
-        role='presentation'
-        width='100%'
-        cellPadding='0'
-        cellSpacing='0'
-        border='0'
-        style={{ backgroundColor: canvasColor }}>
-        <tbody>
+    <table
+      role='presentation'
+      width='100%'
+      cellPadding='0'
+      cellSpacing='0'
+      style={{ backgroundColor: canvasColor }}>
+      <tbody>
+        {/* Top padding row */}
+        {paddingTop > 0 && (
           <tr>
-            <td style={outerTDStyle}>
-              <table
-                role='presentation'
-                align='center'
-                cellPadding='0'
-                cellSpacing='0'
-                border='0'
-                style={innerTableStyle}>
-                <tbody>
-                  <tr>
-                    <td
-                      data-round-container-content
-                      style={{ padding: 0, position: 'relative' }}
-                      onDragEnter={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                      }}
-                      onDragOver={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        try {
-                          e.dataTransfer.dropEffect = 'copy';
-                        } catch {
-                          /* empty */
-                        }
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const type =
-                          e.dataTransfer.getData('text/block-type') ||
-                          e.dataTransfer.getData('application/x-block-type') ||
-                          e.dataTransfer.getData('text/plain');
-                        if (!type) return;
-                        onAddChild?.(index, type);
+            <td
+              style={{
+                height: paddingTop,
+                fontSize: 0,
+                border: 0,
+              }}>
+              &nbsp;
+            </td>
+          </tr>
+        )}
+
+        {/* Main content row */}
+        <tr>
+          <td
+            style={{
+              paddingTop: `${paddingInnerTop}px`,
+              paddingBottom: `${paddingInnerBottom}px`,
+              textAlign: 'center',
+            }}>
+            {/* 3-column table for horizontal centering (matches HTML export) */}
+            <table
+              role='presentation'
+              width='100%'
+              cellPadding='0'
+              cellSpacing='0'
+              style={{ margin: 0 }}>
+              <tbody>
+                <tr>
+                  {/* Left spacer */}
+                  <td
+                    width={`${spacerWidth}%`}
+                    style={{ padding: 0, fontSize: 0, lineHeight: 0 }}>
+                    &nbsp;
+                  </td>
+
+                  {/* Content column */}
+                  <td
+                    width={`${bgWidth}%`}
+                    style={{ padding: 0, maxWidth: 600 }}>
+                    <table
+                      role='presentation'
+                      width='100%'
+                      cellPadding='0'
+                      cellSpacing='0'
+                      style={{
+                        borderCollapse: 'separate',
+                        borderSpacing: 0,
                       }}>
-                      {Array.isArray(block.children) &&
-                      block.children.length > 0 ? (
-                        <>
-                          {block.children.map((child, childIndex) => (
-                            <React.Fragment key={child.id || childIndex}>
-                              {/* Drop zone before each child */}
-                              <div
-                                data-round-container-content
-                                style={{
-                                  minHeight: '20px',
-                                  padding: '4px 0',
-                                  position: 'relative',
-                                  zIndex: 10,
-                                }}
-                                onDragEnter={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  e.currentTarget.style.backgroundColor =
-                                    'rgba(66, 153, 225, 0.1)';
-                                }}
-                                onDragLeave={(e) => {
-                                  e.currentTarget.style.backgroundColor =
-                                    'transparent';
-                                }}
-                                onDragOver={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  try {
-                                    e.dataTransfer.dropEffect = 'copy';
-                                  } catch {
-                                    /* empty */
-                                  }
-                                }}
-                                onDrop={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  e.currentTarget.style.backgroundColor =
-                                    'transparent';
-                                  const type =
-                                    e.dataTransfer.getData('text/block-type') ||
-                                    e.dataTransfer.getData(
-                                      'application/x-block-type'
-                                    ) ||
-                                    e.dataTransfer.getData('text/plain');
-                                  if (!type) return;
-                                  onAddChild?.(index, type, childIndex);
-                                }}
-                              />
-                              {renderChild(child, childIndex, index)}
-                            </React.Fragment>
-                          ))}
-                          {/* Drop zone after last child */}
-                          <div
+                      <tbody>
+                        <tr>
+                          <td
                             data-round-container-content
                             style={{
-                              minHeight: '20px',
-                              padding: '4px 0',
+                              padding: 0,
+                              textAlign: 'center',
+                              backgroundColor,
+                              border: `${borderWidth}px ${borderType} ${borderColor}`,
+                              borderRadius: `${borderRadius}px`,
+                              overflow: 'hidden', // Prevent content bleeding outside rounded corners
                               position: 'relative',
-                              zIndex: 10,
                             }}
                             onDragEnter={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              e.currentTarget.style.backgroundColor =
-                                'rgba(66, 153, 225, 0.1)';
-                            }}
-                            onDragLeave={(e) => {
-                              e.currentTarget.style.backgroundColor =
-                                'transparent';
                             }}
                             onDragOver={(e) => {
                               e.preventDefault();
@@ -192,8 +112,6 @@ export default function RoundContainer({
                             onDrop={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              e.currentTarget.style.backgroundColor =
-                                'transparent';
                               const type =
                                 e.dataTransfer.getData('text/block-type') ||
                                 e.dataTransfer.getData(
@@ -201,73 +119,173 @@ export default function RoundContainer({
                                 ) ||
                                 e.dataTransfer.getData('text/plain');
                               if (!type) return;
-                              const endIndex = Array.isArray(block.children)
-                                ? block.children.length
-                                : 0;
-                              onAddChild?.(index, type, endIndex);
-                            }}
-                          />
-                        </>
-                      ) : (
-                        <div
-                          data-round-container-content
-                          style={{ padding: 24, textAlign: 'center' }}>
-                          <div
-                            style={{
-                              fontFamily:
-                                'SamsungOne, Arial, Helvetica, sans-serif',
-                              fontSize: 12,
-                              color: '#666',
+                              onAddChild?.(index, type);
                             }}>
-                            RoundContainer is empty. Drop components here or use
-                            the button below.
-                          </div>
-                          <button
-                            type='button'
-                            onClick={() => onAddChild?.(index, 'text')}
-                            style={{
-                              marginTop: 12,
-                              background: '#fff',
-                              border: '1px solid #ccc',
-                              borderRadius: 6,
-                              padding: '6px 12px',
-                              cursor: 'pointer',
-                            }}>
-                            + Add Text Component
-                          </button>
-                        </div>
-                      )}
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                            {Array.isArray(block.children) &&
+                            block.children.length > 0 ? (
+                              <>
+                                {block.children.map((child, childIndex) => (
+                                  <React.Fragment key={child.id || childIndex}>
+                                    {/* Drop zone before each child */}
+                                    <div
+                                      data-round-container-content
+                                      style={{
+                                        minHeight: '20px',
+                                        padding: '4px 0',
+                                        position: 'relative',
+                                        zIndex: 10,
+                                      }}
+                                      onDragEnter={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        e.currentTarget.style.backgroundColor =
+                                          'rgba(66, 153, 225, 0.1)';
+                                      }}
+                                      onDragLeave={(e) => {
+                                        e.currentTarget.style.backgroundColor =
+                                          'transparent';
+                                      }}
+                                      onDragOver={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        try {
+                                          e.dataTransfer.dropEffect = 'copy';
+                                        } catch {
+                                          /* empty */
+                                        }
+                                      }}
+                                      onDrop={(e) => {
+                                        e.preventDefault();
+                                        e.stopPropagation();
+                                        e.currentTarget.style.backgroundColor =
+                                          'transparent';
+                                        const type =
+                                          e.dataTransfer.getData(
+                                            'text/block-type'
+                                          ) ||
+                                          e.dataTransfer.getData(
+                                            'application/x-block-type'
+                                          ) ||
+                                          e.dataTransfer.getData('text/plain');
+                                        if (!type) return;
+                                        onAddChild?.(index, type, childIndex);
+                                      }}
+                                    />
+                                    {renderChild(child, childIndex, index)}
+                                  </React.Fragment>
+                                ))}
+                                {/* Drop zone after last child */}
+                                <div
+                                  data-round-container-content
+                                  style={{
+                                    minHeight: '20px',
+                                    padding: '4px 0',
+                                    position: 'relative',
+                                    zIndex: 10,
+                                  }}
+                                  onDragEnter={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    e.currentTarget.style.backgroundColor =
+                                      'rgba(66, 153, 225, 0.1)';
+                                  }}
+                                  onDragLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor =
+                                      'transparent';
+                                  }}
+                                  onDragOver={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    try {
+                                      e.dataTransfer.dropEffect = 'copy';
+                                    } catch {
+                                      /* empty */
+                                    }
+                                  }}
+                                  onDrop={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    e.currentTarget.style.backgroundColor =
+                                      'transparent';
+                                    const type =
+                                      e.dataTransfer.getData(
+                                        'text/block-type'
+                                      ) ||
+                                      e.dataTransfer.getData(
+                                        'application/x-block-type'
+                                      ) ||
+                                      e.dataTransfer.getData('text/plain');
+                                    if (!type) return;
+                                    const endIndex = Array.isArray(
+                                      block.children
+                                    )
+                                      ? block.children.length
+                                      : 0;
+                                    onAddChild?.(index, type, endIndex);
+                                  }}
+                                />
+                              </>
+                            ) : (
+                              <div
+                                data-round-container-content
+                                style={{ padding: 24, textAlign: 'center' }}>
+                                <div
+                                  style={{
+                                    fontFamily:
+                                      'SamsungOne, Arial, Helvetica, sans-serif',
+                                    fontSize: 12,
+                                    color: '#666',
+                                  }}>
+                                  RoundContainer is empty. Drop components here
+                                  or use the button below.
+                                </div>
+                                <button
+                                  type='button'
+                                  onClick={() => onAddChild?.(index, 'text')}
+                                  style={{
+                                    marginTop: 12,
+                                    background: '#fff',
+                                    border: '1px solid #ccc',
+                                    borderRadius: 6,
+                                    padding: '6px 12px',
+                                    cursor: 'pointer',
+                                  }}>
+                                  + Add Text Component
+                                </button>
+                              </div>
+                            )}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+
+                  {/* Right spacer */}
+                  <td
+                    width={`${spacerWidth}%`}
+                    style={{ padding: 0, fontSize: 0, lineHeight: 0 }}>
+                    &nbsp;
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+
+        {/* Bottom padding row */}
+        {paddingBottom > 0 && (
+          <tr>
+            <td
+              style={{
+                height: paddingBottom,
+                fontSize: 0,
+                border: 0,
+              }}>
+              &nbsp;
             </td>
           </tr>
-        </tbody>
-      </table>
-
-      {paddingBottom > 0 && (
-        <table
-          role='presentation'
-          width='100%'
-          cellPadding='0'
-          cellSpacing='0'
-          border='0'>
-          <tbody>
-            <tr>
-              <td
-                style={{
-                  height: paddingBottom,
-                  fontSize: 0,
-                  backgroundColor: canvasColor,
-                  border: 0,
-                }}>
-                &nbsp;
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      )}
-    </>
+        )}
+      </tbody>
+    </table>
   );
 }
