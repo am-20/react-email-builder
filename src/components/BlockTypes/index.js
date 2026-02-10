@@ -15,3 +15,5 @@ export { default as ButtonGroupBlock } from './ButtonGroupBlock';
 export { default as ButtonCodedGroupBlock } from './ButtonCodedGroupBlock';
 export { default as ColumnsBlock } from './ColumnsBlock';
 export { default as ColumnsContentBlock } from './ColumnsContentBlock';
+// Footer block
+export { default as FooterBlock } from './FooterBlock';
