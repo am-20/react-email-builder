@@ -569,3 +569,28 @@
 .ff {
   font-family: SamsungOne, Arial, Helvetica, sans-serif;
 }
+
+/* Fix for RoundContainer nested block settings */
+.block-settings {
+  position: fixed !important;
+  right: 15%;
+  top: 15%;
+  width: 320px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 9999;
+}
+
+.block-actions {
+  position: absolute !important;
+  right: 8px;
+  top: 8px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}

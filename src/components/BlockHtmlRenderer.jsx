@@ -248,9 +248,31 @@ const renderBlockHtml = (block, template = null) => {
 
     /** CODED BUTTON */
     case 'buttonCoded': {
-      const paddingTop = settings.paddingTop ?? '12px';
-      const paddingBottom = settings.paddingBottom ?? '12px';
-      const paddingX = settings.paddingX ?? '24px';
+      let paddingTop, paddingBottom, paddingX;
+      
+      if (settings.padding) {
+        // Parse CSS shorthand padding (e.g., "12px 24px")
+        const parts = settings.padding.trim().split(/\s+/);
+        if (parts.length === 1) {
+          // "12px" → all sides
+          paddingTop = paddingBottom = paddingX = parts[0];
+        } else if (parts.length === 2) {
+          // "12px 24px" → vertical horizontal
+          paddingTop = paddingBottom = parts[0];
+          paddingX = parts[1];
+        } else if (parts.length === 4) {
+          // "12px 24px 36px 48px" → top right bottom left
+          paddingTop = parts[0];
+          paddingX = parts[1];
+          paddingBottom = parts[2];
+        }
+      } else {
+        // Use individual values if provided
+        paddingTop = settings.paddingTop ?? '12px';
+        paddingBottom = settings.paddingBottom ?? '12px';
+        paddingX = settings.paddingX ?? '24px';
+      }
+
       const color = settings.color ?? '#ffffff';
       const bg = settings.buttonBgColor ?? '#000000';
       const border = settings.border ?? 'none';
@@ -381,8 +403,8 @@ const renderBlockHtml = (block, template = null) => {
 
           // spacing: right margin for inline, bottom margin for stacked
           const tableSpacing = inline
-            ? `margin-right:${spacer};`
-            : `margin-bottom:${spacer};`;
+          ? `margin-right:${spacer};`
+          : `margin:0 auto ${spacer} auto; width:fit-content;`; 
 
           return `
             <table role="presentation" cellspacing="0" cellpadding="0" border="0"
@@ -418,16 +440,16 @@ const renderBlockHtml = (block, template = null) => {
         })
         .join('');
 
-      blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
-        <tr>
-          <td align="${
-            settings.textAlign || 'center'
-          }" style="background-color:${bg};">
-            ${buttons}
-          </td>
-        </tr>
-      </table>`;
+        blockHtml = `
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
+          <tr>
+            <td align="${
+              settings.textAlign || 'center'
+            }" style="background-color:${bg};text-align:${settings.textAlign || 'center'};">
+              ${buttons}
+            </td>
+          </tr>
+        </table>`;
       break;
     }
 

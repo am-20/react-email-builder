@@ -18,25 +18,22 @@ import {
   ColumnsContentBlock,
   FooterBlock,
 } from './BlockTypes';
+import {
+  ColorControl,
+  NumberControl,
+  SelectControl,
+  PaddingControl,
+  AlignmentControl,
+  TextControl,
+  CheckboxControl,
+  BorderControl,
+} from './Controls';
 
 const IMG_BLOCK_STYLE = {
   maxWidth: '100%',
   border: 0,
   display: 'block',
   margin: '0 auto',
-};
-
-// Common style constants
-const DEFAULT_FONT_FAMILY = 'SamsungOne, Arial, Helvetica, sans-serif';
-const FALLBACK_FONT = 'Arial, sans-serif';
-
-const COMMON_INPUT_STYLE = {
-  width: 90,
-};
-
-const CONTROL_LABEL_STYLE = {
-  fontSize: 12,
-  color: '#6b7280',
 };
 
 // Utility: Check if drag event should stop propagation for nested/round container blocks
@@ -508,8 +505,8 @@ const BlockRenderer = ({
       }`}
       data-index={index}
       draggable
-      onMouseEnter={() => !isNestedBlock && setHoveredBlockId(block.id)}
-      onMouseLeave={() => !isNestedBlock && setHoveredBlockId(null)}
+      onMouseEnter={() => setHoveredBlockId(block.id)}
+      onMouseLeave={() => setHoveredBlockId(null)}
       onDragStart={(e) => {
         e.stopPropagation();
         handleDragStart(e, block);
@@ -576,236 +573,81 @@ const BlockRenderer = ({
         {!showPreview && isActive && (
           <div className='block-settings'>
             <div className='control-flex margin-bottom-small'>
-              <div style={{ fontSize: 12, color: '#6b7280' }}>
-                Background color
-              </div>
-              <input
-                type='color'
+              <ColorControl
+                label="Background color"
                 value={settings?.backgroundColor || '#ffffff'}
-                onChange={(e) =>
-                  handleUpdateBlockSettings(
-                    index,
-                    'backgroundColor',
-                    e.target.value,
-                  )
-                }
-                className='color-input'
+                onChange={(value) => handleUpdateBlockSettings(index, 'backgroundColor', value)}
               />
 
               {type === 'buttonCoded' && (
                 <>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Button's background color
-                  </div>
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Button's background color"
                     value={settings?.buttonBgColor || '#000000'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'buttonBgColor',
-                        e.target.value,
-                      )
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'buttonBgColor', value)}
                   />
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Button's text color
-                  </div>
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Button's text color"
                     value={settings?.color || '#ffffff'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(index, 'color', e.target.value)
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'color', value)}
                   />
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Button's text font size
-                  </div>
-                  <input
-                    type='number'
-                    className='control-select'
-                    value={
-                      settings?.fontSize ? parseInt(settings.fontSize, 10) : ''
-                    }
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'fontSize',
-                        e.target.value ? `${e.target.value}px` : '',
-                      )
-                    }
+                  <NumberControl
+                    label="Button's text font size"
+                    value={settings?.fontSize}
+                    onChange={(value) => handleUpdateBlockSettings(index, 'fontSize', value)}
                   />
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Border
-                  </div>
-                  <input
-                    type='text'
-                    className='control-select'
+                  <TextControl
+                    label="Border"
                     value={settings?.border || '1px solid #000000'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(index, 'border', e.target.value)
-                    }
+                    onChange={(value) => handleUpdateBlockSettings(index, 'border', value)}
                   />
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Button's inner paddings
-                  </div>
-                  <input
-                    type='text'
-                    className='control-select'
+                  <TextControl
+                    label="Button's inner paddings"
                     value={settings?.padding || '12px 24px'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'padding',
-                        e.target.value,
-                      )
-                    }
+                    onChange={(value) => handleUpdateBlockSettings(index, 'padding', value)}
                   />
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Button's border radius
-                  </div>
-                  <input
-                    type='number'
-                    className='control-select'
-                    value={
-                      settings?.borderRadius
-                        ? parseInt(settings.borderRadius, 10)
-                        : ''
-                    }
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'borderRadius',
-                        e.target.value ? `${e.target.value}px` : '',
-                      )
-                    }
+                  <NumberControl
+                    label="Button's border radius"
+                    value={settings?.borderRadius}
+                    onChange={(value) => handleUpdateBlockSettings(index, 'borderRadius', value)}
                   />
                 </>
               )}
 
               {type === 'spacer' && (
-                <input
-                  type='number'
-                  className='settings-input'
-                  placeholder='Height (px)'
-                  value={settings?.height ? parseInt(settings.height, 10) : ''}
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(
-                      index,
-                      'height',
-                      e.target.value ? `${e.target.value}px` : '',
-                    )
-                  }
-                  style={{ width: 80 }}
-                />
+                <NumberControl
+                label="Height (px)"
+                value={settings?.height}
+                onChange={(value) => handleUpdateBlockSettings(index, 'height', value)}
+              />
               )}
 
               {type === 'divider' && (
                 <>
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Divider color"
                     value={settings?.lineColor || '#dddddd'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'lineColor',
-                        e.target.value,
-                      )
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'lineColor', value)}
                   />
-                  <input
-                    type='number'
-                    className='settings-input'
-                    placeholder='Height (px)'
-                    value={
-                      settings?.lineHeight
-                        ? parseInt(settings.lineHeight, 10)
-                        : ''
-                    }
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'lineHeight',
-                        e.target.value ? `${e.target.value}px` : '',
-                      )
-                    }
-                    style={{ width: 80 }}
+                  <NumberControl
+                    label="Height (px)"
+                    value={settings?.lineHeight}
+                    onChange={(value) => handleUpdateBlockSettings(index, 'lineHeight', value)}
                   />
                 </>
               )}
 
               {(type === 'header' || type === 'text') && (
                 <>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Text color
-                  </div>
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Text color"
                     value={settings?.color || '#000000'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(index, 'color', e.target.value)
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'color', value)}
                   />
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Font size
-                  </div>
-                  <input
-                    type='number'
-                    className='control-select'
-                    value={
-                      settings?.fontSize ? parseInt(settings.fontSize, 10) : ''
-                    }
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'fontSize',
-                        e.target.value ? `${e.target.value}px` : '',
-                      )
-                    }
+                  <NumberControl
+                    label="Font size"
+                    value={settings?.fontSize}
+                    onChange={(value) => handleUpdateBlockSettings(index, 'fontSize', value)}
                   />
                 </>
               )}
@@ -814,352 +656,119 @@ const BlockRenderer = ({
               {type !== 'spacer' &&
                 type !== 'buttonCoded' &&
                 type !== 'roundContainer' && (
-                  <>
-                    <select
-                      className='control-select flex-grow'
-                      value={
-                        settings?.paddingTop ?? settings?.padding ?? '10px'
-                      }
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'paddingTop',
-                          e.target.value,
-                        )
-                      }
-                      title='Padding top'>
-                      <option value='0px'>No padding top</option>
-                      <option value='16px'>Small top</option>
-                      <option value='24px'>Medium top</option>
-                      <option value='40px'>Large top</option>
-                    </select>
-
-                    <select
-                      className='control-select flex-grow'
-                      value={
-                        settings?.paddingBottom ?? settings?.padding ?? '10px'
-                      }
-                      onChange={(e) =>
-                        handleUpdateBlockSettings(
-                          index,
-                          'paddingBottom',
-                          e.target.value,
-                        )
-                      }
-                      title='Padding bottom'>
-                      <option value='0px'>No padding bottom</option>
-                      <option value='16px'>Small bottom</option>
-                      <option value='24px'>Medium bottom</option>
-                      <option value='40px'>Large bottom</option>
-                    </select>
-                  </>
+                  <PaddingControl
+                    paddingTop={settings?.paddingTop ?? settings?.padding ?? '10px'}
+                    paddingBottom={settings?.paddingBottom ?? settings?.padding ?? '10px'}
+                    onTopChange={(value) => handleUpdateBlockSettings(index, 'paddingTop', value)}
+                    onBottomChange={(value) => handleUpdateBlockSettings(index, 'paddingBottom', value)}
+                  />
                 )}
 
               {(type === 'columns' || type === 'columnsContent') && (
-                <div
-                  className='control-flex'
-                  style={{ flexDirection: 'column', gap: 6 }}>
-                  <div style={{ fontSize: 12, color: '#6b7280' }}>
-                    Column gap
-                  </div>
-                  <input
-                    type='number'
-                    className='settings-input'
-                    placeholder='Column gap (px)'
-                    value={
-                      settings?.columnGap
-                        ? parseInt(settings.columnGap, 10)
-                        : ''
-                    }
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'columnGap',
-                        e.target.value ? `${e.target.value}px` : '',
-                      )
-                    }
-                    style={{ width: 80 }}
-                  />
-                </div>
+                <NumberControl
+                  label="Column gap"
+                  value={settings?.columnGap}
+                  onChange={(value) => handleUpdateBlockSettings(index, 'columnGap', value)}
+                />
               )}
 
               {type === 'columnsContent' && (
                 <>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Text color
-                  </div>
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Text color"
                     value={settings?.color || '#000000'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(index, 'color', e.target.value)
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'color', value)}
                   />
-                  <div
-                    className='checkbox-container'
-                    style={{ marginTop: '8px' }}>
-                    <input
-                      type='checkbox'
-                      id={`inline-${block.id}`}
-                      checked={!!settings?.hidetitle}
-                      onChange={(e) => {
-                        const newBlocks = [...template.blocks];
-                        newBlocks[index].settings.hidetitle = e.target.checked;
-                        setTemplate({ ...template, blocks: newBlocks });
-                      }}
-                    />
-                    <label htmlFor={`inline-${block.id}`}>Hide title</label>
-                  </div>
-                  <div className='checkbox-container'>
-                    <input
-                      type='checkbox'
-                      id={`inline-${block.id}`}
-                      checked={!!settings?.isBold}
-                      onChange={(e) => {
-                        const newBlocks = [...template.blocks];
-                        newBlocks[index].settings.isBold = e.target.checked;
-                        setTemplate({ ...template, blocks: newBlocks });
-                      }}
-                    />
-                    <label htmlFor={`inline-${block.id}`}>Is bold</label>
-                  </div>
+                  <CheckboxControl
+                    id={`hidetitle-${block.id}`}
+                    label="Hide title"
+                    checked={!!settings?.hidetitle}
+                    onChange={(checked) => handleUpdateBlockSettings(index, 'hidetitle', checked)}
+                    containerStyle={{ marginTop: 8 }}
+                  />
+                  <CheckboxControl
+                    id={`isBold-${block.id}`}
+                    label="Is bold"
+                    checked={!!settings?.isBold}
+                    onChange={(checked) => handleUpdateBlockSettings(index, 'isBold', checked)}
+                  />
                 </>
               )}
 
               {(type === 'buttonGroup' || type === 'buttonCodedGroup') && (
-                <div className='checkbox-container'>
-                  <input
-                    type='checkbox'
-                    id={`inline-${block.id}`}
-                    checked={!!settings?.inline}
-                    onChange={(e) => {
-                      handleUpdateBlockSettings(
-                        index,
-                        'inline',
-                        e.target.checked,
-                      );
-                    }}
-                  />
-                  <label htmlFor={`inline-${block.id}`}>
-                    Display buttons inline
-                  </label>
-                </div>
+                <CheckboxControl
+                  id={`inline-${block.id}`}
+                  label="Display buttons inline"
+                  checked={!!settings?.inline}
+                  onChange={(checked) => handleUpdateBlockSettings(index, 'inline', checked)}
+                />
               )}
 
               {type === 'header' && (
-                <div className='checkbox-container'>
-                  <input
-                    type='checkbox'
-                    id={`inline-${block.id}`}
-                    checked={!!settings?.isImage}
-                    onChange={(e) => {
-                      handleUpdateBlockSettings(
-                        index,
-                        'isImage',
-                        e.target.checked,
-                      );
-                    }}
-                  />
-                  <label htmlFor={`inline-${block.id}`}>Display image</label>
-                </div>
+                <CheckboxControl
+                  id={`isImage-${block.id}`}
+                  label="Display image"
+                  checked={!!settings?.isImage}
+                  onChange={(checked) => handleUpdateBlockSettings(index, 'isImage', checked)}
+                />
               )}
 
               {(type === 'header' ||
                 type === 'text' ||
                 type === 'button' ||
-                type === 'buttonCoded') && (
-                <>
-                  <div
-                    style={{
-                      fontSize: 12,
-                      color: '#6b7280',
-                      marginTop: '8px',
-                    }}>
-                    Text align
-                  </div>
-                  <select
-                    className='control-select'
+                type === 'buttonCoded' ||
+                type === 'image') && (
+                  <AlignmentControl
                     value={settings?.textAlign || 'left'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'textAlign',
-                        e.target.value,
-                      )
-                    }>
-                    <option value='left'>Left</option>
-                    <option value='center'>Center</option>
-                    <option value='right'>Right</option>
-                  </select>
-                </>
-              )}
-
-              {type === 'image' && (
-                <select
-                  className='control-select'
-                  value={settings?.margin || '0 auto'}
-                  onChange={(e) =>
-                    handleUpdateBlockSettings(index, 'margin', e.target.value)
-                  }>
-                  <option value='0'>Left</option>
-                  <option value='0 auto'>Center</option>
-                  <option value='0 0 0 auto'>Right</option>
-                </select>
+                    onChange={(value) => handleUpdateBlockSettings(index, 'textAlign', value)}
+                  />
               )}
 
               {type === 'roundContainer' && (
                 <>
-                  <div>
-                    <div className='control-flex'>
-                      <span style={{ fontSize: 12, color: '#6b7280' }}>
-                        Canvas
-                      </span>
-                      <input
-                        type='color'
-                        value={settings?.canvasColor || '#CFCFCF'}
-                        onChange={(e) =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'canvasColor',
-                            e.target.value,
-                          )
-                        }
-                        className='color-input'
-                      />
-                    </div>
+                  <ColorControl
+                    label="Canvas"
+                    value={settings?.canvasColor || '#CFCFCF'}
+                    onChange={(value) => handleUpdateBlockSettings(index, 'canvasColor', value)}
+                  />
 
-                    <div
-                      className='control-flex'
-                      style={{ gap: 8, flexWrap: 'wrap', marginTop: '16px' }}>
-                      <div style={{ fontSize: 12, color: '#6b7280' }}>
-                        BG width (%)
-                      </div>
-                      <input
-                        type='number'
-                        min='10'
-                        max='100'
-                        step='1'
-                        className='settings-input'
-                        value={settings?.bgWidth ?? 88}
-                        onChange={(e) =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'bgWidth',
-                            Number(e.target.value),
-                          )
-                        }
-                        style={{ width: 90 }}
-                      />
-                    </div>
+                  <NumberControl
+                    label="BG width (%)"
+                    value={settings?.bgWidth ?? 88}
+                    onChange={(value) => handleUpdateBlockSettings(index, 'bgWidth', value)}
+                    addPx={false}
+                    inputStyle={{ width: 90 }}
+                    containerStyle={{ marginTop: 16 }}
+                  />
 
-                    <div
-                      className='control-flex'
-                      style={{ gap: 8, flexWrap: 'wrap', marginTop: '16px' }}>
-                      <span style={{ fontSize: 12, color: '#6b7280' }}>
-                        Border
-                      </span>
-                      <input
-                        type='color'
-                        value={settings?.borderColor || '#FFFFFF'}
-                        onChange={(e) =>
-                          handleUpdateBlockSettings(
-                            index,
-                            'borderColor',
-                            e.target.value,
-                          )
-                        }
-                        className='color-input'
-                      />
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <input
-                          type='number'
-                          value={settings?.borderWidth ?? 3}
-                          onChange={(e) =>
-                            handleUpdateBlockSettings(
-                              index,
-                              'borderWidth',
-                              Number(e.target.value),
-                            )
-                          }
-                          placeholder='Width'
-                          className='settings-input'
-                          style={{ width: 60 }}
-                        />
-                        <select
-                          value={settings?.borderType || 'solid'}
-                          onChange={(e) =>
-                            handleUpdateBlockSettings(
-                              index,
-                              'borderType',
-                              e.target.value,
-                            )
-                          }
-                          className='control-select'
-                          style={{ width: 90 }}>
-                          <option value='solid'>solid</option>
-                          <option value='dashed'>dashed</option>
-                          <option value='dotted'>dotted</option>
-                        </select>
-                        <input
-                          type='number'
-                          value={settings?.borderRadius ?? 24}
-                          onChange={(e) =>
-                            handleUpdateBlockSettings(
-                              index,
-                              'borderRadius',
-                              Number(e.target.value),
-                            )
-                          }
-                          placeholder='Radius'
-                          className='settings-input'
-                          style={{ width: 70 }}
-                        />
-                      </div>
-                    </div>
+                  <BorderControl
+                    colorValue={settings?.borderColor || '#FFFFFF'}
+                    widthValue={settings?.borderWidth ?? 3}
+                    typeValue={settings?.borderType || 'solid'}
+                    radiusValue={settings?.borderRadius ?? 24}
+                    onColorChange={(value) => handleUpdateBlockSettings(index, 'borderColor', value)}
+                    onWidthChange={(value) => handleUpdateBlockSettings(index, 'borderWidth', value)}
+                    onTypeChange={(value) => handleUpdateBlockSettings(index, 'borderType', value)}
+                    onRadiusChange={(value) => handleUpdateBlockSettings(index, 'borderRadius', value)}
+                  />
 
-                    <div>
-                      <div
-                        style={{
-                          fontSize: 12,
-                          color: '#6b7280',
-                          marginTop: '16px',
-                        }}>
-                        Paddings (top/bottom)
-                      </div>
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <input
-                          type='number'
-                          className='settings-input'
-                          value={settings?.paddingInnerTop ?? 64}
-                          onChange={(e) =>
-                            handleUpdateBlockSettings(
-                              index,
-                              'paddingInnerTop',
-                              Number(e.target.value),
-                            )
-                          }
-                          style={{ width: 70 }}
-                        />
-                        <input
-                          type='number'
-                          className='settings-input'
-                          value={settings?.paddingInnerBottom ?? 64}
-                          onChange={(e) =>
-                            handleUpdateBlockSettings(
-                              index,
-                              'paddingInnerBottom',
-                              Number(e.target.value),
-                            )
-                          }
-                          style={{ width: 70 }}
-                        />
-                      </div>
+                  <div style={{ marginTop: 16 }}>
+                    <div style={{ fontSize: 12, color: '#6b7280', marginBottom: 8 }}>
+                      Paddings (top/bottom)
+                    </div>
+                    <div style={{ display: 'flex', gap: 8 }}>
+                      <NumberControl
+                        value={settings?.paddingInnerTop ?? 64}
+                        onChange={(value) => handleUpdateBlockSettings(index, 'paddingInnerTop', value)}
+                        addPx={false}
+                        inputStyle={{ width: 70 }}
+                      />
+                      <NumberControl
+                        value={settings?.paddingInnerBottom ?? 64}
+                        onChange={(value) => handleUpdateBlockSettings(index, 'paddingInnerBottom', value)}
+                        addPx={false}
+                        inputStyle={{ width: 70 }}
+                      />
                     </div>
                   </div>
                 </>
@@ -1167,41 +776,20 @@ const BlockRenderer = ({
 
               {(type === 'footer' || type === 'footer_general_kz') && (
                 <div className='control-flex margin-bottom-small'>
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Canvas color"
                     value={settings?.canvascolor || '#f5f5f5'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'canvascolor',
-                        e.target.value,
-                      )
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'canvascolor', value)}
                   />
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Text color"
                     value={settings?.textcolor || '#000000'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'textcolor',
-                        e.target.value,
-                      )
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'textcolor', value)}
                   />
-                  <input
-                    type='color'
+                  <ColorControl
+                    label="Disclaimer color"
                     value={settings?.disclaimercolor || '#555555'}
-                    onChange={(e) =>
-                      handleUpdateBlockSettings(
-                        index,
-                        'disclaimercolor',
-                        e.target.value,
-                      )
-                    }
-                    className='color-input'
+                    onChange={(value) => handleUpdateBlockSettings(index, 'disclaimercolor', value)}
                   />
                 </div>
               )}
