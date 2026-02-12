@@ -1,6 +1,4 @@
 // BlockRenderer.jsx
-import React, { useState } from 'react';
-import { GripVertical, Trash2, Copy } from 'lucide-react';
 import { addFileAsset } from '../utils/assets';
 import RoundContainer from './RoundContainer';
 import { createNewBlock } from '../handlers/EmailBuilderHandlers';
@@ -28,6 +26,8 @@ import {
   CheckboxControl,
   BorderControl,
 } from './Controls';
+import { BlockToolbar, BlockTypeIndicator } from './BlockUI';
+import { useImageUpload, useBlockSettings, useBlockDragAndDrop } from '../hooks';
 
 const IMG_BLOCK_STYLE = {
   maxWidth: '100%',
@@ -100,41 +100,42 @@ const BlockRenderer = ({
   hoveredBlockId,
 }) => {
   const { type, content } = block;
-  const [manualUrlValue, setManualUrlValue] = useState(
-    settings?.imagePath || block.imagePath || '',
-  );
-
+  
   const shouldShowToolbar = isHovered || isActive;
+  
+  // Use image upload hook
+  const { manualUrlValue, setManualUrlValue, handleImageUpload } = useImageUpload({
+    index,
+    settings,
+    block,
+    setTemplate,
+    addFileAsset,
+    handleUpdateBlockSettings,
+    handleUpdateBlockContent,
+    isNestedBlock,
+  });
+  
+  // Use block settings hook
+  const { blockStyle, contentStyle } = useBlockSettings({
+    type,
+    settings,
+    isActive,
+  });
 
-  // Padding (separate)
-  const topPad = settings?.paddingTop ?? settings?.padding ?? '0';
-  const bottomPad = settings?.paddingBottom ?? settings?.padding ?? '0';
-
-  const isSpacer = type === 'spacer';
-  const isFooter = type === 'footer' || type === 'footer_general_kz';
-  const isRound = type === 'roundContainer';
-
-  const blockStyle = {
-    backgroundColor: settings?.backgroundColor || 'white',
-    paddingTop: isSpacer || isFooter || isRound ? '0' : topPad,
-    paddingBottom: isSpacer || isFooter || isRound ? '0' : bottomPad,
-    paddingLeft:
-      type === 'image' || isSpacer || isFooter || isRound ? '0' : '8%',
-    paddingRight:
-      type === 'image' || isSpacer || isFooter || isRound ? '0' : '8%',
-    position: 'relative',
-    cursor: 'pointer',
-    border: isActive ? '2px solid #4299e1' : 'none',
-    transition: 'all 0.2s ease',
-    lineHeight: type === 'image' ? 0 : undefined,
-  };
-
-  const contentStyle = {
-    color: settings?.color,
-    fontSize: settings?.fontSize,
-    textAlign: settings?.textAlign,
-    whiteSpace: 'pre-wrap',
-  };
+  // Use drag and drop hook
+  const dragHandlers = useBlockDragAndDrop({
+    block,
+    index,
+    isNestedBlock,
+    type,
+    setHoveredBlockId,
+    setActiveBlockId,
+    handleDragStart,
+    handleDragOver,
+    handleDrop,
+    setDragOverIndex,
+    shouldStopDragPropagation,
+  });
 
   let blockContent;
 
@@ -160,87 +161,6 @@ const BlockRenderer = ({
 
       return next;
     });
-  };
-
-  const handleImageUpload = (
-    e,
-    buttonIndex = null,
-    columnIndex = null,
-    isHeader = false,
-  ) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // { path: "i/1.png", previewUrl: "blob:..." }
-    const asset = addFileAsset(file);
-
-    // For nested blocks with header images, use handleUpdateBlockSettings
-    if (
-      isNestedBlock &&
-      isHeader &&
-      buttonIndex === null &&
-      columnIndex === null
-    ) {
-      handleUpdateBlockSettings(index, 'imagePath', asset.path);
-      handleUpdateBlockSettings(index, 'imagePreviewUrl', asset.previewUrl);
-      setManualUrlValue(asset.path);
-      return;
-    }
-
-    setTemplate((prev) => {
-      const newBlocks = [...prev.blocks];
-      const blk = newBlocks[index];
-
-      if (buttonIndex !== null) {
-        // BUTTON IMAGE
-        const btn = blk.buttons[buttonIndex];
-        btn.settings = {
-          ...(btn.settings || {}),
-          imagePath: asset.path,
-          imagePreviewUrl: asset.previewUrl,
-        };
-      } else if (columnIndex !== null) {
-        // COLUMNS / COLUMN CONTENT IMAGE
-        const col = blk.columns[columnIndex] || {};
-        col.imagePath = asset.path;
-        col.imagePreviewUrl = asset.previewUrl;
-
-        // legacy fallback if some old column types still read content
-        if (typeof col.content !== 'undefined') {
-          col.content = asset.previewUrl;
-        }
-
-        blk.columns[columnIndex] = col;
-      } else if (isHeader) {
-        // HEADER IMAGE
-        blk.settings = {
-          ...(blk.settings || {}),
-          imagePath: asset.path,
-          imagePreviewUrl: asset.previewUrl,
-        };
-
-        if (blk.settings && 'imageUrl' in blk.settings) {
-          delete blk.settings.imageUrl;
-        }
-      } else {
-        // GENERIC IMAGE BLOCKS
-        blk.settings = {
-          ...(blk.settings || {}),
-          imagePath: asset.path,
-          imagePreviewUrl: asset.previewUrl,
-        };
-
-        // Only image-type blocks should have their content replaced by the blob
-        if (blk.type === 'image') {
-          blk.content = asset.previewUrl;
-        }
-      }
-
-      newBlocks[index] = blk;
-      return { ...prev, blocks: newBlocks };
-    });
-
-    setManualUrlValue(asset.path);
   };
 
   switch (type) {
@@ -505,67 +425,16 @@ const BlockRenderer = ({
       }`}
       data-index={index}
       draggable
-      onMouseEnter={() => setHoveredBlockId(block.id)}
-      onMouseLeave={() => setHoveredBlockId(null)}
-      onDragStart={(e) => {
-        e.stopPropagation();
-        handleDragStart(e, block);
-      }}
-      onDragOver={(e) => {
-        if (shouldStopDragPropagation(e, isNestedBlock, type)) return;
-        e.preventDefault();
-        e.stopPropagation();
-        handleDragOver(e, index);
-      }}
-      onDragLeave={(e) => {
-        if (shouldStopDragPropagation(e, isNestedBlock, type)) return;
-        e.stopPropagation();
-        setDragOverIndex(null);
-      }}
-      onDrop={(e) => {
-        if (shouldStopDragPropagation(e, isNestedBlock, type)) return;
-        e.preventDefault();
-        e.stopPropagation();
-        handleDrop(e, index);
-      }}
-      onClick={(e) => {
-        if (isNestedBlock) e.stopPropagation();
-        setActiveBlockId(block.id);
-      }}>
+      {...dragHandlers}>
       <div style={blockStyle}>
-        {!showPreview && (
-          <div
-            className='block-type-indicator'
-            style={{
-              color:
-                type === 'header' || type === 'text'
-                  ? settings?.color
-                  : undefined,
-            }}>
-            <GripVertical size={14} className='drag-handle' />
-            <div className='block-type-text'>{type}</div>
-          </div>
-        )}
+        {!showPreview && <BlockTypeIndicator type={type} settings={settings} />}
 
         {!showPreview && shouldShowToolbar && (
-          <div className='block-actions' style={{ zIndex: 20 }}>
-            <button
-              className='action-button'
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDuplicateBlock(index);
-              }}>
-              <Copy size={14} className='action-icon' />
-            </button>
-            <button
-              className='action-button'
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteBlock(index);
-              }}>
-              <Trash2 size={14} className='action-icon' />
-            </button>
-          </div>
+          <BlockToolbar
+            index={index}
+            onDuplicate={handleDuplicateBlock}
+            onDelete={handleDeleteBlock}
+          />
         )}
 
         {blockContent}

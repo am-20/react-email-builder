@@ -87,7 +87,7 @@ const buildStyle = (type, raw = {}) => {
     type === 'spacer' ||
     type === 'header'
   );
-  if (needsSidePad) stylePairs.push('padding-left: 8%;', 'padding-right: 8%;');
+  if (needsSidePad) stylePairs.push('padding-left: 6%;', 'padding-right: 6%;');
 
   return stylePairs.join(' ');
 };
@@ -480,6 +480,10 @@ const renderBlockHtml = (block, template = null) => {
         : '0';
       const widthPercent = (100 / count).toFixed(4);
       const backgroundColor = settings.backgroundColor || '#ffffff';
+      
+      // Add padding top/bottom from settings
+      const paddingTop = settings.paddingTop || settings.padding || '0';
+      const paddingBottom = settings.paddingBottom || settings.padding || '0';
 
       const cells = cols
         .map((c, idx) => {
@@ -487,10 +491,11 @@ const renderBlockHtml = (block, template = null) => {
           const padLeft = idx === 0 ? '0' : halfGap;
           const padRight = idx === count - 1 ? '0' : halfGap;
 
+          // Images will maintain their quality and be properly centered
           const img = src
             ? `<img src="${src}" alt="${
                 c?.settings?.altText || ''
-              }" style="max-width:100%;display:block;height:auto;border:0;">`
+              }" style="width:auto;display:block;height:auto;border:0;margin:0 auto;">`
             : '';
           const inner = c?.settings?.linkUrl
             ? `<a href="${c.settings.linkUrl}" _label="${
@@ -506,7 +511,7 @@ const renderBlockHtml = (block, template = null) => {
         .join('');
 
       blockHtml = `
-      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${backgroundColor};padding-left:8%;padding-right:8%;">
+      <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background-color:${backgroundColor};padding-top:${paddingTop};padding-bottom:${paddingBottom};padding-left:6%;padding-right:6%;">
         <tbody>
           <tr>${cells}</tr>
         </tbody>
