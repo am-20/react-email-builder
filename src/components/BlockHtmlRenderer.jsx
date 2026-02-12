@@ -1,34 +1,61 @@
 import React from 'react';
+import {
+  parsePadding,
+  createLink,
+  createImage,
+  calculateHalfGap,
+  calculateSpacerWidth,
+  calculateColumnWidth,
+  getDefaults,
+  COMMON_DEFAULTS,
+  renderButton,
+  renderButtonGroup,
+} from '../helpers';
+import { translationsKZ, translationsRU } from '../i18n/translations';
 
 /** kebab-case helper for inline styles */
 const kebabCase = (str) =>
   str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase();
 
-/** Resolve a safe image src (ignore blob:/data: for final HTML) */
-const getImageSrc = (s = {}) => {
-  // support both shapes: s.imagePath / s.imageUrl and legacy s.settings.*
-  const rawSrc =
-    s.imagePath ||
-    s.imageUrl ||
-    s.settings?.imagePath ||
-    s.settings?.imageUrl ||
-    '';
+// Extract first value from CSS padding shorthand (top or bottom)
+const sanitizePadding = (val) =>
+  typeof val === 'string' ? val.trim().split(/\s+/)[0] : val;
 
-  if (typeof rawSrc !== 'string') return '';
-
-  // strip out blob:/data: if asset pipeline didn't replace them
-  if (rawSrc.startsWith('blob:') || rawSrc.startsWith('data:')) {
-    return '';
-  }
-
-  return rawSrc;
-};
-
-const sanitizePadding = (val) => {
-  if (typeof val !== 'string') return val;
-  const parts = val.trim().split(/\s+/);
-  return parts[0]; // top or bottom only
-};
+// Keys to exclude from style string generation (created once, not on every call)
+const NON_STYLE_KEYS = new Set([
+  // generic
+  'altText',
+  'imageAlt',
+  'imageUrl',
+  'imagePath',
+  'imagePreviewUrl',
+  'linkLabel',
+  'linklabel',
+  'linkUrl',
+  'urls',
+  'canvascolor',
+  'textcolor',
+  'disclaimercolor',
+  // component-specific
+  'inline',
+  'gap',
+  'imagePosition',
+  'imageWidth',
+  'showButton',
+  'buttonText',
+  'buttonUrl',
+  'buttonColor',
+  'buttonTextColor',
+  'buttonBgColor',
+  'border',
+  'borderRadius',
+  'content',
+  'lineHeight',
+  'lineColor',
+  'height',
+  // ensure we don't emit legacy 'padding' itself
+  'padding',
+]);
 
 /** Build inline style string from settings (filter out non-style keys) */
 const buildStyle = (type, raw = {}) => {
@@ -38,41 +65,6 @@ const buildStyle = (type, raw = {}) => {
     paddingTop: sanitizePadding(raw.paddingTop ?? raw.padding),
     paddingBottom: sanitizePadding(raw.paddingBottom ?? raw.padding),
   };
-
-  const NON_STYLE_KEYS = new Set([
-    // generic
-    'altText',
-    'imageAlt',
-    'imageUrl',
-    'imagePath',
-    'imagePreviewUrl',
-    'linkLabel',
-    'linklabel',
-    'linkUrl',
-    'urls',
-    'canvascolor',
-    'textcolor',
-    'disclaimercolor',
-    // component-specific
-    'inline',
-    'gap',
-    'imagePosition',
-    'imageWidth',
-    'showButton',
-    'buttonText',
-    'buttonUrl',
-    'buttonColor',
-    'buttonTextColor',
-    'buttonBgColor',
-    'border',
-    'borderRadius',
-    'content',
-    'lineHeight',
-    'lineColor',
-    'height',
-    // ensure we don't emit legacy 'padding' itself
-    'padding',
-  ]);
 
   const stylePairs = Object.entries(settings)
     .filter(
@@ -92,32 +84,6 @@ const buildStyle = (type, raw = {}) => {
   return stylePairs.join(' ');
 };
 
-const tKZ = {
-  questions: 'Сұрақтарыңыз бар ма?',
-  disclaimer:
-    'Сіз Samsung хабарламаларының таратылымына жазылғандықтан осы хатты алдыңыз. Осы хатқа жауап қайтармаңыз. Бұл автоматты түрде жолданатын хабарлама. Біздің хабарламаларымызды алудан бас тарту үшін, осы ',
-  link: 'сілтеме',
-  disclaimer_end: 'арқылы өтуіңізді сұраймыз',
-  all_rights: ' Барлық құқықтар қорғалған.',
-  address:
-    'ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA» ЖШС (САМСУНГ ЭЛЕКТРОНИКС ОРТАЛЫҚ ЕУРАЗИЯ) Қазақстан Республикасы, Алматы қ., 050000, Желтоқсан көшесі, 115 үй, «Kaisar Plaza» сауда-кеңсе орталығы, 3-қабат.',
-  legal: 'Құқықтық ақпарат',
-  privacy: 'Құпиялылық саясаты',
-};
-
-const tRU = {
-  questions: 'Есть вопросы?',
-  disclaimer:
-    'Вы получили это письмо, потому что подписались на рассылку Samsung. Не отвечайте на данное письмо. Оно является автоматической рассылкой. Чтобы отказаться от получения наших рассылок, пожалуйста, перейдите по этой ',
-  link: 'ссылке',
-  disclaimer_end: '',
-  all_rights: ' Все права защищены.',
-  address:
-    'ТОО «SAMSUNG ELECTRONICS CENTRAL EURASIA» (САМСУНГ ЭЛЕКТРОНИКС ЦЕНТРАЛЬНАЯ ЕВРАЗИЯ) Республика Казахстан, г. Алматы, 050000, улица Желтоксан, д. 115, Торгово-офисный центр «Kaisar Plaza», 3 этаж.',
-  legal: 'Правовая информация',
-  privacy: 'Политика конфиденциальности',
-};
-
 /** Render a block to exportable HTML (string) */
 const renderBlockHtml = (block, template = null) => {
   const { type, content = '', settings = {} } = block;
@@ -132,7 +98,7 @@ const renderBlockHtml = (block, template = null) => {
         const src =
           settings?.imagePath ||
           settings?.imageUrl ||
-          'https://placehold.co/80x80';
+          COMMON_DEFAULTS.placeholderHeaderImage;
 
         const img = `<img src="${src}" alt="voucher" style="max-width:100%;border:0;display:block;margin:0 auto;">`;
 
@@ -196,7 +162,7 @@ const renderBlockHtml = (block, template = null) => {
       const src =
         settings?.imagePath ||
         settings?.imageUrl ||
-        'https://placehold.co/640x300';
+        COMMON_DEFAULTS.placeholderImage;
 
       const img = `<img src="${src}" alt="${
         settings.altText || ''
@@ -225,21 +191,14 @@ const renderBlockHtml = (block, template = null) => {
 
     /** IMAGE BUTTON */
     case 'button': {
-      const buttonImgSrc =
-        getImageSrc(settings) || 'https://placehold.co/80x40';
+      const align = settings.textAlign ?? COMMON_DEFAULTS.textAlign;
+      const buttonHtml = renderButton(settings, true);
+
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr>
-          <td style="text-align:${settings.textAlign || 'center'};">
-            <a href="${
-              settings.linkUrl || '#'
-            }" target="_blank" rel="noopener noreferrer" _label="${
-              settings.linkLabel || ''
-            }">
-              <img src="${buttonImgSrc}" alt="${
-                settings.imageAlt || ''
-              }" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
-            </a>
+          <td style="text-align:${align};">
+            ${buttonHtml}
           </td>
         </tr>
       </table>`;
@@ -248,52 +207,14 @@ const renderBlockHtml = (block, template = null) => {
 
     /** CODED BUTTON */
     case 'buttonCoded': {
-      let paddingTop, paddingBottom, paddingX;
-      
-      if (settings.padding) {
-        // Parse CSS shorthand padding (e.g., "12px 24px")
-        const parts = settings.padding.trim().split(/\s+/);
-        if (parts.length === 1) {
-          // "12px" → all sides
-          paddingTop = paddingBottom = paddingX = parts[0];
-        } else if (parts.length === 2) {
-          // "12px 24px" → vertical horizontal
-          paddingTop = paddingBottom = parts[0];
-          paddingX = parts[1];
-        } else if (parts.length === 4) {
-          // "12px 24px 36px 48px" → top right bottom left
-          paddingTop = parts[0];
-          paddingX = parts[1];
-          paddingBottom = parts[2];
-        }
-      } else {
-        // Use individual values if provided
-        paddingTop = settings.paddingTop ?? '12px';
-        paddingBottom = settings.paddingBottom ?? '12px';
-        paddingX = settings.paddingX ?? '24px';
-      }
-
-      const color = settings.color ?? '#ffffff';
-      const bg = settings.buttonBgColor ?? '#000000';
-      const border = settings.border ?? 'none';
-      const radius = settings.borderRadius ?? '30px';
-      const fontSize = settings.fontSize ?? '16px';
-      const fontWeight = settings.fontWeight ?? 'bold';
-      const text = settings.content || 'Click Me';
-      const href = settings.linkUrl || '#';
-      const linkLabel = settings.linkLabel || '#';
-      const align = settings.textAlign || 'center';
+      const align = settings.textAlign ?? COMMON_DEFAULTS.textAlign;
+      const buttonHtml = renderButton(settings, false);
 
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr>
           <td align="${align}" style="padding:16px 0;">
-            <a href="${href}" target="_blank" _label="${linkLabel}" rel="noopener noreferrer" style="
-              display:inline-block;text-decoration:none;color:${color};background-color:${bg};
-              border:${border};border-radius:${radius};font-weight:${fontWeight};font-size:${fontSize};
-              padding:${paddingTop} ${paddingX} ${paddingBottom} ${paddingX};letter-spacing:0;line-height:120%;
-              font-family:${settings.fontFamily || 'Arial, sans-serif'};
-            ">${text}</a>
+            ${buttonHtml}
           </td>
         </tr>
       </table>`;
@@ -302,73 +223,16 @@ const renderBlockHtml = (block, template = null) => {
 
     /** IMAGE BUTTON GROUP */
     case 'buttonGroup': {
-      const inline = !!settings.inline;
-      const gap = settings.gap || '0';
-      const bg = settings.backgroundColor || '#ffffff';
-
-      const buttons = (block.buttons || []).map((btn) => {
-        const s = btn?.settings || {};
-        const imgSrc = getImageSrc(s) || 'https://placehold.co/80x40';
-        const href = s.linkUrl || '#';
-        const linkLabel = s.linkLabel || '';
-        const alt = s.imageAlt || '';
-
-        // inner button html – same in both modes
-        const inner = `
-          <a href="${href}" target="_blank" rel="noopener noreferrer" _label="${linkLabel}">
-            <img src="${imgSrc}" alt="${alt}" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
-          </a>
-        `;
-
-        return { inner };
-      });
-
-      let tableRows = '';
-
-      if (inline) {
-        // ONE ROW, many TDs → buttons inline
-        const cells = buttons
-          .map((btn, i) => {
-            const isLast = i === buttons.length - 1;
-            const paddingRight = !isLast ? `padding-right:${gap};` : '';
-            return `
-              <td align="center" style="${paddingRight}">
-                ${btn.inner}
-              </td>
-            `;
-          })
-          .join('');
-
-        tableRows = `<tr>${cells}</tr>`;
-      } else {
-        // MANY ROWS, one TD per row → buttons stacked
-        tableRows = buttons
-          .map((btn, i) => {
-            const isLast = i === buttons.length - 1;
-            const paddingBottom = !isLast ? `padding-bottom:${gap};` : '';
-            return `
-              <tr>
-                <td align="center" style="${paddingBottom}">
-                  ${btn.inner}
-                </td>
-              </tr>
-            `;
-          })
-          .join('');
-      }
+      const bg = settings.backgroundColor ?? COMMON_DEFAULTS.white;
+      const textAlign = settings.textAlign ?? COMMON_DEFAULTS.textAlign;
+      const groupHtml = renderButtonGroup(block.buttons || [], settings, true);
 
       blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
           <tbody>
             <tr>
-              <td align="${
-                settings.textAlign || 'center'
-              }" style="background-color:${bg};">
-                <table role="presentation" cellspacing="0" cellpadding="0" border="0">
-                  <tbody>
-                    ${tableRows}
-                  </tbody>
-                </table>
+              <td align="${textAlign}" style="background-color:${bg};">
+                ${groupHtml}
               </td>
             </tr>
           </tbody>
@@ -379,74 +243,15 @@ const renderBlockHtml = (block, template = null) => {
 
     /** CODED BUTTON GROUP */
     case 'buttonCodedGroup': {
-      const inline = !!settings.inline;
-      const gap = settings.gap || '0';
-      const bg = settings.backgroundColor || '#ffffff';
-      const fontFamily = settings.fontFamily || 'Arial, sans-serif';
+      const bg = settings.backgroundColor ?? COMMON_DEFAULTS.white;
+      const textAlign = settings.textAlign ?? COMMON_DEFAULTS.textAlign;
+      const groupHtml = renderButtonGroup(block.buttons || [], settings, false);
 
-      const buttons = (block.buttons || [])
-        .map((btn, i, arr) => {
-          const s = btn?.settings || {};
-
-          const label = s.content || 'Click Me';
-          const href = s.linkUrl || '#';
-          const linkLabel = s.linkLabel || '';
-
-          const color = s.color ?? '#ffffff';
-          const btnBg = s.buttonBgColor ?? '#000000';
-          const padding = s.padding ?? '12px 24px';
-          const fontSize = s.fontSize ?? '16px';
-          const border = s.border ?? '1px solid #000000';
-
-          const isLast = i === arr.length - 1;
-          const spacer = isLast ? '0' : gap;
-
-          // spacing: right margin for inline, bottom margin for stacked
-          const tableSpacing = inline
-          ? `margin-right:${spacer};`
-          : `margin:0 auto ${spacer} auto; width:fit-content;`; 
-
-          return `
-            <table role="presentation" cellspacing="0" cellpadding="0" border="0"
-                   style="display:${
-                     inline ? 'inline-block' : 'block'
-                   };${tableSpacing}">
-              <tr>
-                <td align="center">
-                  <a href="${href}"
-                     target="_blank" rel="noopener noreferrer"
-                     _label="${linkLabel}"
-                     style="text-decoration:none;">
-                    <span style="
-                      display:inline-block;
-                      border-radius:30px;
-                      text-decoration:none;
-                      font-weight:bold;
-                      letter-spacing:0;
-                      font-size:${fontSize};
-                      color:${color};
-                      background-color:${btnBg};
-                      border:${border};
-                      padding:${padding};
-                      line-height:120%;
-                      font-family:${fontFamily};
-                    ">
-                      ${label}
-                    </span>
-                  </a>
-                </td>
-              </tr>
-            </table>`;
-        })
-        .join('');
-
-        blockHtml = `
+      blockHtml = `
         <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
           <tr>
-            <td align="${
-              settings.textAlign || 'center'
-            }" style="background-color:${bg};text-align:${settings.textAlign || 'center'};">
-              ${buttons}
+            <td align="${textAlign}" style="background-color:${bg};text-align:${textAlign};">
+              ${groupHtml}
             </td>
           </tr>
         </table>`;
@@ -458,15 +263,15 @@ const renderBlockHtml = (block, template = null) => {
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
         <tr><td style="height:${
-          settings.lineHeight || '1px'
-        };background-color:${settings.lineColor || '#ddd'};"></td></tr>
+          settings.lineHeight ?? '1px'
+        };background-color:${settings.lineColor ?? '#ddd'};"></td></tr>
       </table>`;
       break;
 
     case 'spacer':
       blockHtml = `
       <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="${styleString}">
-        <tr><td style="height:${settings.height || '40px'};"></td></tr>
+        <tr><td style="height:${settings.height ?? '40px'};"></td></tr>
       </table>`;
       break;
 
@@ -474,16 +279,17 @@ const renderBlockHtml = (block, template = null) => {
     case 'columns': {
       const cols = Array.isArray(block.columns) ? block.columns : [];
       const count = Math.max(cols.length, 1);
-      const gap = settings.columnGap || '0';
-      const halfGap = /^-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-        ? `${parseInt(gap) / 2}px`
-        : '0';
-      const widthPercent = (100 / count).toFixed(4);
-      const backgroundColor = settings.backgroundColor || '#ffffff';
-      
-      // Add padding top/bottom from settings
-      const paddingTop = settings.paddingTop || settings.padding || '0';
-      const paddingBottom = settings.paddingBottom || settings.padding || '0';
+      const gap = settings.columnGap ?? '0';
+
+      // Use calculateHalfGap helper
+      const halfGap = calculateHalfGap(gap);
+
+      // Use calculateColumnWidth helper
+      const widthPercent = calculateColumnWidth(count);
+
+      const backgroundColor = settings.backgroundColor ?? COMMON_DEFAULTS.white;
+      const paddingTop = settings.paddingTop ?? settings.padding ?? '0';
+      const paddingBottom = settings.paddingBottom ?? settings.padding ?? '0';
 
       const cells = cols
         .map((c, idx) => {
@@ -491,16 +297,16 @@ const renderBlockHtml = (block, template = null) => {
           const padLeft = idx === 0 ? '0' : halfGap;
           const padRight = idx === count - 1 ? '0' : halfGap;
 
-          // Images will maintain their quality and be properly centered
+          // Use createImage and createLinkedImage helpers
           const img = src
-            ? `<img src="${src}" alt="${
-                c?.settings?.altText || ''
-              }" style="width:auto;display:block;height:auto;border:0;margin:0 auto;">`
+            ? createImage(
+                src,
+                c?.settings?.altText ?? '',
+                'width:auto;height:auto;margin:0 auto;',
+              )
             : '';
           const inner = c?.settings?.linkUrl
-            ? `<a href="${c.settings.linkUrl}" _label="${
-                c?.settings?.linkLabel || ''
-              }">${img}</a>`
+            ? createLink(c.settings.linkUrl, img, c?.settings?.linkLabel ?? '')
             : img;
 
           return `
@@ -524,19 +330,25 @@ const renderBlockHtml = (block, template = null) => {
       const cols = Array.isArray(block.columns) ? block.columns : [];
       const count = Math.max(cols.length, 1);
 
-      const gap = settings?.columnGap || '0';
-      const halfGap =
-        typeof gap === 'string' && /-?\d+(\.\d+)?(px|em|rem|%)$/.test(gap)
-          ? `${parseInt(gap) / 2}px`
-          : '0';
+      // Use calculateHalfGap helper (same as columns case)
+      const gap = settings?.columnGap ?? '0';
+      const halfGap = calculateHalfGap(gap);
 
-      const widthPercent = `${(100 / count).toFixed(4)}%`;
+      // Use calculateColumnWidth helper
+      const widthPercent = `${calculateColumnWidth(count)}%`;
 
-      const bg = settings?.backgroundColor || '#ffffff';
-      const color = settings?.color || '#000000';
-      const isBold = settings?.isBold || false;
-      const fontFamily =
-        settings?.fontFamily || 'SamsungOne, Arial, Helvetica, sans-serif';
+      // Use getDefaults for cleaner default handling
+      const {
+        backgroundColor: bg,
+        color,
+        isBold,
+        fontFamily,
+      } = getDefaults(settings, {
+        backgroundColor: COMMON_DEFAULTS.white,
+        color: COMMON_DEFAULTS.black,
+        isBold: false,
+        fontFamily: 'SamsungOne, Arial, Helvetica, sans-serif',
+      });
 
       const paddingTop = settings?.paddingTop ?? settings?.padding ?? '0';
       const paddingBottom = settings?.paddingBottom ?? settings?.padding ?? '0';
@@ -603,12 +415,18 @@ const renderBlockHtml = (block, template = null) => {
     // ROUND CONTAINER
     case 'roundContainer': {
       const s = settings || {};
-      const canvasColor = s.canvasColor || '#CFCFCF';
-      const backgroundColor = s.backgroundColor || '#FFFFFF';
+
+      // Use getDefaults for cleaner default handling
+      const { canvasColor, backgroundColor, borderColor, borderType } =
+        getDefaults(s, {
+          canvasColor: COMMON_DEFAULTS.canvasGray,
+          backgroundColor: COMMON_DEFAULTS.white,
+          borderColor: COMMON_DEFAULTS.white,
+          borderType: 'solid',
+        });
+
       const bgWidth = Number(s.bgWidth ?? 88);
-      const borderColor = s.borderColor || '#FFFFFF';
       const borderWidth = Number(s.borderWidth ?? 3);
-      const borderType = s.borderType || 'solid';
       const borderRadius = Number(s.borderRadius ?? 24);
       const paddingTop = Number(s.paddingTop ?? 8);
       const paddingBottom = Number(s.paddingBottom ?? 8);
@@ -632,8 +450,8 @@ const renderBlockHtml = (block, template = null) => {
           ? `<tr><td style="mso-line-height-rule:exactly;height:${paddingBottom}px;font-size:0;border:0;background-color:${canvasColor}" bgcolor="${canvasColor}" height="${paddingBottom}">&nbsp;</td></tr>`
           : '';
 
-      // Calculate spacer width: (100 - bgWidth) / 2
-      const spacerWidth = ((100 - bgWidth) / 2).toFixed(2);
+      // Use calculateSpacerWidth helper
+      const spacerWidth = calculateSpacerWidth(bgWidth);
 
       blockHtml = `
       <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color:${canvasColor};">
@@ -685,7 +503,7 @@ const renderBlockHtml = (block, template = null) => {
     case 'footer':
     case 'footer_general_kz': {
       const isKZ = type === 'footer_general_kz';
-      const dict = isKZ ? tKZ : tRU;
+      const dict = isKZ ? translationsKZ : translationsRU;
       const disclaimerLink = settings.urls?.optout
         ? `<a href='${settings.urls.optout}' style='text-decoration:underline;color:${settings.disclaimercolor};'>${dict.link}</a>`
         : dict.link;
