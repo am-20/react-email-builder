@@ -33,6 +33,8 @@ const inlineStyles = `
   .pre-header:active {
     max-height: none;
   }
+  *[class].hauto { height: auto !important; }
+  *[class].w100pc { width: 100% !important; }  
 `;
 
 export const generateHtmlOutput = (template, renderBlockHtml) => {
@@ -66,9 +68,9 @@ export const generateHtmlOutput = (template, renderBlockHtml) => {
     <tr>
       <td align="center">
         <!-- Email container -->
-        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="640px" style="margin: 0 auto; background-color: #ffffff;">
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="640" style="margin: 0 auto; background-color: #ffffff;">
           <tr>
-            <td>
+            <td align="center">
               <!-- Header with title and view in browser link -->
               <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="width:100%;margin:0 auto;padding:0;text-align:center;font-family: SamsungOne, Arial, Helvetica, sans-serif;background-color: #f5f5f5;">
                 <tr>

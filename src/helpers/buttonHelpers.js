@@ -24,8 +24,8 @@ export const renderButton = (settings, isImage = false) => {
     const label = settings.linkLabel ?? COMMON_DEFAULTS.defaultLabel;
 
     return `
-      <a href="${href}" target="_blank" rel="noopener noreferrer" _label="${label}">
-        <img src="${imgSrc}" alt="${alt}" style="max-width:100%;display:block;margin:0 auto;height:auto;border:0;">
+      <a href="${href}" target="_blank" rel="noopener noreferrer" _label="${label}" style="display:inline-block;">
+        <img src="${imgSrc}" alt="${alt}" style="max-width:100%;display:block;height:auto;border:0;">
       </a>
     `;
   } else {
@@ -48,12 +48,18 @@ export const renderButton = (settings, isImage = false) => {
     const label = settings.linkLabel ?? COMMON_DEFAULTS.defaultLabel;
 
     return `
-      <a href="${href}" target="_blank" _label="${label}" rel="noopener noreferrer" style="
-        display:inline-block;text-decoration:none;color:${color};background-color:${bg};
-        border:${border};border-radius:${radius};font-weight:${fontWeight};font-size:${fontSize};
-        padding:${paddingTop} ${paddingX} ${paddingBottom} ${paddingX};letter-spacing:0;line-height:120%;
-        font-family:${fontFamily};
-      ">${text}</a>
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="display:inline-block;">
+        <tr>
+          <td align="center">
+            <a href="${href}" target="_blank" _label="${label}" rel="noopener noreferrer" style="
+              display:inline;text-decoration:none;color:${color};background-color:${bg};
+              border:${border};border-radius:${radius};font-weight:${fontWeight};font-size:${fontSize};
+              padding:${paddingTop} ${paddingX} ${paddingBottom} ${paddingX};letter-spacing:0;line-height:120%;
+              font-family:${fontFamily};
+            ">${text}</a>
+          </td>
+        </tr>
+      </table>
     `;
   }
 };
@@ -70,9 +76,9 @@ export const renderButton = (settings, isImage = false) => {
 export const renderButtonGroup = (buttons, settings, isImage = false) => {
   const inline = !!settings.inline;
   const gap = settings.gap ?? COMMON_DEFAULTS.gap;
-  const bg = settings.backgroundColor ?? COMMON_DEFAULTS.white;
-  const fontFamily = settings.fontFamily ?? COMMON_DEFAULTS.fontFamily;
-  const textAlign = settings.textAlign ?? COMMON_DEFAULTS.textAlign;
+  // const bg = settings.backgroundColor ?? COMMON_DEFAULTS.white;
+  // const fontFamily = settings.fontFamily ?? COMMON_DEFAULTS.fontFamily;
+  // const textAlign = settings.textAlign ?? COMMON_DEFAULTS.textAlign;
 
   if (isImage) {
     // IMAGE BUTTON GROUP
@@ -84,39 +90,29 @@ export const renderButtonGroup = (buttons, settings, isImage = false) => {
     let tableRows = '';
 
     if (inline) {
-      // ONE ROW, many TDs → buttons inline
+      // One row, many TDs - buttons side by side
       const cells = buttonHtmls
         .map((btnHtml, i) => {
           const isLast = i === buttonHtmls.length - 1;
-          const paddingRight = !isLast ? `padding-right:${gap};` : '';
-          return `
-            <td align="center" style="${paddingRight}">
-              ${btnHtml}
-            </td>
-          `;
+          const paddingRight = !isLast ? 'padding-right:' + gap + ';' : '';
+          return '<td align="center" style="text-align:center;' + paddingRight + '">' + btnHtml + '</td>';
         })
         .join('');
 
-      tableRows = `<tr>${cells}</tr>`;
+      tableRows = '<tr align="center">' + cells + '</tr>';
     } else {
-      // MANY ROWS, one TD per row → buttons stacked
+      // Many rows, one TD per row - buttons stacked
       tableRows = buttonHtmls
         .map((btnHtml, i) => {
           const isLast = i === buttonHtmls.length - 1;
-          const paddingBottom = !isLast ? `padding-bottom:${gap};` : '';
-          return `
-            <tr>
-              <td align="center" style="${paddingBottom}">
-                ${btnHtml}
-              </td>
-            </tr>
-          `;
+          const paddingBottom = !isLast ? 'padding-bottom:' + gap + ';' : '';
+          return '<tr align="center"><td align="center" style="text-align:center;' + paddingBottom + '">' + btnHtml + '</td></tr>';
         })
         .join('');
     }
 
     return `
-      <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+      <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="display:inline-block;">
         <tbody>
           ${tableRows}
         </tbody>
@@ -124,31 +120,38 @@ export const renderButtonGroup = (buttons, settings, isImage = false) => {
     `;
   } else {
     // CODED BUTTON GROUP
-    const buttonTables = buttons
-      .map((btn, i, arr) => {
-        const s = btn?.settings || {};
-        const buttonHtml = renderButton(s, false);
+    if (inline) {
+      // Buttons side by side in one table row
+      const cells = buttons
+        .map((btn, i, arr) => {
+          const s = btn?.settings || {};
+          const buttonHtml = renderButton(s, false);
+          const isLast = i === arr.length - 1;
+          const paddingRight = !isLast ? 'padding-right:' + gap + ';' : '';
+          return '<td align="center" style="text-align:center;' + paddingRight + '">' + buttonHtml + '</td>';
+        })
+        .join('');
 
-        const isLast = i === arr.length - 1;
-        const spacer = isLast ? '0' : gap;
+      return `
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="display:inline-block;">
+          <tr align="center">${cells}</tr>
+        </table>`;
+    } else {
+      // Each button in its own centered row
+      const rows = buttons
+        .map((btn, i, arr) => {
+          const s = btn?.settings || {};
+          const buttonHtml = renderButton(s, false);
+          const isLast = i === arr.length - 1;
+          const paddingBottom = !isLast ? 'padding-bottom:' + '30px;' : '';
+          return '<tr align="center"><td align="center" style="text-align:center;' + paddingBottom + '">' + buttonHtml + '</td></tr>';
+        })
+        .join('');
 
-        // spacing: right margin for inline, bottom margin for stacked
-        const tableSpacing = inline
-          ? `margin-right:${spacer};`
-          : `margin:0 auto ${spacer} auto; width:fit-content;`;
-
-        return `
-          <table role="presentation" cellspacing="0" cellpadding="0" border="0"
-                 style="display:${inline ? 'inline-block' : 'block'};${tableSpacing}">
-            <tr>
-              <td align="center">
-                ${buttonHtml}
-              </td>
-            </tr>
-          </table>`;
-      })
-      .join('');
-
-    return buttonTables;
+      return `
+        <table role="presentation" cellspacing="0" cellpadding="0" border="0" style="display:inline-block;">
+          ${rows}
+        </table>`;
+    }
   }
 };
