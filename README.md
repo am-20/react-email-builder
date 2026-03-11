@@ -1,65 +1,65 @@
 # React Email Builder
 
-A drag-and-drop email template builder built with React 19 and Vite 6. Create responsive, email-client-compatible templates with a visual editor and export them as production-ready HTML packaged in a ZIP file with all assets included.
+Визуальный конструктор email-шаблонов с функцией drag-and-drop, построенный на React 19 и Vite 6. Создает адаптивные шаблоны писем, совместимые со всеми почтовыми клиентами, и экспортирует их в виде готового HTML, упакованного в ZIP-файл со всеми ресурсами.
 
 ---
 
-## Table of Contents
+## Содержание
 
-- [Overview](#overview)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [Architecture Deep Dive](#architecture-deep-dive)
-- [Installation](#installation)
-- [Usage Guide](#usage-guide)
-- [Component Types](#component-types)
-- [File-by-File Reference](#file-by-file-reference)
-- [Data Flow & State Management](#data-flow--state-management)
-- [How to Add a New Block Type](#how-to-add-a-new-block-type)
-- [How to Add a New Settings Control](#how-to-add-a-new-settings-control)
-- [Export & Deployment](#export--deployment)
-- [Internationalization (i18n)](#internationalization-i18n)
-- [Technical Details](#technical-details)
-- [Available Scripts](#available-scripts)
-- [Troubleshooting](#troubleshooting)
-
----
-
-## Overview
-
-This project provides a visual, drag-and-drop interface for building email templates that work across all major email clients (Outlook, Gmail, Apple Mail, mobile clients). The builder outputs table-based HTML with inline styles — the industry standard for email compatibility.
-
-### Key Capabilities
-
-- **Visual Editor** — Drag-and-drop interface with a 640px canvas matching email width standards.
-- **Live Preview** — View the final email HTML in a new browser tab at any time.
-- **14 Block Types** — Headers, text, images, buttons (image and coded), columns, dividers, spacers, round containers, and footers.
-- **Auto-Save** — All work is debounced (400ms) and persisted to `localStorage`.
-- **ZIP Export** — One-click export produces a ZIP file containing `index.html` and an `i/` folder with all images.
-- **Image Management** — Upload images that are stored as base64 in `localStorage`, with blob URLs used for instant preview in the editor.
+- [Обзор](#обзор)
+- [Технологический стек](#технологический-стек)
+- [Структура проекта](#структура-проекта)
+- [Архитектура: подробный разбор](#архитектура-подробный-разбор)
+- [Установка](#установка)
+- [Руководство по использованию](#руководство-по-использованию)
+- [Типы компонентов](#типы-компонентов)
+- [Справочник по файлам](#справочник-по-файлам)
+- [Поток данных и управление состоянием](#поток-данных-и-управление-состоянием)
+- [Как добавить новый тип блока](#как-добавить-новый-тип-блока)
+- [Как добавить новый элемент управления настройками](#как-добавить-новый-элемент-управления-настройками)
+- [Экспорт и развёртывание](#экспорт-и-развёртывание)
+- [Локализация (i18n)](#локализация-i18n)
+- [Технические детали](#технические-детали)
+- [Доступные скрипты](#доступные-скрипты)
+- [Решение проблем](#решение-проблем)
 
 ---
 
-## Tech Stack
+## Обзор
 
-| Category       | Technology                                            |
-| -------------- | ----------------------------------------------------- |
-| Framework      | React 19                                              |
-| Build Tool     | Vite 6                                                |
-| Icons          | lucide-react 0.503                                    |
-| ZIP Generation | JSZip 3.10                                            |
-| File Download  | file-saver 2.0                                        |
-| Styling        | Plain CSS (Tailwind in devDeps but unused at runtime) |
-| Linting        | ESLint 9                                              |
+Проект предоставляет визуальный интерфейс с drag-and-drop функцией для создания email-шаблонов, которые корректно отображаются во всех основных почтовых клиентах (Outlook, Gmail, Apple Mail, мобильные клиенты). Конструктор генерирует HTML на основе таблиц с inline-стилями — это стандарт для обеспечения совместимости с почтовыми клиентами.
+
+### Ключевые возможности
+
+- **Визуальный редактор** — интерфейс drag-and-drop с холстом шириной 640px, соответствующим стандартам ширины email-рассылок.
+- **Предпросмотр** — возможность в любой момент открыть итоговый HTML письма в новой вкладке браузера.
+- **14 типов блоков** — заголовки, текст, изображения, кнопки (картинкой или кодом), колонки, разделители, отступы, контейнеры с закруглёнными углами и футеры.
+- **Автосохранение** — все изменения сохраняются в `localStorage` с дебаунсом 400 мс.
+- **Экспорт в ZIP** — экспорт одним кликом создаёт ZIP-файл с `index.html` и папкой `i/` со всеми изображениями.
+- **Управление изображениями** — загруженные изображения хранятся в `localStorage` в формате base64, а для мгновенного предпросмотра в редакторе используются blob-URL.
 
 ---
 
-## Project Structure
+## Технологический стек
+
+| Категория         | Технология                                                     |
+| ----------------- | -------------------------------------------------------------- |
+| Фреймворк         | React 19                                                       |
+| Инструмент сборки | Vite 6                                                         |
+| Иконки            | lucide-react 0.503                                             |
+| Генерация ZIP     | JSZip 3.10                                                     |
+| Скачивание файлов | file-saver 2.0                                                 |
+| Стилизация        | Чистый CSS (Tailwind в devDeps, но не используется в рантайме) |
+| Линтинг           | ESLint 9                                                       |
+
+---
+
+## Структура проекта
 
 ```
 react-email-builder/
 ├── public/
-│   └── i/                              # Default footer icons (included in ZIP export)
+│   └── i/                              # Стандартные иконки футера (включаются в ZIP при экспорте)
 │       ├── facebook.png
 │       ├── instagram.png
 │       ├── vk.png
@@ -69,17 +69,17 @@ react-email-builder/
 │       ├── chat.png
 │       └── call.png
 ├── scripts/
-│   └── convertImagesToBase64.js        # Utility: batch-convert images to base64
+│   └── convertImagesToBase64.js        # Утилита: пакетная конвертация изображений в base64
 ├── src/
 │   ├── components/
-│   │   ├── EmailBuilder.jsx            # Root builder: state, sidebar, canvas, toolbar
-│   │   ├── EmailBuilder.css            # All editor styles
-│   │   ├── BlockRenderer.jsx           # Maps block data → editor UI + settings panels
-│   │   ├── BlockHtmlRenderer.jsx       # Maps block data → email-safe HTML strings
-│   │   ├── PreHeader.jsx               # Title bar with "view in browser" link
-│   │   ├── RoundContainer.jsx          # Nestable container with rounded corners
-│   │   ├── BlockTypes/                 # Individual block editor components
-│   │   │   ├── index.js                # Barrel export
+│   │   ├── EmailBuilder.jsx            # Корневой компонент: состояние, сайдбар, холст, тулбар
+│   │   ├── EmailBuilder.css            # Все стили редактора
+│   │   ├── BlockRenderer.jsx           # Маппинг данных блока → UI редактора + панели настроек
+│   │   ├── BlockHtmlRenderer.jsx       # Маппинг данных блока → email-безопасные HTML-строки
+│   │   ├── PreHeader.jsx               # Верхняя строка с заголовком и ссылкой «Открыть в браузере»
+│   │   ├── RoundContainer.jsx          # Вложенный контейнер с закруглёнными углами
+│   │   ├── BlockTypes/                 # Отдельные компоненты блоков для редактора
+│   │   │   ├── index.js                # Barrel-экспорт
 │   │   │   ├── HeaderBlock.jsx
 │   │   │   ├── TextBlock.jsx
 │   │   │   ├── ImageBlock.jsx
@@ -92,47 +92,47 @@ react-email-builder/
 │   │   │   ├── DividerBlock.jsx
 │   │   │   ├── SpacerBlock.jsx
 │   │   │   └── FooterBlock.jsx
-│   │   ├── BlockUI/                    # Shared block chrome (toolbar, type badge)
+│   │   ├── BlockUI/                    # Общие UI-элементы блоков (тулбар, индикатор типа)
 │   │   │   ├── index.js
-│   │   │   ├── BlockToolbar.jsx        # Duplicate / Delete action buttons
-│   │   │   └── BlockTypeIndicator.jsx  # Drag handle + block type label
-│   │   └── Controls/                   # Reusable settings form controls
+│   │   │   ├── BlockToolbar.jsx        # Кнопки «Дублировать» / «Удалить»
+│   │   │   └── BlockTypeIndicator.jsx  # Ручка перетаскивания + метка типа блока
+│   │   └── Controls/                   # Переиспользуемые элементы управления настройками
 │   │       ├── index.js
-│   │       ├── ColorControl.jsx        # Color picker with label
-│   │       ├── NumberControl.jsx       # Number input with optional px suffix
-│   │       ├── SelectControl.jsx       # Dropdown select
-│   │       ├── TextControl.jsx         # Text input
-│   │       ├── CheckboxControl.jsx     # Checkbox toggle
-│   │       ├── PaddingControl.jsx      # Padding top/bottom presets
-│   │       ├── AlignmentControl.jsx    # Text alignment selector
-│   │       └── BorderControl.jsx       # Border style controls
+│   │       ├── ColorControl.jsx        # Палитра цветов с подписью
+│   │       ├── NumberControl.jsx       # Числовой ввод с опциональным суффиксом px
+│   │       ├── SelectControl.jsx       # Выпадающий список
+│   │       ├── TextControl.jsx         # Текстовый ввод
+│   │       ├── CheckboxControl.jsx     # Чекбокс
+│   │       ├── PaddingControl.jsx      # Пресеты отступов сверху/снизу
+│   │       ├── AlignmentControl.jsx    # Выбор выравнивания текста
+│   │       └── BorderControl.jsx       # Настройки границ
 │   ├── config/
-│   │   └── emailTemplateConfig.jsx     # Component palette + initial template
+│   │   └── emailTemplateConfig.jsx     # Палитра компонентов + начальный шаблон
 │   ├── handlers/
-│   │   └── EmailBuilderHandlers.js     # All business logic (CRUD, drag-drop, export)
-│   ├── helpers/                        # Pure functions for BlockHtmlRenderer
-│   │   ├── index.js                    # Barrel export
+│   │   └── EmailBuilderHandlers.js     # Вся бизнес-логика (CRUD [Create, Read, Update, Delete], drag-drop, экспорт)
+│   ├── helpers/                        # Чистые функции для BlockHtmlRenderer
+│   │   ├── index.js                    # Barrel-экспорт
 │   │   ├── htmlHelpers.js              # wrapInTable, createLink, createImage, createLinkedImage
 │   │   ├── calculateHelpers.js         # calculateHalfGap, calculateSpacerWidth, calculateColumnWidth
 │   │   ├── defaultHelpers.js           # getDefault, getDefaults, COMMON_DEFAULTS
-│   │   ├── parsePadding.js             # CSS padding shorthand parser
-│   │   └── buttonHelpers.js            # renderButton, renderButtonGroup (HTML generation)
-│   ├── hooks/                          # Custom React hooks
-│   │   ├── index.js                    # Barrel export
-│   │   ├── useImageUpload.js           # Image upload logic for all block types
-│   │   ├── useBlockSettings.js         # Calculates block/content styles from settings
-│   │   └── useBlockDragAndDrop.js      # Drag-and-drop event handler factory
+│   │   ├── parsePadding.js             # Парсер CSS-сокращений для padding
+│   │   └── buttonHelpers.js            # renderButton, renderButtonGroup (генерация HTML)
+│   ├── hooks/                          # Кастомные React-хуки
+│   │   ├── index.js                    # Barrel-экспорт
+│   │   ├── useImageUpload.js           # Логика загрузки изображений для всех типов блоков
+│   │   ├── useBlockSettings.js         # Вычисление стилей блока/контента из настроек
+│   │   └── useBlockDragAndDrop.js      # Фабрика обработчиков событий drag-and-drop
 │   ├── i18n/
-│   │   └── translations.js            # Footer text in Russian and Kazakh
+│   │   └── translations.js            # Текст футера на русском и казахском
 │   ├── utils/
-│   │   ├── assets.js                   # localStorage asset registry (add, list, get, clear)
-│   │   ├── htmlGenerator.js            # Wraps block HTML in full email document
-│   │   └── imageUtils.js               # Footer icon paths, social icon map
-│   ├── App.jsx                         # Mounts EmailBuilder
-│   ├── App.css                         # Minimal app-level styles
-│   ├── index.css                       # CSS reset / globals
-│   └── main.jsx                        # Vite entry point
-├── index.html                          # Vite HTML shell
+│   │   ├── assets.js                   # Реестр ресурсов в localStorage (add, list, get, clear)
+│   │   ├── htmlGenerator.js            # Оборачивает HTML блоков в полный email-документ
+│   │   └── imageUtils.js              # Пути к иконкам футера, маппинг социальных иконок
+│   ├── App.jsx                         # Рендерит EmailBuilder
+│   ├── App.css                         # Минимальные стили уровня приложения
+│   ├── index.css                       # CSS-сброс / глобальные стили
+│   └── main.jsx                        # Точка входа Vite
+├── index.html                          # HTML-оболочка Vite
 ├── package.json
 ├── vite.config.js
 ├── eslint.config.js
@@ -141,243 +141,243 @@ react-email-builder/
 
 ---
 
-## Architecture Deep Dive
+## Архитектура: подробный разбор
 
-The codebase is organized into clear layers. Understanding these layers is the fastest way to navigate the project.
+Кодовая база организована в по слоям. Понимание этих слоёв — самый быстрый способ ориентироваться в проекте.
 
-### Layer 1 — State & Orchestration
+### Слой 1 — Основа
 
-**`EmailBuilder.jsx`** is the single source of truth. It holds the `template` state object (via `useState`) and passes everything down as props. It also handles auto-save to `localStorage`, image rehydration on mount, and the toolbar actions (preview, save, clear).
+**`EmailBuilder.jsx`** — single source of truth. Он содержит объект состояния `template` (через `useState`) и передаёт всё дочерним компонентам через пропсы. Также отвечает за автосохранение в `localStorage`, восстановление изображений при рендеринге и действия тулбара (предпросмотр, сохранение, очистка).
 
-### Layer 2 — Block Rendering (Editor vs. HTML)
+### Слой 2 — Рендеринг блоков (Редактор vs. HTML)
 
-There are two parallel rendering pipelines — one for the editor UI, one for the exported HTML:
+Существуют два параллельных конвейера рендеринга — один для UI редактора, другой для экспортируемого HTML:
 
-| File                    | Purpose                                             | Output      |
-| ----------------------- | --------------------------------------------------- | ----------- |
-| `BlockRenderer.jsx`     | Editor view — what the user sees and interacts with | React JSX   |
-| `BlockHtmlRenderer.jsx` | Export view — what gets written to the ZIP          | HTML string |
+| Файл                    | Назначение                                                           | Выход       |
+| ----------------------- | -------------------------------------------------------------------- | ----------- |
+| `BlockRenderer.jsx`     | Вид в редакторе — то, что видит и с чем взаимодействует пользователь | React JSX   |
+| `BlockHtmlRenderer.jsx` | Вид для экспорта — то, что записывается в ZIP                        | HTML-строка |
 
-Both receive the same block data object and must handle all 14 block types. When you add a new block type, you must update **both** files.
+Оба получают один и тот же объект данных блока и должны обрабатывать все виды блоков. При добавлении нового типа блока необходимо обновить **оба** файла.
 
-`BlockRenderer.jsx` delegates the visual rendering of each block type to individual components inside `BlockTypes/`. It also assembles the settings panels for each block type using controls from `Controls/`.
+`BlockRenderer.jsx` делегирует визуальный рендеринг каждого типа блока отдельным компонентам в `BlockTypes/`. Он также собирает панели настроек для каждого типа блока, используя элементы управления из `Controls/`.
 
-### Layer 3 — Extracted Components
+### Слой 3 — Извлечённые компоненты
 
-To keep `BlockRenderer.jsx` manageable, the rendering and controls were extracted into sub-directories:
+Для поддержания управляемости `BlockRenderer.jsx` рендеринг и элементы управления были вынесены в подкаталоги:
 
-- **`BlockTypes/`** — One component per block type (e.g., `SpacerBlock.jsx`, `TextBlock.jsx`). Each receives its block's data and renders the editor preview.
-- **`Controls/`** — Reusable form elements (color pickers, number inputs, padding selectors, etc.) used across multiple block settings panels.
-- **`BlockUI/`** — Shared block chrome: the `BlockToolbar` (duplicate/delete buttons) and `BlockTypeIndicator` (drag handle + type label).
+- **`BlockTypes/`** — по одному компоненту на тип блока (например, `SpacerBlock.jsx`, `TextBlock.jsx`). Каждый получает данные блока и рендерит превью в редакторе.
+- **`Controls/`** — переиспользуемые элементы форм (палитры цветов, числовые поля, селекторы отступов и т.д.), используемые в панелях настроек разных блоков.
+- **`BlockUI/`** — общие UI-элементы блоков: `BlockToolbar` (кнопки дублирования/удаления) и `BlockTypeIndicator` (ручка перетаскивания + метка типа).
 
-### Layer 4 — Custom Hooks
+### Слой 4 — Кастомные хуки
 
-Three hooks extract reusable logic from `BlockRenderer`:
+Три хука извлекают переиспользуемую логику из `BlockRenderer`:
 
-| Hook                  | Responsibility                                                                                                                                                     |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `useImageUpload`      | Handles file upload for all block types (images, buttons, columns, headers, nested blocks). Returns `handleImageUpload` and manual URL state.                      |
-| `useBlockSettings`    | Computes `blockStyle` and `contentStyle` objects from a block's settings using `useMemo`. Handles padding, background color, borders, and type-specific overrides. |
-| `useBlockDragAndDrop` | Returns all event handler props (`onDragStart`, `onDragOver`, `onDrop`, `onClick`, `onMouseEnter/Leave`) for a block element.                                      |
+| Хук                   | Назначение                                                                                                                                                                |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useImageUpload`      | Обработка загрузки файлов для всех типов блоков (изображения, кнопки, колонки, заголовки, вложенные блоки). Возвращает `handleImageUpload` и состояние ручного ввода URL. |
+| `useBlockSettings`    | Вычисляет объекты `blockStyle` и `contentStyle` из настроек блока через `useMemo`. Обрабатывает отступы, фоновый цвет, границы и специфические для типа переопределения.  |
+| `useBlockDragAndDrop` | Возвращает все пропсы обработчиков событий (`onDragStart`, `onDragOver`, `onDrop`, `onClick`, `onMouseEnter/Leave`) для элемента блока.                                   |
 
-### Layer 5 — Helpers (Pure Functions)
+### Слой 5 — Хелперы (чистые функции)
 
-The `helpers/` directory contains pure functions used primarily by `BlockHtmlRenderer.jsx` for generating email-safe HTML:
+Каталог `helpers/` содержит чистые функции, используемые преимущественно `BlockHtmlRenderer.jsx` для генерации email-безопасного HTML:
 
-| File                  | What it exports                                                                                                  |
-| --------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `htmlHelpers.js`      | `wrapInTable()`, `createLink()`, `createImage()`, `createLinkedImage()` — building blocks for email HTML         |
-| `calculateHelpers.js` | `calculateHalfGap()`, `calculateSpacerWidth()`, `calculateColumnWidth()` — layout math                           |
-| `defaultHelpers.js`   | `getDefault()`, `getDefaults()`, `COMMON_DEFAULTS` — null-safe settings access and a centralized defaults object |
-| `parsePadding.js`     | `parsePadding()` — parses CSS shorthand like `"12px 24px"` into `{ top, bottom, x }`                             |
-| `buttonHelpers.js`    | `renderButton()`, `renderButtonGroup()` — generates HTML for image and coded buttons                             |
+| Файл                  | Что экспортирует                                                                                                                         |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| `htmlHelpers.js`      | `wrapInTable()`, `createLink()`, `createImage()`, `createLinkedImage()` — строительные блоки для email HTML                              |
+| `calculateHelpers.js` | `calculateHalfGap()`, `calculateSpacerWidth()`, `calculateColumnWidth()` — математика для вёрстки                                        |
+| `defaultHelpers.js`   | `getDefault()`, `getDefaults()`, `COMMON_DEFAULTS` — null-безопасный доступ к настройкам и централизованный объект значений по умолчанию |
+| `parsePadding.js`     | `parsePadding()` — парсит CSS-сокращение, например `"12px 24px"`, в `{ top, bottom, x }`                                                 |
+| `buttonHelpers.js`    | `renderButton()`, `renderButtonGroup()` — генерирует HTML для графических и кодированных кнопок                                          |
 
-### Layer 6 — Utilities
+### Слой 6 — Утилиты
 
-| File                     | What it does                                                                                                                                                                                                          |
-| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `utils/assets.js`        | Manages the `localStorage` asset registry. Handles `addFileAsset()` (stores base64 + returns blob preview URL), `listAssets()`, `getAssetDataUrl()`, and `clearAllAssets()`.                                          |
-| `utils/htmlGenerator.js` | `generateHtmlOutput()` wraps all rendered block HTML in a complete email document with DOCTYPE, meta tags, inline styles, pre-header text, and the email wrapper tables. Also exports `generateRoundContainerHTML()`. |
-| `utils/imageUtils.js`    | Maps social icon names to file paths. Provides `getFooterIcon()`, `socialIcons` map, and a legacy `handleImageUploadForBlock()`.                                                                                      |
+| Файл                     | Что делает                                                                                                                                                                                                                    |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `utils/assets.js`        | Управляет реестром ресурсов в `localStorage`. Содержит `addFileAsset()` (сохраняет base64 + возвращает blob-URL для превью), `listAssets()`, `getAssetDataUrl()` и `clearAllAssets()`.                                        |
+| `utils/htmlGenerator.js` | `generateHtmlOutput()` оборачивает весь отрендеренный HTML блоков в полный email-документ с DOCTYPE, мета-тегами, inline-стилями, текстом прехедера и таблицами-обёртками. Также экспортирует `generateRoundContainerHTML()`. |
+| `utils/imageUtils.js`    | Маппинг имён социальных иконок на пути к файлам. Содержит `getFooterIcon()`, объект `socialIcons` и устаревшую функцию `handleImageUploadForBlock()`.                                                                         |
 
 ---
 
-## Installation
+## Установка
 
-### Prerequisites
+### Предварительные требования
 
-- Node.js v16 or higher
-- npm (or yarn)
+- Node.js версии 16 или выше
+- npm (или yarn)
 
-### Setup
+### Настройка
 
 ```bash
-# 1. Navigate to the project
+# 1. Перейдите в директорию проекта
 cd react-email-builder
 
-# 2. Install dependencies
+# 2. Установите зависимости
 npm install
 
-# 3. Start the dev server
+# 3. Запустите dev-сервер
 npm run dev
 
-# 4. Open in browser (default: http://localhost:5173)
+# 4. Откройте в браузере (по умолчанию: http://localhost:5173)
 ```
 
 ---
 
-## Usage Guide
+## Руководство по использованию
 
-### Building a Template
+### Создание шаблона
 
-1. **Drag components** from the left sidebar onto the canvas.
-2. **Click a block** to select it — this reveals the settings panel below the block.
-3. **Edit text** inline by clicking into text/header blocks (uses `contentEditable`).
-4. **Upload images** by clicking the upload button in the settings panel of image/button blocks.
-5. **Reorder blocks** by dragging selected blocks up or down.
-6. **Preview** — Click the "Preview" toolbar button to toggle a rendered HTML preview, or use the "View in browser" link in the pre-header to open the full email in a new tab.
-7. **Save** — Click "Save" to download a ZIP file containing `index.html` and all images.
+1. **Перетащите компоненты** из левого сайдбара на холст.
+2. **Нажмите на блок**, чтобы выделить его — откроется панель настроек под блоком.
+3. **Редактируйте текст** прямо в текстовых/заголовочных блоках (используется `contentEditable`).
+4. **Загружайте изображения**, нажав кнопку загрузки в панели настроек блоков с изображениями/кнопками.
+5. **Меняйте порядок блоков**, перетаскивая выбранные блоки вверх или вниз.
+6. **Предпросмотр** — нажмите кнопку «Preview» в тулбаре для переключения HTML-предпросмотра, или используйте ссылку «Посмотреть в браузере» в прехедере, чтобы открыть письмо в новой вкладке.
+7. **Сохранение** — нажмите «Save» для скачивания ZIP-файла с `index.html` и всеми изображениями.
 
-### Template Settings (Sidebar)
+### Настройки шаблона (Сайдбар)
 
-The sidebar exposes four global template settings:
+Сайдбар предоставляет четыре глобальных настройки шаблона:
 
-| Setting                | Purpose                                                               |
-| ---------------------- | --------------------------------------------------------------------- |
-| Template Title         | Displayed in the email pre-header and used as the ZIP filename        |
-| Title Link Label       | Tracking `_label` attribute on the title in the pre-header            |
-| Title Link Label Unsub | Tracking `_label` attribute on the unsubscribe link in the pre-header |
-| Footer Link Label      | Default `_label` value passed to footer blocks for unsubscribe links  |
+| Настройка              | Назначение                                                                     |
+| ---------------------- | ------------------------------------------------------------------------------ |
+| Template Title         | Отображается в прехедере письма и используется как имя ZIP-файла               |
+| Title Link Label       | Атрибут трекинга `_label` для заголовка в прехедере                            |
+| Title Link Label Unsub | Атрибут трекинга `_label` для ссылки отписки в прехедере                       |
+| Footer Link Label      | Значение `_label` по умолчанию, передаваемое в блоки футера для ссылок отписки |
 
-### Working with Images
+### Работа с изображениями
 
-- **Upload**: Click the upload area in any image/button/column block's settings panel.
-- **Storage**: Uploaded images are converted to base64 and stored in `localStorage` under the key `emailBuilderAssets`. The editor displays a `blob:` URL for fast rendering.
-- **Paths**: Each uploaded image gets a sequential path like `i/1.png`, `i/2.jpg`, etc. This path is what appears in the exported HTML.
-- **Export**: All uploaded images are included in the ZIP's `i/` folder. Default footer icons from `public/i/` are also included automatically.
-
----
-
-## Component Types
-
-### Text & Headings
-
-| Type     | Description                                       | Key Settings                                           |
-| -------- | ------------------------------------------------- | ------------------------------------------------------ |
-| `header` | Large heading, optionally with an image beside it | fontSize, color, fontFamily, textAlign, isImage toggle |
-| `text`   | Paragraph text with inline editing                | fontSize, color, fontFamily, textAlign                 |
-
-### Images
-
-| Type             | Description                                | Key Settings                                                                                         |
-| ---------------- | ------------------------------------------ | ---------------------------------------------------------------------------------------------------- |
-| `image`          | Single full-width image with optional link | imagePath, altText, linkUrl, linkLabel, margin (for alignment)                                       |
-| `columns`        | Multiple images side by side               | Per-column: imagePath, altText, linkUrl. Group: columnGap                                            |
-| `columnsContent` | Images with title and text below each      | Per-column: imagePath, title, text, titleFontSize, textFontSize. Group: columnGap, hidetitle, isBold |
-
-### Buttons
-
-| Type               | Description                                        | Key Settings                                                                    |
-| ------------------ | -------------------------------------------------- | ------------------------------------------------------------------------------- |
-| `button`           | Image-based button (user uploads a button graphic) | imagePath, imageAlt, linkUrl, linkLabel                                         |
-| `buttonCoded`      | CSS-styled button with text content                | content, buttonBgColor, color, borderRadius, fontSize, border, padding, linkUrl |
-| `buttonGroup`      | Multiple image buttons together                    | Per-button settings + inline toggle, gap                                        |
-| `buttonCodedGroup` | Multiple coded buttons together                    | Per-button settings + inline toggle, gap                                        |
-
-### Layout
-
-| Type             | Description                                                             | Key Settings                                                                                                                         |
-| ---------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
-| `divider`        | Horizontal line separator                                               | lineColor, lineHeight, padding                                                                                                       |
-| `spacer`         | Empty space with configurable height                                    | height, backgroundColor                                                                                                              |
-| `roundContainer` | Container with rounded corners that can **nest other blocks** inside it | canvasColor, backgroundColor, bgWidth, borderWidth, borderType, borderColor, borderRadius, paddingTop/Bottom, paddingInnerTop/Bottom |
-
-### Footers
-
-| Type                | Description                                                    | Language |
-| ------------------- | -------------------------------------------------------------- | -------- |
-| `footer`            | Full footer with social links, disclaimer, legal/privacy links | Russian  |
-| `footer_general_kz` | Same structure as above                                        | Kazakh   |
-
-Both footer types support a `theme` setting (`day` / `night`) that switches between light and dark icon variants and adjusts text colors.
+- **Загрузка**: нажмите на область загрузки в панели настроек любого блока с изображением/кнопкой/колонкой.
+- **Хранение**: загруженные изображения конвертируются в base64 и сохраняются в `localStorage` под ключом `emailBuilderAssets`. Для быстрого отображения в редакторе используется `blob:` URL.
+- **Пути**: каждое загруженное изображение получает последовательный путь вида `i/1.png`, `i/2.jpg` и т.д. Этот путь используется в экспортированном HTML.
+- **Экспорт**: все загруженные изображения включаются в папку `i/` внутри ZIP. Стандартные иконки футера из `public/i/` также добавляются автоматически.
 
 ---
 
-## File-by-File Reference
+## Типы компонентов
 
-This section explains **when to edit each file** so you can jump to the right place immediately.
+### Текст и заголовки
 
-### Core Components
+| Тип      | Описание                                            | Основные настройки                                            |
+| -------- | --------------------------------------------------- | ------------------------------------------------------------- |
+| `header` | Крупный заголовок, опционально с изображением рядом | fontSize, color, fontFamily, textAlign, переключатель isImage |
+| `text`   | Текстовый параграф с инлайн-редактированием         | fontSize, color, fontFamily, textAlign                        |
 
-| File                    | Edit when you need to...                                                                               |
-| ----------------------- | ------------------------------------------------------------------------------------------------------ |
-| `EmailBuilder.jsx`      | Change the sidebar, toolbar, canvas layout, global state shape, auto-save logic, or image rehydration  |
-| `BlockRenderer.jsx`     | Change how blocks look in the editor, add settings panels for new block types, or wire up new controls |
-| `BlockHtmlRenderer.jsx` | Change the exported HTML output for any block type, fix email client rendering issues                  |
-| `RoundContainer.jsx`    | Modify the round container's editor UI, nested block drag-and-drop, or child block rendering           |
-| `PreHeader.jsx`         | Change the pre-header bar (title, "view in browser" link)                                              |
+### Изображения
 
-### Block Type Components (`BlockTypes/`)
+| Тип              | Описание                                              | Основные настройки                                                                                    |
+| ---------------- | ----------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| `image`          | Одно изображение на всю ширину с опциональной ссылкой | imagePath, altText, linkUrl, linkLabel, margin (для выравнивания)                                     |
+| `columns`        | Несколько изображений в ряд                           | По колонке: imagePath, altText, linkUrl. Группа: columnGap                                            |
+| `columnsContent` | Изображения с заголовком и текстом под каждым         | По колонке: imagePath, title, text, titleFontSize, textFontSize. Группа: columnGap, hidetitle, isBold |
 
-Each file renders one block type's **editor preview**. Edit the corresponding file when you want to change how that block type looks or behaves in the editor canvas.
+### Кнопки
 
-### Controls (`Controls/`)
+| Тип                | Описание                                                    | Основные настройки                                                              |
+| ------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `button`           | Кнопка-изображение (пользователь загружает картинку кнопки) | imagePath, imageAlt, linkUrl, linkLabel                                         |
+| `buttonCoded`      | CSS-стилизованная кнопка с текстовым содержимым             | content, buttonBgColor, color, borderRadius, fontSize, border, padding, linkUrl |
+| `buttonGroup`      | Несколько картинок кнопок вместе                            | Настройки для каждой кнопки + переключатель inline, gap                         |
+| `buttonCodedGroup` | Несколько кнопок написанных кодом вместе                    | Настройки для каждой кнопки + переключатель inline, gap                         |
 
-Each file is a small, reusable form control. Edit these when you need to change how a specific input type works across all block settings panels (e.g., changing the padding presets in `PaddingControl.jsx`).
+### Компоновка
 
-### Block UI (`BlockUI/`)
+| Тип              | Описание                                                                            | Основные настройки                                                                                                                   |
+| ---------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `divider`        | Горизонтальный разделитель                                                          | lineColor, lineHeight, padding                                                                                                       |
+| `spacer`         | Пустое пространство с настраиваемой высотой                                         | height, backgroundColor                                                                                                              |
+| `roundContainer` | Контейнер с закруглёнными углами, внутрь которого можно **вкладывать другие блоки** | canvasColor, backgroundColor, bgWidth, borderWidth, borderType, borderColor, borderRadius, paddingTop/Bottom, paddingInnerTop/Bottom |
 
-| File                     | Purpose                                            |
-| ------------------------ | -------------------------------------------------- |
-| `BlockToolbar.jsx`       | The duplicate/delete buttons shown on hover/active |
-| `BlockTypeIndicator.jsx` | The drag handle + block type label                 |
+### Футеры
 
-### Hooks (`hooks/`)
+| Тип                 | Описание                                                                                                         | Язык      |
+| ------------------- | ---------------------------------------------------------------------------------------------------------------- | --------- |
+| `footer`            | Полный футер с социальными ссылками, дисклеймером, ссылками на правовую информацию и политику конфиденциальности | Русский   |
+| `footer_general_kz` | Аналогичная структура                                                                                            | Казахский |
 
-| File                     | Purpose                                                                                 |
-| ------------------------ | --------------------------------------------------------------------------------------- |
-| `useImageUpload.js`      | All image upload logic. Handles normal blocks, nested blocks, buttons, columns, headers |
-| `useBlockSettings.js`    | Calculates `blockStyle` and `contentStyle` from settings via `useMemo`                  |
-| `useBlockDragAndDrop.js` | Returns drag-and-drop event handler props                                               |
-
-### Helpers (`helpers/`)
-
-| File                  | Purpose                                                                                            |
-| --------------------- | -------------------------------------------------------------------------------------------------- |
-| `htmlHelpers.js`      | Low-level HTML generation: `wrapInTable()`, `createLink()`, `createImage()`, `createLinkedImage()` |
-| `calculateHelpers.js` | Layout math: gap halving, spacer width, column width percentages                                   |
-| `defaultHelpers.js`   | Null-safe getters + `COMMON_DEFAULTS` constant object with all shared default values               |
-| `parsePadding.js`     | Parses CSS padding shorthand into `{ top, bottom, x }`                                             |
-| `buttonHelpers.js`    | Generates button HTML (both image and coded variants, single and grouped)                          |
-
-### Config & i18n
-
-| File                      | Purpose                                                                                                                               |
-| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
-| `emailTemplateConfig.jsx` | Defines the `components` array (sidebar palette) and `initialTemplate` (default template loaded on first visit)                       |
-| `translations.js`         | Russian (`translationsRU`) and Kazakh (`translationsKZ`) footer strings. Used by `BlockHtmlRenderer.jsx` when rendering footer blocks |
-
-### Handlers
-
-| File                      | Purpose                                                                                                                                                                                                                                                     |
-| ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `EmailBuilderHandlers.js` | All business logic: `createNewBlock()` (factory with defaults for each type), `handleDeleteBlock()`, `handleDuplicateBlock()`, `handleUpdateBlockContent()`, `handleUpdateBlockSettings()`, `handleSaveTemplate()` (ZIP generation), drag-and-drop handlers |
-
-### Utilities
-
-| File               | Purpose                                                                                                                                    |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------ |
-| `assets.js`        | `localStorage`-backed asset registry: `addFileAsset()`, `listAssets()`, `getAssetDataUrl()`, `clearAllAssets()`                            |
-| `htmlGenerator.js` | `generateHtmlOutput()` — wraps block HTML in a full email document. `generateRoundContainerHTML()` — produces round container wrapper HTML |
-| `imageUtils.js`    | Footer icon path helpers and `socialIcons` name mapping                                                                                    |
+Оба типа футеров поддерживают настройку `theme` (`day` / `night`), которая переключает между светлыми и тёмными вариантами иконок и корректирует цвета текста.
 
 ---
 
-## Data Flow & State Management
+## Справочник по файлам
 
-### Template State Shape
+Этот раздел объясняет, **когда редактировать каждый файл**, чтобы вы сразу попадали в нужное место.
 
-The entire application state is a single `template` object:
+### Основные компоненты
+
+| Файл                    | Редактируйте, когда нужно...                                                                                                       |
+| ----------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `EmailBuilder.jsx`      | Изменить сайдбар, тулбар, компоновку холста, структуру глобального состояния, логику автосохранения или восстановления изображений |
+| `BlockRenderer.jsx`     | Изменить внешний вид блоков в редакторе, добавить панели настроек для новых типов блоков или подключить новые элементы управления  |
+| `BlockHtmlRenderer.jsx` | Изменить экспортируемый HTML для любого типа блока, исправить проблемы рендеринга в почтовых клиентах                              |
+| `RoundContainer.jsx`    | Изменить UI круглого контейнера в редакторе, drag-and-drop вложенных блоков или рендеринг дочерних блоков                          |
+| `PreHeader.jsx`         | Изменить строку прехедера (заголовок, ссылка «Открыть в браузере»)                                                                 |
+
+### Компоненты типов блоков (`BlockTypes/`)
+
+Каждый файл рендерит **превью одного типа блока в редакторе**. Редактируйте соответствующий файл, когда хотите изменить внешний вид или поведение этого типа блока на холсте редактора.
+
+### Элементы управления (`Controls/`)
+
+Каждый файл — это небольшой переиспользуемый элемент формы. Редактируйте их, когда нужно изменить работу конкретного типа ввода во всех панелях настроек блоков (например, изменить пресеты отступов в `PaddingControl.jsx`).
+
+### UI блоков (`BlockUI/`)
+
+| Файл                     | Назначение                                                         |
+| ------------------------ | ------------------------------------------------------------------ |
+| `BlockToolbar.jsx`       | Кнопки дублирования/удаления, отображаемые при наведении/выделении |
+| `BlockTypeIndicator.jsx` | Ручка перетаскивания + метка типа блока                            |
+
+### Хуки (`hooks/`)
+
+| Файл                     | Назначение                                                                                               |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| `useImageUpload.js`      | Вся логика загрузки изображений. Обрабатывает обычные блоки, вложенные блоки, кнопки, колонки, заголовки |
+| `useBlockSettings.js`    | Вычисляет `blockStyle` и `contentStyle` из настроек через `useMemo`                                      |
+| `useBlockDragAndDrop.js` | Возвращает пропсы обработчиков событий drag-and-drop                                                     |
+
+### Хелперы (`helpers/`)
+
+| Файл                  | Назначение                                                                                             |
+| --------------------- | ------------------------------------------------------------------------------------------------------ |
+| `htmlHelpers.js`      | Низкоуровневая генерация HTML: `wrapInTable()`, `createLink()`, `createImage()`, `createLinkedImage()` |
+| `calculateHelpers.js` | Математика для вёрстки: деление отступов пополам, ширина спейсера, процент ширины колонок              |
+| `defaultHelpers.js`   | Null-безопасные геттеры + объект-константа `COMMON_DEFAULTS` со всеми общими значениями по умолчанию   |
+| `parsePadding.js`     | Парсит CSS-сокращение padding в `{ top, bottom, x }`                                                   |
+| `buttonHelpers.js`    | Генерирует HTML кнопок (графические и кодированные варианты, одиночные и группированные)               |
+
+### Конфигурация и i18n
+
+| Файл                      | Назначение                                                                                                                                    |
+| ------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------- |
+| `emailTemplateConfig.jsx` | Определяет массив `components` (палитра в сайдбаре) и `initialTemplate` (шаблон по умолчанию при первом посещении)                            |
+| `translations.js`         | Строки футера на русском (`translationsRU`) и казахском (`translationsKZ`). Используются `BlockHtmlRenderer.jsx` при рендеринге блоков футера |
+
+### Обработчики
+
+| Файл                      | Назначение                                                                                                                                                                                                                                                    |
+| ------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `EmailBuilderHandlers.js` | Вся бизнес-логика: `createNewBlock()` (фабрика с дефолтами для каждого типа), `handleDeleteBlock()`, `handleDuplicateBlock()`, `handleUpdateBlockContent()`, `handleUpdateBlockSettings()`, `handleSaveTemplate()` (генерация ZIP), обработчики drag-and-drop |
+
+### Утилиты
+
+| Файл               | Назначение                                                                                                                                             |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `assets.js`        | Реестр ресурсов на базе `localStorage`: `addFileAsset()`, `listAssets()`, `getAssetDataUrl()`, `clearAllAssets()`                                      |
+| `htmlGenerator.js` | `generateHtmlOutput()` — оборачивает HTML блоков в полный email-документ. `generateRoundContainerHTML()` — генерирует HTML-обёртку круглого контейнера |
+| `imageUtils.js`    | Хелперы путей к иконкам футера и маппинг имён `socialIcons`                                                                                            |
+
+---
+
+## Поток данных и управление состоянием
+
+### Структура состояния шаблона
+
+Всё состояние приложения — это единый объект `template`:
 
 ```javascript
 {
@@ -395,105 +395,105 @@ The entire application state is a single `template` object:
         backgroundColor: "#ffffff",
         color: "#000000",
         fontSize: "48px",
-        // ... type-specific settings
+        // ... настройки, специфичные для типа
       }
     },
     {
       id: "round-1700000000002",
       type: "roundContainer",
-      settings: { /* container settings */ },
+      settings: { /* настройки контейнера */ },
       children: [
-        // Nested blocks (same shape as top-level blocks)
+        // Вложенные блоки (такая же структура, как у блоков верхнего уровня)
       ]
     },
     {
       id: "buttonGroup-1700000000003",
       type: "buttonGroup",
       buttons: [
-        { content: "...", settings: { /* per-button settings */ } },
-        { content: "...", settings: { /* per-button settings */ } }
+        { content: "...", settings: { /* настройки кнопки */ } },
+        { content: "...", settings: { /* настройки кнопки */ } }
       ],
-      settings: { /* group-level settings */ }
+      settings: { /* настройки группы */ }
     }
     // ...
   ]
 }
 ```
 
-Note that different block types may have additional top-level properties beyond `content` and `settings`:
+Обратите внимание, что разные типы блоков могут иметь дополнительные свойства верхнего уровня помимо `content` и `settings`:
 
-- `buttons` array — for `buttonGroup` and `buttonCodedGroup`
-- `columns` array — for `columns` and `columnsContent`
-- `children` array — for `roundContainer`
+- массив `buttons` — для `buttonGroup` и `buttonCodedGroup`
+- массив `columns` — для `columns` и `columnsContent`
+- массив `children` — для `roundContainer`
 
-### Data Flow
+### Поток данных
 
 ```
-User Action
+Действие пользователя
     ↓
-EmailBuilder.jsx (state holder)
-    ↓ props
-BlockRenderer.jsx (editor UI)        ──→ user sees / edits blocks
-    ↓ calls handler
-EmailBuilderHandlers.js              ──→ updates template state
-    ↓ state change triggers
-localStorage auto-save (400ms debounce)
+EmailBuilder.jsx (держатель состояния)
+    ↓ пропсы
+BlockRenderer.jsx (UI редактора)         ──→ пользователь видит / редактирует блоки
+    ↓ вызывает обработчик
+EmailBuilderHandlers.js                  ──→ обновляет состояние шаблона
+    ↓ изменение состояния запускает
+автосохранение в localStorage (дебаунс 400 мс)
 
-User clicks "Save"
+Пользователь нажимает «Save»
     ↓
 EmailBuilderHandlers.handleSaveTemplate()
-    ↓ calls
+    ↓ вызывает
 htmlGenerator.generateHtmlOutput(template, renderBlockHtml)
-    ↓ iterates blocks, calls
+    ↓ итерирует блоки, вызывает
 BlockHtmlRenderer.renderBlockHtml(block, template)
-    ↓ uses
-helpers/* (htmlHelpers, buttonHelpers, etc.)
-    ↓ produces
-Complete HTML string → packaged into ZIP with assets → downloaded
+    ↓ использует
+helpers/* (htmlHelpers, buttonHelpers и т.д.)
+    ↓ генерирует
+Полная HTML-строка → упаковывается в ZIP с ресурсами → скачивается
 ```
 
-### localStorage Keys
+### Ключи localStorage
 
-| Key                  | Contents                                                  |
-| -------------------- | --------------------------------------------------------- |
-| `emailBuilderData`   | JSON-serialized template state                            |
-| `emailBuilderAssets` | JSON map of `{ [path]: { dataUrl, mime, name, ts } }`     |
-| `assetCounter`       | Integer counter for generating sequential image filenames |
+| Ключ                 | Содержимое                                                                   |
+| -------------------- | ---------------------------------------------------------------------------- |
+| `emailBuilderData`   | JSON-сериализованное состояние шаблона                                       |
+| `emailBuilderAssets` | JSON-карта `{ [path]: { dataUrl, mime, name, ts } }`                         |
+| `assetCounter`       | Целочисленный счётчик для генерации последовательных имён файлов изображений |
 
 ---
 
-## How to Add a New Block Type
+## Как добавить новый тип блока
 
-Follow these five steps in order. Use an existing block type (e.g., `divider`) as a reference throughout.
+Следуйте этим шагам по порядку. Используйте существующий тип блока (например, `divider`) как образец.
 
-### Step 1 — Register in Config
+### Шаг 1 — Зарегистрировать в конфигурации
 
-In `src/config/emailTemplateConfig.jsx`, add an entry to the `components` array:
+В `src/config/emailTemplateConfig.jsx` добавьте запись в массив `components`:
 
 ```jsx
 { type: 'myBlock', label: 'My Block', icon: <SomeIcon size={16} /> }
 ```
 
-### Step 2 — Define Creation Defaults
+### Шаг 2 — Определить дефолты для создания
 
-In `src/handlers/EmailBuilderHandlers.js`, add a `case` to the `createNewBlock()` switch:
+В `src/handlers/EmailBuilderHandlers.js` добавьте `case` в switch `createNewBlock()`:
 
 ```javascript
 case 'myBlock':
   return {
     id,
     type,
-    content: 'Default content',
+    content: 'Контент по умолчанию',
     settings: {
       backgroundColor: '#ffffff',
-      // your default settings...
+      // ваши настройки по умолчанию...
     },
   };
 ```
 
-### Step 3 — Create the Editor Component
+### Шаг 3 — Создать компонент редактора
 
-Create `src/components/BlockTypes/MyBlock.jsx`:
+Создайте `src/components/BlockTypes/MyBlock.jsx`:
 
 ```jsx
 const MyBlock = ({ content, settings, index, isActive }) => {
@@ -506,7 +506,7 @@ const MyBlock = ({ content, settings, index, isActive }) => {
       border='0'>
       <tbody>
         <tr>
-          <td>{/* your editor preview */}</td>
+          <td>{/* ваше превью в редакторе */}</td>
         </tr>
       </tbody>
     </table>
@@ -516,121 +516,121 @@ const MyBlock = ({ content, settings, index, isActive }) => {
 export default MyBlock;
 ```
 
-Then add it to `src/components/BlockTypes/index.js`:
+Затем добавьте в `src/components/BlockTypes/index.js`:
 
 ```javascript
 export { default as MyBlock } from './MyBlock';
 ```
 
-### Step 4 — Wire Up in BlockRenderer
+### Шаг 4 — Подключить в BlockRenderer
 
-In `src/components/BlockRenderer.jsx`:
+В `src/components/BlockRenderer.jsx`:
 
-1. Import the new component.
-2. Add a `case 'myBlock':` in the block rendering section that renders `<MyBlock ... />`.
-3. Add a `case 'myBlock':` in the settings panel section to render the relevant `Controls/` components.
+1. Импортируйте новый компонент.
+2. Добавьте `case 'myBlock':` в секции рендеринга блоков, который рендерит `<MyBlock ... />`.
+3. Добавьте `case 'myBlock':` в секции панели настроек для рендеринга соответствующих компонентов из `Controls/`.
 
-### Step 5 — Add HTML Rendering
+### Шаг 5 — Добавить HTML-рендеринг
 
-In `src/components/BlockHtmlRenderer.jsx`, add a `case 'myBlock':` that returns an email-safe HTML string using table-based layout and inline styles. Use helpers from `helpers/` to keep the code clean.
-
----
-
-## How to Add a New Settings Control
-
-1. Create `src/components/Controls/MyControl.jsx` — a small functional component that accepts `value`, `onChange`, and a `label` prop at minimum.
-2. Export it from `src/components/Controls/index.js`.
-3. Import and use it in `BlockRenderer.jsx` inside the relevant block type's settings panel section.
-
-All existing controls follow the same pattern: label + input element, with optional styling props.
+В `src/components/BlockHtmlRenderer.jsx` добавьте `case 'myBlock':`, который возвращает email-безопасную HTML-строку на основе табличной вёрстки с inline-стилями. Используйте хелперы из `helpers/` для чистоты кода.
 
 ---
 
-## Export & Deployment
+## Как добавить новый элемент управления настройками
 
-### What "Save" Produces
+1. Создайте `src/components/Controls/MyControl.jsx` — небольшой функциональный компонент, принимающий как минимум пропсы `value`, `onChange` и `label`.
+2. Экспортируйте его из `src/components/Controls/index.js`.
+3. Импортируйте и используйте в `BlockRenderer.jsx` внутри секции панели настроек соответствующего типа блока.
 
-Clicking **Save** triggers `handleSaveTemplate()` which:
-
-1. Calls `generateHtmlOutput()` to produce the full HTML document.
-2. Creates a ZIP using JSZip containing:
-   - `index.html` — the complete email template
-   - `i/` folder — all uploaded images (from `localStorage`) + default footer icons (fetched from `public/i/`)
-3. Downloads the ZIP using file-saver. The filename is derived from the template title.
-
-### Email Client Compatibility
-
-The generated HTML uses these email-safe practices:
-
-- **Table-based layouts** — required for Outlook rendering.
-- **Inline styles** — required for Gmail (strips `<style>` blocks in some contexts).
-- **`role="presentation"`** — on all layout tables for accessibility.
-- **MSO conditional comments** — where needed for Outlook-specific rendering.
-- **`color-scheme: light`** — meta tag to prevent dark mode recoloring.
-- **XHTML Transitional DOCTYPE** — maximum compatibility.
-
-### Server-Side Template Tags
-
-The exported HTML includes Adobe Campaign template tags:
-
-- `<%@ include view="MirrorPageUrl" %>` — "View in browser" link
-- `<%@ include option='NmsServer_URL' %>` — unsubscribe URL base
-- `<%= escapeUrl(recipient.cryptedId) %>` — encrypted recipient ID
-
-These tags are rendered as-is in the HTML and are processed server-side by Adobe Campaign during email delivery.
+Все существующие элементы управления следуют одному паттерну: подпись + элемент ввода, с опциональными пропсами стилизации.
 
 ---
 
-## Internationalization (i18n)
+## Экспорт и развёртывание
 
-Footer blocks support two languages defined in `src/i18n/translations.js`:
+### Что создаёт кнопка «Save»
 
-- **Russian (`translationsRU`)** — used by the `footer` block type.
-- **Kazakh (`translationsKZ`)** — used by the `footer_general_kz` block type.
+Нажатие **Save** запускает `handleSaveTemplate()`, который:
 
-Each translation object contains: `questions`, `disclaimer`, `link`, `disclaimer_end`, `all_rights`, `address`, `legal`, and `privacy` strings.
+1. Вызывает `generateHtmlOutput()` для создания полного HTML-документа.
+2. Создаёт ZIP с помощью JSZip, содержащий:
+   - `index.html` — готовый email-шаблон
+   - папку `i/` — все загруженные изображения (из `localStorage`) + стандартные иконки футера (загруженные из `public/i/`)
+3. Скачивает ZIP через file-saver. Имя файла формируется из заголовка шаблона.
 
-To add a new language, create a new translation object in `translations.js`, export it, then create a corresponding footer block type that references it.
+### Совместимость с почтовыми клиентами
 
----
+Сгенерированный HTML использует следующие email-безопасные практики:
 
-## Technical Details
+- **Табличная вёрстка** — обязательна для рендеринга в Outlook.
+- **Inline-стили** — обязательны для Gmail (в некоторых контекстах удаляет блоки `<style>`).
+- **`role="presentation"`** — на всех таблицах компоновки для доступности.
+- **Условные комментарии MSO** — где необходимо для специфического рендеринга в Outlook.
+- **`color-scheme: light`** — мета-тег для предотвращения перекраски в тёмном режиме.
+- **XHTML Transitional DOCTYPE** — максимальная совместимость.
 
-### Image Handling Pipeline
+### Серверные теги шаблонов
 
-1. **Upload**: User selects a file → `addFileAsset()` in `assets.js` generates a sequential path (`i/1.png`), creates a `blob:` URL for immediate preview, and kicks off a `FileReader` to convert to base64 in the background.
-2. **Editor**: The `blob:` URL is stored in `settings.imagePreviewUrl` and displayed in the canvas.
-3. **Persistence**: The base64 `dataUrl` is stored in `localStorage` under `emailBuilderAssets` so it survives page reloads.
-4. **Rehydration**: On mount, `rehydrateTemplateImages()` in `EmailBuilder.jsx` walks all blocks and restores preview URLs from `localStorage`.
-5. **Export**: `listAssets()` reads the full registry; each base64 image is decoded and written to the ZIP's `i/` folder.
+Экспортированный HTML включает теги шаблонов Adobe Campaign:
 
-### Round Container (Nesting)
+- `<%@ include view="MirrorPageUrl" %>` — ссылка «Посмотреть в браузере»
+- `<%@ include option='NmsServer_URL' %>` — базовый URL для отписки
+- `<%= escapeUrl(recipient.cryptedId) %>` — зашифрованный ID получателя
 
-`roundContainer` is the only block type that supports nesting. It has a `children` array instead of `content`. The `RoundContainer.jsx` component manages its own internal drag-and-drop zone, allowing users to drag sidebar components into it. Nested blocks use the same block data shape but are managed through the parent's `children` array using a `parentIndex` parameter in `handleUpdateBlockSettings()`.
-
-### Browser Requirements
-
-The editor uses the following browser APIs: FileReader, localStorage, Drag & Drop API, Blob URLs, and contentEditable. It targets modern evergreen browsers (Chrome, Firefox, Safari, Edge).
-
----
-
-## Available Scripts
-
-| Command           | Purpose                              |
-| ----------------- | ------------------------------------ |
-| `npm run dev`     | Start Vite dev server with HMR       |
-| `npm run build`   | Production build to `dist/`          |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint`    | Run ESLint                           |
+Эти теги выводятся как есть в HTML и обрабатываются на стороне сервера Adobe Campaign при отправке письма.
 
 ---
 
-## Troubleshooting
+## Локализация (i18n)
 
-**Images disappear after reload** — `localStorage` might be full. The base64 images are large; clear old assets with the "Clear Local" toolbar button and re-upload.
+Блоки футера поддерживают два языка, определённых в `src/i18n/translations.js`:
 
-**Drag and drop not working inside Round Container** — Make sure you're dragging from the sidebar (new components), not reordering existing blocks into the container. Round containers intercept `text/block-type` drag data to distinguish new components from reorder drags.
+- **Русский (`translationsRU`)** — используется типом блока `footer`.
+- **Казахский (`translationsKZ`)** — используется типом блока `footer_general_kz`.
 
-**Exported HTML looks broken in Outlook** — Check that you're using table-based layout in `BlockHtmlRenderer.jsx`. Outlook ignores `div`, `flexbox`, and `grid` layouts entirely.
+Каждый объект переводов содержит строки: `questions`, `disclaimer`, `link`, `disclaimer_end`, `all_rights`, `address`, `legal` и `privacy`.
 
-**Footer icons missing from ZIP** — The export fetches default icons from the running dev server at `public/i/`. Make sure the dev server is running when you click Save, or that the icons exist at the expected paths.
+Чтобы добавить новый язык, создайте новый объект переводов в `translations.js`, экспортируйте его, затем создайте соответствующий тип блока футера, который на него ссылается.
+
+---
+
+## Технические детали
+
+### Конвейер обработки изображений
+
+1. **Загрузка**: пользователь выбирает файл → `addFileAsset()` в `assets.js` генерирует последовательный путь (`i/1.png`), создаёт `blob:` URL для мгновенного предпросмотра и запускает `FileReader` для конвертации в base64 в фоновом режиме.
+2. **Редактор**: `blob:` URL сохраняется в `settings.imagePreviewUrl` и отображается на холсте.
+3. **Персистентность**: base64 `dataUrl` сохраняется в `localStorage` под ключом `emailBuilderAssets`, чтобы пережить перезагрузку страницы.
+4. **Восстановление**: при монтировании `rehydrateTemplateImages()` в `EmailBuilder.jsx` обходит все блоки и восстанавливает URL превью из `localStorage`.
+5. **Экспорт**: `listAssets()` читает полный реестр; каждое base64-изображение декодируется и записывается в папку `i/` внутри ZIP.
+
+### Round Container (вложенность)
+
+`roundContainer` — единственный тип блока, поддерживающий вложенность. У него массив `children` вместо `content`. Компонент `RoundContainer.jsx` управляет собственной внутренней зоной drag-and-drop, позволяя пользователям перетаскивать компоненты из сайдбара внутрь контейнера. Вложенные блоки используют ту же структуру данных, но управляются через массив `children` родителя с помощью параметра `parentIndex` в `handleUpdateBlockSettings()`.
+
+### Требования к браузеру
+
+Редактор использует следующие API браузера: FileReader, localStorage, Drag & Drop API, Blob URLs и contentEditable. Он рассчитан на современные evergreen-браузеры (Chrome, Firefox, Safari, Edge).
+
+---
+
+## Доступные скрипты
+
+| Команда           | Назначение                              |
+| ----------------- | --------------------------------------- |
+| `npm run dev`     | Запуск dev-сервера Vite с HMR           |
+| `npm run build`   | Продакшен-сборка в `dist/`              |
+| `npm run preview` | Локальный предпросмотр продакшен-сборки |
+| `npm run lint`    | Запуск ESLint                           |
+
+---
+
+## Решение проблем
+
+**Изображения исчезают после перезагрузки** — возможно, `localStorage` переполнен. Base64-изображения занимают много места; очистите старые ресурсы кнопкой «Clear Local» в тулбаре и загрузите заново.
+
+**Drag-and-drop не работает внутри Round Container** — убедитесь, что вы перетаскиваете из сайдбара (новые компоненты), а не пытаетесь переместить существующие блоки внутрь контейнера. Круглые контейнеры перехватывают данные `text/block-type` при перетаскивании, чтобы отличить новые компоненты от перестановки.
+
+**Экспортированный HTML некорректно отображается в Outlook** — проверьте, что в `BlockHtmlRenderer.jsx` используется табличная вёрстка. Outlook полностью игнорирует `div`, `flexbox` и `grid`.
+
+**Иконки футера отсутствуют в ZIP** — при экспорте стандартные иконки загружаются с запущенного dev-сервера из `public/i/`. Убедитесь, что dev-сервер запущен при нажатии Save или что иконки доступны по ожидаемым путям.
